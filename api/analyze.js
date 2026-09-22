@@ -1,5 +1,7 @@
-module.exports = async function handler(req, res) {
-  // CORS Headers
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+export default async function handler(req, res) {
+  // CORS & Method Check
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -9,115 +11,73 @@ module.exports = async function handler(req, res) {
   }
 
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed. Use POST.' });
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { image } = req.body || {};
+    const { image } = req.body;
     if (!image) {
-      return res.status(400).json({ error: 'No image data received by server.' });
+      return res.status(400).json({ error: 'No image data provided.' });
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      return res.status(500).json({ 
-        error: 'GEMINI_API_KEY is missing in Vercel Environment Variables.' 
-      });
+      return res.status(500).json({ error: 'Server misconfiguration: GEMINI_API_KEY is missing.' });
     }
 
-    const base64Data = image.replace(/^data:image\/\w+;base64,/, '');
+    // Initialize Gemini AI API
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    const prompt = `Analyse this gaming/desk setup photo as a professional setup reviewer.
-Only judge things that can reasonably be seen in the image.
+    // Clean base64 string
+    const base64Data = image.replace(/^data:image\/\w+;base64,/, "");
 
-Return ONLY valid JSON using this exact structure:
-{
-  "overallScore": 8.4,
-  "summary": "Short overall assessment of the setup",
-  "categories": {
-    "aesthetics": 8.5,
-    "cableManagement": 7.2,
-    "lighting": 9.1,
-    "layout": 8.4,
-    "equipment": 8.6
-  },
-  "strengths": [
-    "Clean desk space and minimal clutter",
-    "Balanced ambient RGB lighting",
-    "Ergonomic dual-monitor placement"
-  ],
-  "improvements": [
-    "Bundle visible hanging cables under the desk",
-    "Add a desk mat to anchor the keyboard",
-    "Elevate speakers to ear level"
-  ]
-}
+    const prompt = `
+      You are an expert desk setup, workspace aesthetic, and gaming rig reviewer.
+      Analyze this desk setup photo and provide a JSON response evaluating these criteria:
+      1. Overall Score (1.0 to 10.0)
+      2. Category breakdown (1-10 each): Cable Management, Lighting, Aesthetics, Ergonomics, Hardware Balance.
+      3. Key Strengths (3 concise bullet points).
+      4. Recommended Improvements (3 actionable bullet points).
+      5. Summary (2 short sentences).
 
-All scores must be numbers between 0 and 10. Do not wrap the JSON in markdown code blocks.`;
+      Return ONLY valid raw JSON with this exact structure:
+      {
+        "overallScore": 8.4,
+        "summary": "...",
+        "categories": {
+          "cables": 7.5,
+          "lighting": 9.0,
+          "aesthetics": 8.5,
+          "ergonomics": 8.0,
+          "hardware": 8.8
+        },
+        "strengths": ["...", "...", "..."],
+        "improvements": ["...", "...", "..."]
+      }
+    `;
 
-    // Candidate models to try in sequence if one hits high demand
-    const models = ['gemini-3.6-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
-    let lastErrorMessage = '';
-
-    for (const model of models) {
-      for (let attempt = 1; attempt <= 2; attempt++) {
-        try {
-          const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-
-          const response = await fetch(geminiUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [
-                {
-                  parts: [
-                    { text: prompt },
-                    {
-                      inline_data: {
-                        mime_type: 'image/jpeg',
-                        data: base64Data,
-                      },
-                    },
-                  ],
-                },
-              ],
-            })
-          });
-
-          const data = await response.json();
-
-          if (response.ok) {
-            const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (rawText) {
-              const cleanedJsonText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
-              const parsedJson = JSON.parse(cleanedJsonText);
-              return res.status(200).json(parsedJson);
-            }
-          }
-
-          lastErrorMessage = data.error?.message || `HTTP ${response.status}`;
-
-          // If high demand or rate limit, wait 1 second before retrying
-          if (response.status === 429 || response.status === 503 || lastErrorMessage.includes('high demand')) {
-            await new Promise(r => setTimeout(r, 1000));
-          } else {
-            // Move on to next model if it's a non-capacity issue
-            break;
-          }
-        } catch (err) {
-          lastErrorMessage = err.message;
-          await new Promise(r => setTimeout(r, 1000));
+    const result = await model.generateContent([
+      prompt,
+      {
+        inlineData: {
+          data: base64Data,
+          mimeType: "image/jpeg"
         }
       }
-    }
+    ]);
 
-    return res.status(503).json({ 
-      error: `Gemini API is temporarily busy across all models. Please try again in 10 seconds. (${lastErrorMessage})` 
-    });
+    const textResponse = result.response.text();
+    const cleanJsonText = textResponse.replace(/```json/g, '').replace(/```/g, '').trim();
+    const parsedData = JSON.parse(cleanJsonText);
+
+    return res.status(200).json(parsedData);
 
   } catch (err) {
+    console.error("API Error:", err);
     return res.status(500).json({ 
-      error: 'Backend Execution Failure: ' + err.message 
+      error: "Failed to analyze setup photo.", 
+      details: err.message 
     });
   }
-};
+}
