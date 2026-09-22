@@ -134,6 +134,7 @@
     }
 
     let selectedImageBase64 = null;
+    let loadingInterval = null;
 
     function checkBetaAccess() {
       const savedKey = localStorage.getItem('setupscore_beta_key');
@@ -169,7 +170,7 @@
           const canvas = document.createElement('canvas');
           let width = img.width;
           let height = img.height;
-          const maxDim = 1200; // Resize to max 1200px width/height
+          const maxDim = 1200;
 
           if (width > height && width > maxDim) {
             height *= maxDim / width;
@@ -184,7 +185,6 @@
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
 
-          // Compress to JPEG with 0.8 quality (~500KB)
           selectedImageBase64 = canvas.toDataURL('image/jpeg', 0.8);
           
           const preview = document.getElementById('imagePreview');
@@ -197,43 +197,220 @@
       reader.readAsDataURL(file);
     }
 
-    function startAnalysis() {
+    // Rotating status messages during analysis
+    function startLoadingMessages() {
+      const messages = [
+        "Looking at your layout...",
+        "Checking your lighting...",
+        "Analysing cable management...",
+        "Reviewing your equipment...",
+        "Calculating your overall score..."
+      ];
+      let index = 0;
+      const statusEl = document.getElementById('loadingStatus');
+      statusEl.innerText = messages[0];
+
+      loadingInterval = setInterval(() => {
+        index = (index + 1) % messages.length;
+        statusEl.innerText = messages[index];
+      }, 1200);
+    }
+
+    async function startAnalysis() {
+      if (!selectedImageBase64) return;
       showScreen('loadingScreen');
-      setTimeout(() => {
-        // Mock fallback results for v0.2 UI verification
-        displayResults({
-          overallScore: 8.6,
-          summary: "Clean desk space with modern lighting contrast. Cable management is well hidden behind the monitor arm.",
-          categories: { aesthetics: 9.0, cableManagement: 8.2, lighting: 9.1, layout: 8.5, equipment: 8.2 }
+      startLoadingMessages();
+
+      try {
+        const res = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: selectedImageBase64 })
         });
-      }, 2500);
+
+        clearInterval(loadingInterval);
+
+        if (!res.ok) {
+          throw new Error('Analysis failed.');
+        }
+
+        const data = await res.json();
+        displayResults(data);
+      } catch (err) {
+        clearInterval(loadingInterval);
+        alert("Error analyzing setup. Please check your internet connection or API setup.");
+        showScreen('photoScreen');
+      }
     }
 
     function displayResults(data) {
-      document.getElementById('scoreValue').innerText = data.overallScore + " / 10";
-      document.getElementById('summaryText').innerText = data.summary;
+      document.getElementById('scoreValue').innerText = (data.overallScore || 8.0) + " / 10";
+      document.getElementById('summaryText').innerText = data.summary || "Setup analysis complete.";
       
       const catContainer = document.getElementById('categoriesContainer');
       catContainer.innerHTML = '';
       
-      Object.entries(data.categories).forEach(([key, score]) => {
-        catContainer.innerHTML += `
-          <div style="margin-bottom: 12px;">
-            <div style="display:flex; justify-content:space-between; font-size: 13px; font-weight: 600;">
-              <span style="text-transform: capitalize;">${key}</span>
-              <span>${score}/10</span>
+      if (data.categories) {
+        Object.entries(data.categories).forEach(([key, score]) => {
+          catContainer.innerHTML += `
+            <div style="margin-bottom: 12px;">
+              <div style="display:flex; justify-content:space-between; font-size: 13px; font-weight: 600;">
+                <span style="text-transform: capitalize;">${key}</span>
+                <span>${score}/10</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${score * 10}%;"></div>
+              </div>
             </div>
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: ${score * 10}%;"></div>
+          `;
+        });
+      }
+
+      showScreen('resultsScreen');
+    }
+
+    window.onload = checkBetaAccess;
+  </script><script>
+    const VALID_KEYS = ['SETUP2026', 'VIP-TEST'];
+    for(let i = 1; i <= 100; i++) {
+      VALID_KEYS.push(`SETUP-VIP-${String(i).padStart(3, '0')}`);
+    }
+
+    let selectedImageBase64 = null;
+    let loadingInterval = null;
+
+    function checkBetaAccess() {
+      const savedKey = localStorage.getItem('setupscore_beta_key');
+      if (!savedKey || !VALID_KEYS.includes(savedKey)) {
+        document.getElementById('betaModal').style.display = 'flex';
+      }
+    }
+
+    function validateBetaKey() {
+      const inputKey = document.getElementById('betaKeyInput').value.trim().toUpperCase();
+      if (VALID_KEYS.includes(inputKey)) {
+        localStorage.setItem('setupscore_beta_key', inputKey);
+        document.getElementById('betaModal').style.display = 'none';
+      } else {
+        document.getElementById('betaKeyError').style.display = 'block';
+      }
+    }
+
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+    }
+
+    // Client-side HTML5 Canvas Image Compression
+    function handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          const maxDim = 1200;
+
+          if (width > height && width > maxDim) {
+            height *= maxDim / width;
+            width = maxDim;
+          } else if (height > maxDim) {
+            width *= maxDim / height;
+            height = maxDim;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          selectedImageBase64 = canvas.toDataURL('image/jpeg', 0.8);
+          
+          const preview = document.getElementById('imagePreview');
+          preview.src = selectedImageBase64;
+          preview.style.display = 'block';
+          document.getElementById('analyzeBtn').style.display = 'block';
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Rotating status messages during analysis
+    function startLoadingMessages() {
+      const messages = [
+        "Looking at your layout...",
+        "Checking your lighting...",
+        "Analysing cable management...",
+        "Reviewing your equipment...",
+        "Calculating your overall score..."
+      ];
+      let index = 0;
+      const statusEl = document.getElementById('loadingStatus');
+      statusEl.innerText = messages[0];
+
+      loadingInterval = setInterval(() => {
+        index = (index + 1) % messages.length;
+        statusEl.innerText = messages[index];
+      }, 1200);
+    }
+
+    async function startAnalysis() {
+      if (!selectedImageBase64) return;
+      showScreen('loadingScreen');
+      startLoadingMessages();
+
+      try {
+        const res = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: selectedImageBase64 })
+        });
+
+        clearInterval(loadingInterval);
+
+        if (!res.ok) {
+          throw new Error('Analysis failed.');
+        }
+
+        const data = await res.json();
+        displayResults(data);
+      } catch (err) {
+        clearInterval(loadingInterval);
+        alert("Error analyzing setup. Please check your internet connection or API setup.");
+        showScreen('photoScreen');
+      }
+    }
+
+    function displayResults(data) {
+      document.getElementById('scoreValue').innerText = (data.overallScore || 8.0) + " / 10";
+      document.getElementById('summaryText').innerText = data.summary || "Setup analysis complete.";
+      
+      const catContainer = document.getElementById('categoriesContainer');
+      catContainer.innerHTML = '';
+      
+      if (data.categories) {
+        Object.entries(data.categories).forEach(([key, score]) => {
+          catContainer.innerHTML += `
+            <div style="margin-bottom: 12px;">
+              <div style="display:flex; justify-content:space-between; font-size: 13px; font-weight: 600;">
+                <span style="text-transform: capitalize;">${key}</span>
+                <span>${score}/10</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${score * 10}%;"></div>
+              </div>
             </div>
-          </div>
-        `;
-      });
+          `;
+        });
+      }
 
       showScreen('resultsScreen');
     }
 
     window.onload = checkBetaAccess;
   </script>
-</body>
-</html>
