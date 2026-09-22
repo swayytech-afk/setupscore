@@ -21,8 +21,8 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 80px; overflow-x: hidden; }
 
-    /* Beta Modal Gate */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; z-index: 999; padding: 20px; }
+    /* Modal Gate */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.88); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; z-index: 999; padding: 20px; }
     .modal-card { background: #121520; border: 1px solid var(--card-border); border-radius: var(--radius-lg); padding: 28px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
     .beta-badge { display: inline-block; background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue)); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
 
@@ -52,11 +52,14 @@
 
     .progress-bar { height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; margin-top: 6px; }
     .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan)); width: 0%; transition: width 1s ease; }
+
+    .list-item { font-size: 13px; color: var(--text); margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px; }
+    .list-bullet { color: var(--accent-cyan); font-weight: bold; }
   </style>
 </head>
 <body>
 
-  <!-- BETA CODE GATE MODAL -->
+  <!-- BETA GATE MODAL -->
   <div id="betaModal" class="modal-overlay" style="display: none;">
     <div class="modal-card">
       <span class="beta-badge">VIP Launch Beta</span>
@@ -64,7 +67,7 @@
       <p style="color: var(--text-muted); font-size: 13px; margin-top: 6px;">SetupScore is currently in exclusive launch mode. Enter your access key to begin.</p>
       <input type="text" id="betaKeyInput" class="input-field" placeholder="SETUP-VIP-001">
       <button class="btn btn-primary" onclick="validateBetaKey()">Unlock SetupScore</button>
-      <p id="betaKeyError" style="color: #ff4d4d; font-size: 12px; margin-top: 10px; display: none;">Invalid access key. Try SETUP2026</p>
+      <p id="betaKeyError" style="color: #ff4d4d; font-size: 12px; margin-top: 10px; display: none;">Invalid key. Try SETUP2026</p>
     </div>
   </div>
 
@@ -75,15 +78,15 @@
   <!-- HOME SCREEN -->
   <div id="homeScreen" class="screen active">
     <h1 class="hero-title">Your Setup.<br>Rated by AI.</h1>
-    <p class="hero-sub">Upload a photo of your desk setup and let Gemini AI break down layout, cable management, and aesthetics.</p>
+    <p class="hero-sub">Upload a photo of your desk setup and let Gemini AI break down layout, cable management, lighting, and aesthetics.</p>
     
     <button class="btn btn-primary" onclick="showScreen('photoScreen')">Rate My Setup</button>
-    <button class="btn btn-secondary" onclick="showScreen('historyScreen')">View Previous Ratings</button>
+    <button class="btn btn-secondary" onclick="showScreen('historyScreen')">View Saved Setups</button>
   </div>
 
   <!-- PHOTO SCREEN -->
   <div id="photoScreen" class="screen">
-    <h2 style="font-size: 22px; margin-bottom: 12px;">Select Photo</h2>
+    <h2 style="font-size: 22px; margin-bottom: 12px;">Select Setup Photo</h2>
     
     <div class="upload-box" onclick="document.getElementById('fileInput').click()">
       <p style="font-size: 14px; color: var(--text-muted);">Tap to take photo or choose file</p>
@@ -112,6 +115,16 @@
     </div>
 
     <div class="card" id="categoriesContainer"></div>
+
+    <div class="card">
+      <h4 style="font-size: 14px; margin-bottom: 10px; color: var(--accent-cyan);">What's Working</h4>
+      <div id="strengthsContainer"></div>
+    </div>
+
+    <div class="card">
+      <h4 style="font-size: 14px; margin-bottom: 10px; color: #ff6b6b;">What I'd Improve</h4>
+      <div id="improvementsContainer"></div>
+    </div>
 
     <button class="btn btn-primary" onclick="showScreen('photoScreen')">Rate Another Setup</button>
   </div>
@@ -156,6 +169,7 @@
     function showScreen(screenId) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(screenId).classList.add('active');
+      if (screenId === 'historyScreen') renderHistory();
     }
 
     // Client-side HTML5 Canvas Image Compression
@@ -197,14 +211,13 @@
       reader.readAsDataURL(file);
     }
 
-    // Rotating status messages during analysis
     function startLoadingMessages() {
       const messages = [
         "Looking at your layout...",
         "Checking your lighting...",
         "Analysing cable management...",
         "Reviewing your equipment...",
-        "Calculating your overall score..."
+        "Calculating your score..."
       ];
       let index = 0;
       const statusEl = document.getElementById('loadingStatus');
@@ -229,16 +242,17 @@
         });
 
         clearInterval(loadingInterval);
+        const data = await res.json();
 
         if (!res.ok) {
-          throw new Error('Analysis failed.');
+          throw new Error(data.error || `HTTP ${res.status}`);
         }
 
-        const data = await res.json();
+        saveToHistory(data, selectedImageBase64);
         displayResults(data);
       } catch (err) {
         clearInterval(loadingInterval);
-        alert("Error analyzing setup. Please check your internet connection or API setup.");
+        alert(`API Error: ${err.message}`);
         showScreen('photoScreen');
       }
     }
@@ -266,151 +280,50 @@
         });
       }
 
-      showScreen('resultsScreen');
-    }
+      const strContainer = document.getElementById('strengthsContainer');
+      strContainer.innerHTML = (data.strengths || []).map(s => `
+        <div class="list-item"><span class="list-bullet">✓</span> ${s}</div>
+      `).join('');
 
-    window.onload = checkBetaAccess;
-  </script><script>
-    const VALID_KEYS = ['SETUP2026', 'VIP-TEST'];
-    for(let i = 1; i <= 100; i++) {
-      VALID_KEYS.push(`SETUP-VIP-${String(i).padStart(3, '0')}`);
-    }
-
-    let selectedImageBase64 = null;
-    let loadingInterval = null;
-
-    function checkBetaAccess() {
-      const savedKey = localStorage.getItem('setupscore_beta_key');
-      if (!savedKey || !VALID_KEYS.includes(savedKey)) {
-        document.getElementById('betaModal').style.display = 'flex';
-      }
-    }
-
-    function validateBetaKey() {
-      const inputKey = document.getElementById('betaKeyInput').value.trim().toUpperCase();
-      if (VALID_KEYS.includes(inputKey)) {
-        localStorage.setItem('setupscore_beta_key', inputKey);
-        document.getElementById('betaModal').style.display = 'none';
-      } else {
-        document.getElementById('betaKeyError').style.display = 'block';
-      }
-    }
-
-    function showScreen(screenId) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById(screenId).classList.add('active');
-    }
-
-    // Client-side HTML5 Canvas Image Compression
-    function handleImageUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement('canvas');
-          let width = img.width;
-          let height = img.height;
-          const maxDim = 1200;
-
-          if (width > height && width > maxDim) {
-            height *= maxDim / width;
-            width = maxDim;
-          } else if (height > maxDim) {
-            width *= maxDim / height;
-            height = maxDim;
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-
-          selectedImageBase64 = canvas.toDataURL('image/jpeg', 0.8);
-          
-          const preview = document.getElementById('imagePreview');
-          preview.src = selectedImageBase64;
-          preview.style.display = 'block';
-          document.getElementById('analyzeBtn').style.display = 'block';
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    // Rotating status messages during analysis
-    function startLoadingMessages() {
-      const messages = [
-        "Looking at your layout...",
-        "Checking your lighting...",
-        "Analysing cable management...",
-        "Reviewing your equipment...",
-        "Calculating your overall score..."
-      ];
-      let index = 0;
-      const statusEl = document.getElementById('loadingStatus');
-      statusEl.innerText = messages[0];
-
-      loadingInterval = setInterval(() => {
-        index = (index + 1) % messages.length;
-        statusEl.innerText = messages[index];
-      }, 1200);
-    }
-
-    async function startAnalysis() {
-      if (!selectedImageBase64) return;
-      showScreen('loadingScreen');
-      startLoadingMessages();
-
-      try {
-        const res = await fetch('/api/analyze', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ image: selectedImageBase64 })
-        });
-
-        clearInterval(loadingInterval);
-
-        if (!res.ok) {
-          throw new Error('Analysis failed.');
-        }
-
-        const data = await res.json();
-        displayResults(data);
-      } catch (err) {
-        clearInterval(loadingInterval);
-        alert("Error analyzing setup. Please check your internet connection or API setup.");
-        showScreen('photoScreen');
-      }
-    }
-
-    function displayResults(data) {
-      document.getElementById('scoreValue').innerText = (data.overallScore || 8.0) + " / 10";
-      document.getElementById('summaryText').innerText = data.summary || "Setup analysis complete.";
-      
-      const catContainer = document.getElementById('categoriesContainer');
-      catContainer.innerHTML = '';
-      
-      if (data.categories) {
-        Object.entries(data.categories).forEach(([key, score]) => {
-          catContainer.innerHTML += `
-            <div style="margin-bottom: 12px;">
-              <div style="display:flex; justify-content:space-between; font-size: 13px; font-weight: 600;">
-                <span style="text-transform: capitalize;">${key}</span>
-                <span>${score}/10</span>
-              </div>
-              <div class="progress-bar">
-                <div class="progress-fill" style="width: ${score * 10}%;"></div>
-              </div>
-            </div>
-          `;
-        });
-      }
+      const impContainer = document.getElementById('improvementsContainer');
+      impContainer.innerHTML = (data.improvements || []).map(i => `
+        <div class="list-item"><span class="list-bullet" style="color:#ff6b6b;">•</span> ${i}</div>
+      `).join('');
 
       showScreen('resultsScreen');
+    }
+
+    function saveToHistory(data, image) {
+      const history = JSON.parse(localStorage.getItem('setupscore_history') || '[]');
+      history.unshift({
+        id: Date.now(),
+        date: new Date().toLocaleDateString(),
+        score: data.overallScore,
+        image: image,
+        data: data
+      });
+      localStorage.setItem('setupscore_history', JSON.stringify(history.slice(0, 10)));
+    }
+
+    function renderHistory() {
+      const history = JSON.parse(localStorage.getItem('setupscore_history') || '[]');
+      const container = document.getElementById('historyContainer');
+      if (history.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-muted); font-size:14px;">No saved setups yet.</p>';
+        return;
+      }
+      container.innerHTML = history.map(item => `
+        <div class="card" style="display:flex; gap:12px; align-items:center;">
+          <img src="${item.image}" style="width:60px; height:60px; border-radius:10px; object-fit:cover;">
+          <div>
+            <div style="font-weight:bold; font-size:16px;">Score: ${item.score}/10</div>
+            <div style="color:var(--text-muted); font-size:12px;">${item.date}</div>
+          </div>
+        </div>
+      `).join('');
     }
 
     window.onload = checkBetaAccess;
   </script>
+</body>
+</html>
