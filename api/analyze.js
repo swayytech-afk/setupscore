@@ -56,8 +56,8 @@ Return ONLY valid JSON using this exact structure:
 
 All scores must be numbers between 0 and 10. Do not wrap the JSON in markdown code blocks.`;
 
-    // Updated model endpoint identifier
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+    // Updated API endpoint targeting gemini-3.6-flash
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
 
     const response = await fetch(geminiUrl, {
       method: 'POST',
