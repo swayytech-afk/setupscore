@@ -20,13 +20,16 @@ module.exports = async function handler(req, res) {
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      return res.status(500).json({ error: 'GEMINI_API_KEY environment variable is missing on Vercel.' });
+      return res.status(500).json({ 
+        error: 'Missing API Key', 
+        details: 'GEMINI_API_KEY environment variable is missing in Vercel settings.' 
+      });
     }
 
-    // Dynamic MIME type detection & Base64 cleaning
+    // Robust MIME detection and Base64 extraction
     const mimeMatch = image.match(/^data:(image\/\w+);base64,/);
     const mimeType = mimeMatch ? mimeMatch[1] : "image/jpeg";
-    const base64Data = image.replace(/^data:image\/\w+;base64,/, "");
+    const base64Data = image.includes(',') ? image.split(',')[1] : image;
 
     const promptText = `
       You are an expert desk setup, workspace aesthetic, and gaming rig reviewer.
@@ -53,7 +56,6 @@ module.exports = async function handler(req, res) {
       }
     `;
 
-    // Direct Gemini REST API endpoint
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
     const geminiRes = await fetch(apiUrl, {
@@ -82,9 +84,17 @@ module.exports = async function handler(req, res) {
 
     if (!geminiRes.ok) {
       const errText = await geminiRes.text();
+      let googleErrorMsg = errText;
+      try {
+        const parsedErr = JSON.parse(errText);
+        if (parsedErr.error && parsedErr.error.message) {
+          googleErrorMsg = parsedErr.error.message;
+        }
+      } catch (e) {}
+
       return res.status(geminiRes.status).json({ 
-        error: "Gemini API HTTP Error", 
-        details: errText 
+        error: `Gemini API Error (${geminiRes.status})`, 
+        details: googleErrorMsg 
       });
     }
 
@@ -92,7 +102,10 @@ module.exports = async function handler(req, res) {
     const candidateText = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!candidateText) {
-      return res.status(500).json({ error: "Empty response received from Gemini API." });
+      return res.status(500).json({ 
+        error: "Empty Response", 
+        details: "No response text was returned by the Gemini model." 
+      });
     }
 
     const parsedData = JSON.parse(candidateText);
@@ -101,7 +114,7 @@ module.exports = async function handler(req, res) {
   } catch (err) {
     console.error("Vercel Function Error:", err);
     return res.status(500).json({ 
-      error: "Failed to analyze setup photo.", 
+      error: "Server Error", 
       details: err.message || "Internal server error" 
     });
   }
