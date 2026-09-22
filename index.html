@@ -11,15 +11,19 @@
   <!-- Header -->
   <header class="border-b border-slate-800/80 bg-slate-900/50 backdrop-blur sticky top-0 z-50">
     <div class="max-w-4xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-teal-400 to-blue-500 flex items-center justify-center font-black text-slate-950 text-lg shadow-lg shadow-teal-500/20">
+      
+      <!-- Logo / Reset Button -->
+      <div class="flex items-center gap-3 cursor-pointer group" onclick="resetApp()" title="Click to Reset App">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-teal-400 to-blue-500 flex items-center justify-center font-black text-slate-950 text-lg shadow-lg shadow-teal-500/20 group-hover:scale-105 transition-transform">
           S
         </div>
         <div>
-          <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-slate-100 via-teal-200 to-teal-400 bg-clip-text text-transparent">
+          <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-slate-100 via-teal-200 to-teal-400 bg-clip-text text-transparent group-hover:opacity-90 transition">
             SetupScore AI
           </h1>
-          <p class="text-[11px] text-slate-400 font-mono">v0.5 • Workspace Vision & Value</p>
+          <button onclick="event.stopPropagation(); openChangelog();" class="text-[11px] text-teal-400/80 hover:text-teal-300 font-mono hover:underline flex items-center gap-1">
+            v0.5 • Workspace Vision & Value <span>📜</span>
+          </button>
         </div>
       </div>
 
@@ -61,9 +65,14 @@
 
       <div id="previewContainer" class="hidden mt-4 space-y-4">
         <img id="imagePreview" class="max-h-64 mx-auto rounded-xl border border-slate-800 shadow-md object-cover">
-        <button onclick="runAnalysis()" id="analyzeBtn" class="bg-teal-400 hover:bg-teal-300 text-slate-950 font-bold text-xs uppercase tracking-wider px-8 py-3 rounded-xl transition shadow-lg shadow-teal-500/10">
-          Run Analysis
-        </button>
+        <div class="flex items-center justify-center gap-3">
+          <button onclick="runAnalysis()" id="analyzeBtn" class="bg-teal-400 hover:bg-teal-300 text-slate-950 font-bold text-xs uppercase tracking-wider px-8 py-3 rounded-xl transition shadow-lg shadow-teal-500/10">
+            Run Analysis
+          </button>
+          <button onclick="resetApp()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs px-4 py-3 rounded-xl transition">
+            Clear
+          </button>
+        </div>
       </div>
 
       <div id="loading" class="hidden mt-4 py-2 text-teal-400 text-xs font-mono animate-pulse">
@@ -268,6 +277,36 @@
 
   </main>
 
+  <!-- Changelog Modal -->
+  <div id="changelogModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
+      <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
+        <h3 class="text-sm font-bold text-slate-100 uppercase tracking-wider flex items-center gap-2">
+          <span>📜</span> Version Changelog History
+        </h3>
+        <button onclick="closeChangelog()" class="text-slate-400 hover:text-slate-200 font-mono text-xs">✕ Close</button>
+      </div>
+      <div class="space-y-4 max-h-[60vh] overflow-y-auto pr-2 text-xs font-mono">
+        <div class="border-l-2 border-teal-400 pl-3">
+          <span class="text-teal-400 font-bold">v0.5 (Current)</span>
+          <p class="text-slate-300 mt-1">Added tabbed interface, client-side canvas compression, legacy GTX / Intel Core 1000 selectors, and restored instant logo reset button.</p>
+        </div>
+        <div class="border-l-2 border-slate-700 pl-3">
+          <span class="text-slate-400 font-bold">v0.4</span>
+          <p class="text-slate-400 mt-1">Introduced multi-currency support (AUD, USD, EUR, GBP) and itemized hardware valuation breakdown table.</p>
+        </div>
+        <div class="border-l-2 border-slate-700 pl-3">
+          <span class="text-slate-400 font-bold">v0.3</span>
+          <p class="text-slate-400 mt-1">Integrated AI Vision scoring engine for cables, lighting, aesthetics, and ergonomics evaluation.</p>
+        </div>
+        <div class="border-l-2 border-slate-700 pl-3">
+          <span class="text-slate-400 font-bold">v0.1 - v0.2</span>
+          <p class="text-slate-400 mt-1">Initial base layout, image upload dropzone, and responsive dark theme initialization.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     let base64Image = null;
     let latestAiScores = null;
@@ -278,6 +317,28 @@
       EUR: { rate: 0.92, symbol: "€" },
       GBP: { rate: 0.78, symbol: "£" }
     };
+
+    function resetApp() {
+      base64Image = null;
+      latestAiScores = null;
+      document.getElementById('imageInput').value = '';
+      document.getElementById('previewContainer').classList.add('hidden');
+      document.getElementById('aestheticResults').classList.add('hidden');
+      document.getElementById('aestheticBlank').classList.remove('hidden');
+      document.getElementById('gpuSelect').selectedIndex = 5;
+      document.getElementById('cpuSelect').selectedIndex = 4;
+      document.getElementById('monitorSelect').selectedIndex = 1;
+      switchTab('aesthetic');
+      calculateCostBreakdown();
+    }
+
+    function openChangelog() {
+      document.getElementById('changelogModal').classList.remove('hidden');
+    }
+
+    function closeChangelog() {
+      document.getElementById('changelogModal').classList.add('hidden');
+    }
 
     function switchTab(tab) {
       const isAesthetic = tab === 'aesthetic';
@@ -339,7 +400,6 @@
       if (!file) return;
 
       try {
-        // Compress photo locally before storing in memory
         base64Image = await compressImage(file);
         document.getElementById('imagePreview').src = base64Image;
         document.getElementById('previewContainer').classList.remove('hidden');
@@ -363,7 +423,6 @@
           body: JSON.stringify({ image: base64Image })
         });
 
-        // Safely parse JSON or handle server error response text
         const responseText = await res.text();
         let data;
         try {
@@ -394,7 +453,6 @@
       document.getElementById('scoreValue').textContent = data.overallScore ? data.overallScore.toFixed(1) : "N/A";
       document.getElementById('summaryText').textContent = data.summary || "Setup score analysis complete.";
 
-      // Render Categories
       const categoriesGrid = document.getElementById('categoriesGrid');
       const cats = data.categories || {};
       
@@ -413,7 +471,6 @@
         </div>
       `).join('');
 
-      // Render Lists
       document.getElementById('strengthsList').innerHTML = (data.strengths || []).map(s => `<li class="flex items-start gap-2"><span>•</span><span>${s}</span></li>`).join('');
       document.getElementById('improvementsList').innerHTML = (data.improvements || []).map(i => `<li class="flex items-start gap-2"><span>•</span><span>${i}</span></li>`).join('');
     }
@@ -422,13 +479,11 @@
       const currKey = document.getElementById('currencySelect').value;
       const { rate, symbol } = currencyRates[currKey];
 
-      // Manual Spec Values (USD Base)
       const gpuCost = parseFloat(document.getElementById('gpuSelect').value);
       const cpuCost = parseFloat(document.getElementById('cpuSelect').value);
       const monitorCost = parseFloat(document.getElementById('monitorSelect').value);
       const pcBasePlatformUsd = 200;
 
-      // AI Visual Estimates based on scores
       const ergoScore = latestAiScores?.categories?.ergonomics || 6.5;
       const lightingScore = latestAiScores?.categories?.lighting || 6.5;
       const aestheticScore = latestAiScores?.categories?.aesthetics || 6.5;
@@ -437,7 +492,6 @@
       const peripheralsUsd = Math.round(80 + (aestheticScore * 30));
       const lightingUsd = Math.round(30 + (lightingScore * 20));
 
-      // Converted Totals
       const pcHardware = Math.round((gpuCost + cpuCost + pcBasePlatformUsd) * rate);
       const monitors = Math.round(monitorCost * rate);
       const furniture = Math.round(furnitureUsd * rate);
@@ -446,7 +500,6 @@
 
       const totalCost = pcHardware + monitors + furniture + peripherals + lighting;
 
-      // Update Breakdown UI
       document.getElementById('costPc').textContent = `${symbol}${pcHardware.toLocaleString()}`;
       document.getElementById('costMonitors').textContent = `${symbol}${monitors.toLocaleString()}`;
       document.getElementById('costFurniture').textContent = `${symbol}${furniture.toLocaleString()}`;
@@ -455,14 +508,12 @@
 
       document.getElementById('totalCostDisplay').textContent = `${symbol}${totalCost.toLocaleString()}`;
 
-      // Tier Calculation
       let tier = "Budget / Minimalist";
       if (totalCost > 4500 * rate) tier = "Enthusiast / Ultra Tier";
       else if (totalCost > 2500 * rate) tier = "High-End Workstation";
       else if (totalCost > 1200 * rate) tier = "Mid-Range Setup";
       document.getElementById('costTierDisplay').textContent = `Tier: ${tier}`;
 
-      // Cost vs Aesthetic Ratio
       const overallScore = latestAiScores?.overallScore || 0;
       document.getElementById('costScoreRef').textContent = overallScore ? overallScore.toFixed(1) : "--";
       
@@ -521,7 +572,6 @@
       `).join('');
     }
 
-    // Default Initialization
     calculateCostBreakdown();
   </script>
 </body>
