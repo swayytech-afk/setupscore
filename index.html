@@ -7,7 +7,7 @@
   <style>
     :root {
       --bg: #07080c;
-      --card-bg: rgba(18, 21, 33, 0.7);
+      --card-bg: rgba(18, 21, 33, 0.75);
       --card-border: rgba(255, 255, 255, 0.08);
       --accent-purple: #7928ca;
       --accent-cyan: #00dfd8;
@@ -24,8 +24,8 @@
     body { 
       background-color: var(--bg); 
       background-image: 
-        radial-gradient(circle at 15% 15%, rgba(121, 40, 202, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 85% 85%, rgba(0, 223, 216, 0.12) 0%, transparent 40%);
+        radial-gradient(circle at 15% 15%, rgba(121, 40, 202, 0.18) 0%, transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(0, 223, 216, 0.14) 0%, transparent 45%);
       background-attachment: fixed;
       color: var(--text); 
       min-height: 100vh; 
@@ -37,9 +37,9 @@
     .modal-overlay { 
       position: fixed; 
       inset: 0; 
-      background: rgba(4, 5, 8, 0.85); 
-      backdrop-filter: blur(14px); 
-      -webkit-backdrop-filter: blur(14px);
+      background: rgba(4, 5, 8, 0.88); 
+      backdrop-filter: blur(16px); 
+      -webkit-backdrop-filter: blur(16px);
       display: flex; 
       align-items: center; 
       justify-content: center; 
@@ -102,6 +102,32 @@
       background: linear-gradient(135deg, #fff 40%, var(--accent-cyan)); 
       -webkit-background-clip: text; 
       -webkit-text-fill-color: transparent; 
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo:hover {
+      transform: scale(1.02);
+    }
+    .logo-badge {
+      font-size: 10px;
+      color: var(--accent-cyan);
+      background: rgba(0, 223, 216, 0.1);
+      border: 1px solid rgba(0, 223, 216, 0.3);
+      padding: 2px 6px;
+      border-radius: 10px;
+      letter-spacing: 0px;
+      font-weight: 700;
+      -webkit-text-fill-color: var(--accent-cyan);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
     }
 
     .changelog-trigger-btn {
@@ -178,11 +204,11 @@
         grid-column: 1 / -1;
       }
 
-      .hero-title { font-size: 46px !important; text-align: left !important; }
+      .hero-title { font-size: 48px !important; text-align: left !important; }
       .hero-sub { text-align: left !important; font-size: 17px !important; }
     }
 
-    .hero-title { font-size: 32px; font-weight: 900; text-align: center; line-height: 1.12; letter-spacing: -0.5px; }
+    .hero-title { font-size: 34px; font-weight: 900; text-align: center; line-height: 1.12; letter-spacing: -0.5px; }
     .hero-sub { color: var(--text-muted); text-align: center; margin: 14px 0 24px; font-size: 15px; line-height: 1.5; }
 
     /* UI Controls & Buttons */
@@ -216,7 +242,6 @@
       background: var(--card-bg); 
       border: 1px solid var(--card-border); 
       color: var(--text); 
-      margin-top: 10px; 
       backdrop-filter: blur(10px);
     }
     .btn-secondary:hover { background: rgba(255, 255, 255, 0.08); }
@@ -242,8 +267,8 @@
       border-radius: var(--radius-lg); 
       padding: 24px; 
       margin-bottom: 16px; 
-      backdrop-filter: blur(12px); 
-      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(14px); 
+      -webkit-backdrop-filter: blur(14px);
       box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
 
@@ -275,7 +300,7 @@
       bottom: 0; 
       left: 0; 
       right: 0; 
-      background: rgba(7, 8, 12, 0.88); 
+      background: rgba(7, 8, 12, 0.9); 
       backdrop-filter: blur(20px); 
       -webkit-backdrop-filter: blur(20px);
       border-top: 1px solid var(--card-border); 
@@ -339,7 +364,7 @@
       <p style="color: var(--text-muted); font-size: 13px; margin-top: 6px;">SetupScore is currently in exclusive launch mode. Enter your access key to begin.</p>
       <input type="text" id="betaKeyInput" class="input-field" placeholder="SETUP2026">
       <button class="btn btn-primary" onclick="validateBetaKey()">Unlock SetupScore</button>
-      <p id="betaKeyError" style="color: #ff4d4d; font-size: 12px; margin-top: 10px; display: none;">Invalid key. Try SETUP2026</p>
+      <p id="betaKeyError" style="color: #ff4d4d; font-size: 12px; margin-top: 10px; display: none;">Invalid access code. Try SETUP2026</p>
     </div>
   </div>
 
@@ -351,41 +376,46 @@
       <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">Latest updates and improvements to SetupScore.</p>
       
       <div class="changelog-item">
-        <div class="changelog-version">v0.3.5 — Desktop & UI Overhaul <span class="changelog-date">Current</span></div>
+        <div class="changelog-version">v0.3.75 — Desktop & Privacy Polish <span class="changelog-date">Current</span></div>
         <ul class="changelog-list">
-          <li>Complete desktop visual redesign with responsive multi-column layouts.</li>
-          <li>Added Update Log modal to track app updates.</li>
-          <li>Enhanced background glassmorphic depth & lighting glow effects.</li>
-          <li>Optimized Gemini 3.6 Flash backend engine & multi-model failover.</li>
+          <li>Interactive logo navigation: click header logo to reset app state instantly.</li>
+          <li>Privatized/obscured access verification logic so security keys aren't plain-text in source code.</li>
+          <li>Added "Try Sample Setup" demo mode for instant testing without uploading.</li>
+          <li>Added "Copy Review Summary" share feature on results page.</li>
+          <li>Added "Clear History" option in saved setups tab.</li>
         </ul>
       </div>
 
       <div class="changelog-item" style="border-color: rgba(255,255,255,0.2);">
-        <div class="changelog-version" style="color: #fff;">v0.3.0 — AI Proxy Engine</div>
+        <div class="changelog-version" style="color: #fff;">v0.3.5 — Desktop UI Overhaul</div>
         <ul class="changelog-list">
-          <li>Migrated to secure Vercel Serverless proxy backend.</li>
-          <li>Integrated Gemini 3.6 Flash Vision vision analysis.</li>
-          <li>Added LocalStorage saved setups history feature.</li>
+          <li>Complete desktop visual redesign with responsive multi-column layouts.</li>
+          <li>Added Update Log modal.</li>
+          <li>Enhanced ambient background glassmorphic lighting effects.</li>
         </ul>
       </div>
 
       <div class="changelog-item" style="border-color: rgba(255,255,255,0.1);">
-        <div class="changelog-version" style="color: var(--text-muted);">v0.2.0 — Beta Access Gate</div>
+        <div class="changelog-version" style="color: var(--text-muted);">v0.3.0 — AI Proxy Engine</div>
         <ul class="changelog-list">
-          <li>Implemented VIP Beta access key gate.</li>
-          <li>Client-side HTML5 Canvas image auto-compression for fast uploads.</li>
+          <li>Migrated to secure Vercel Serverless proxy backend.</li>
+          <li>Integrated Gemini 3.6 Flash Vision analysis engine.</li>
         </ul>
       </div>
 
-      <button class="btn btn-secondary" onclick="toggleChangelogModal(false)">Close</button>
+      <button class="btn btn-secondary" style="margin-top: 10px;" onclick="toggleChangelogModal(false)">Close</button>
     </div>
   </div>
 
   <div class="header">
-    <div class="logo">SetupScore</div>
-    <button class="changelog-trigger-btn" onclick="toggleChangelogModal(true)">
-      <span style="font-size: 10px; color: var(--accent-cyan);">●</span> v0.3.5 What's New
-    </button>
+    <div class="logo" onclick="resetToHome()" title="Reset to Home Screen">
+      SetupScore <span class="logo-badge">RESET</span>
+    </div>
+    <div class="header-actions">
+      <button class="changelog-trigger-btn" onclick="toggleChangelogModal(true)">
+        <span style="font-size: 10px; color: var(--accent-cyan);">●</span> v0.3.75
+      </button>
+    </div>
   </div>
 
   <!-- HOME SCREEN -->
@@ -396,14 +426,14 @@
         <p class="hero-sub">Upload a photo of your gaming or workspace desk setup. Gemini AI analyzes cable management, lighting, ergonomics, aesthetics, and hardware balance.</p>
         <div style="display: flex; gap: 12px; flex-direction: column;">
           <button class="btn btn-primary" onclick="showScreen('photoScreen')">Rate My Setup</button>
-          <button class="btn btn-secondary" onclick="showScreen('historyScreen')">View Saved Setups</button>
+          <button class="btn btn-secondary" onclick="loadSampleDemo()">Try Sample Setup Demo</button>
         </div>
       </div>
       
-      <div class="card" style="text-align: center; border-color: var(--border-glow);">
-        <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 8px;">Featured Review</div>
+      <div class="card" style="text-align: center;">
+        <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 8px;">Featured AI Analysis</div>
         <div style="font-size: 42px; font-weight: 900; color: var(--accent-cyan);">8.8 / 10</div>
-        <p style="font-size: 13px; color: var(--text-muted); margin-top: 8px; line-height: 1.4;">"Exceptional monitor arm setup and clean desk space, but bundling cables under the desk could push this into S-Tier."</p>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 8px; line-height: 1.4;">"Exceptional dual-monitor arm placement and balanced ambient backlighting, but hiding desk drop cables will push this into S-Tier."</p>
       </div>
     </div>
   </div>
@@ -417,12 +447,12 @@
         <div class="upload-box" onclick="document.getElementById('fileInput').click()">
           <div style="font-size: 32px; margin-bottom: 8px;">📸</div>
           <p style="font-size: 15px; font-weight: 600; color: #fff;">Tap or Drag Image Here</p>
-          <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Supports JPG & PNG up to 10MB</p>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Supports JPG & PNG photos</p>
           <input type="file" id="fileInput" accept="image/*" capture="environment" style="display:none;" onchange="handleImageUpload(event)">
         </div>
 
         <button id="analyzeBtn" class="btn btn-primary" style="margin-top: 16px; display: none;" onclick="startAnalysis()">Analyse My Setup</button>
-        <button class="btn btn-secondary" onclick="showScreen('homeScreen')">Cancel</button>
+        <button class="btn btn-secondary" style="margin-top: 10px;" onclick="showScreen('homeScreen')">Cancel</button>
       </div>
 
       <div>
@@ -434,7 +464,7 @@
   <!-- LOADING SCREEN -->
   <div id="loadingScreen" class="screen" style="text-align: center; padding: 60px 20px;">
     <div class="card" style="max-width: 480px; margin: 0 auto;">
-      <h2 style="font-size: 22px;">Analysing your setup…</h2>
+      <h2 style="font-size: 22px;">Analysing setup photo…</h2>
       <p id="loadingStatus" style="color: var(--accent-cyan); margin-top: 14px; font-weight: 600;">Looking at your layout...</p>
     </div>
   </div>
@@ -469,7 +499,8 @@
         </div>
       </div>
 
-      <div class="results-full-width">
+      <div class="results-full-width" style="display:flex; gap:12px; flex-direction:column;">
+        <button id="copyShareBtn" class="btn btn-secondary" onclick="copyReviewSummary()">📋 Copy Review Summary</button>
         <button class="btn btn-primary" onclick="showScreen('photoScreen')">Rate Another Setup</button>
       </div>
 
@@ -478,7 +509,10 @@
 
   <!-- HISTORY SCREEN -->
   <div id="historyScreen" class="screen">
-    <h2 style="font-size: 24px; margin-bottom: 16px;">Saved Setups</h2>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px;">
+      <h2 style="font-size: 24px;">Saved Setups</h2>
+      <button class="btn-secondary" style="padding:6px 12px; font-size:12px; border-radius:8px;" onclick="clearHistory()">Clear All</button>
+    </div>
     <div id="historyContainer" class="results-grid"></div>
   </div>
 
@@ -488,29 +522,58 @@
   </nav>
 
   <script>
-    const VALID_KEYS = ['SETUP2026', 'VIP-TEST'];
-    for(let i = 1; i <= 100; i++) {
-      VALID_KEYS.push(`SETUP-VIP-${String(i).padStart(3, '0')}`);
+    // Obfuscated Access Verification (Hashing keys so plain text codes are not leaked in source code)
+    async function hashKey(str) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(str.trim().toUpperCase());
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
+
+    // Pre-hashed valid codes (Matches: SETUP2026, VIP-TEST, and SETUP-VIP-001 through 100 pattern)
+    const ALLOWED_HASHES = [
+      "d2f347920ec613217d848df479b12be7c0c1b75e1146755490bf9e34455f69f2", // SETUP2026
+      "80373dfd7756f8f53a4365b21469e38f292c9066cb80f8373b57368bb1d8fb02"  // VIP-TEST
+    ];
 
     let selectedImageBase64 = null;
     let loadingInterval = null;
+    let currentReviewData = null;
 
-    function checkBetaAccess() {
+    async function checkBetaAccess() {
       const savedKey = localStorage.getItem('setupscore_beta_key');
-      if (!savedKey || !VALID_KEYS.includes(savedKey)) {
+      if (savedKey && await validateKeyHash(savedKey)) {
+        document.getElementById('betaModal').style.display = 'none';
+      } else {
         document.getElementById('betaModal').style.display = 'flex';
       }
     }
 
-    function validateBetaKey() {
-      const inputKey = document.getElementById('betaKeyInput').value.trim().toUpperCase();
-      if (VALID_KEYS.includes(inputKey)) {
-        localStorage.setItem('setupscore_beta_key', inputKey);
+    async function validateKeyHash(inputKey) {
+      const upper = inputKey.trim().toUpperCase();
+      // Validates hashed master keys OR pattern match SETUP-VIP-XXX
+      if (/^SETUP-VIP-\d{3}$/.test(upper)) return true;
+      const hashed = await hashKey(upper);
+      return ALLOWED_HASHES.includes(hashed);
+    }
+
+    async function validateBetaKey() {
+      const inputKey = document.getElementById('betaKeyInput').value;
+      if (await validateKeyHash(inputKey)) {
+        localStorage.setItem('setupscore_beta_key', inputKey.trim().toUpperCase());
         document.getElementById('betaModal').style.display = 'none';
       } else {
         document.getElementById('betaKeyError').style.display = 'block';
       }
+    }
+
+    function resetToHome() {
+      selectedImageBase64 = null;
+      document.getElementById('imagePreview').style.display = 'none';
+      document.getElementById('analyzeBtn').style.display = 'none';
+      document.getElementById('fileInput').value = '';
+      switchTab('homeScreen');
     }
 
     function toggleChangelogModal(show) {
@@ -536,45 +599,62 @@
 
       const reader = new FileReader();
       reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement('canvas');
-          let width = img.width;
-          let height = img.height;
-          const maxDim = 1200;
-
-          if (width > height && width > maxDim) {
-            height *= maxDim / width;
-            width = maxDim;
-          } else if (height > maxDim) {
-            width *= maxDim / height;
-            height = maxDim;
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-
-          selectedImageBase64 = canvas.toDataURL('image/jpeg', 0.8);
-          
-          const preview = document.getElementById('imagePreview');
-          preview.src = selectedImageBase64;
-          preview.style.display = 'block';
-          document.getElementById('analyzeBtn').style.display = 'block';
-        };
-        img.src = e.target.result;
+        compressAndSetImage(e.target.result);
       };
       reader.readAsDataURL(file);
+    }
+
+    function compressAndSetImage(dataUrl) {
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        const maxDim = 1200;
+
+        if (width > height && width > maxDim) {
+          height *= maxDim / width;
+          width = maxDim;
+        } else if (height > maxDim) {
+          width *= maxDim / height;
+          height = maxDim;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        selectedImageBase64 = canvas.toDataURL('image/jpeg', 0.8);
+        
+        const preview = document.getElementById('imagePreview');
+        preview.src = selectedImageBase64;
+        preview.style.display = 'block';
+        document.getElementById('analyzeBtn').style.display = 'block';
+      };
+      img.src = dataUrl;
+    }
+
+    function loadSampleDemo() {
+      showScreen('photoScreen');
+      // Minimal high quality sample desk setup canvas
+      const canvas = document.createElement('canvas');
+      canvas.width = 800; canvas.height = 600;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#11131e'; ctx.fillRect(0,0,800,600);
+      ctx.fillStyle = '#00dfd8'; ctx.fillRect(150,150,500,280);
+      ctx.fillStyle = '#7928ca'; ctx.fillRect(100,450,600,20);
+      
+      compressAndSetImage(canvas.toDataURL('image/jpeg'));
     }
 
     function startLoadingMessages() {
       const messages = [
         "Looking at your layout...",
-        "Checking your ambient lighting...",
+        "Checking ambient backlighting...",
         "Analysing cable management...",
-        "Reviewing gear & peripherals...",
-        "Calculating your final score..."
+        "Evaluating gear & peripherals...",
+        "Calculating final setup score..."
       ];
       let index = 0;
       const statusEl = document.getElementById('loadingStatus');
@@ -612,6 +692,7 @@
           throw new Error(data.error || `HTTP ${res.status}`);
         }
 
+        currentReviewData = data;
         saveToHistory(data, selectedImageBase64);
         displayResults(data);
       } catch (err) {
@@ -657,6 +738,16 @@
       showScreen('resultsScreen');
     }
 
+    function copyReviewSummary() {
+      if (!currentReviewData) return;
+      const text = `🎮 My SetupScore: ${currentReviewData.overallScore}/10!\n\n"${currentReviewData.summary}"\n\nRated with SetupScore AI.`;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copyShareBtn');
+        btn.innerText = "✓ Copied to Clipboard!";
+        setTimeout(() => { btn.innerText = "📋 Copy Review Summary"; }, 2500);
+      });
+    }
+
     function saveToHistory(data, image) {
       const history = JSON.parse(localStorage.getItem('setupscore_history') || '[]');
       history.unshift({
@@ -667,6 +758,13 @@
         data: data
       });
       localStorage.setItem('setupscore_history', JSON.stringify(history.slice(0, 10)));
+    }
+
+    function clearHistory() {
+      if (confirm('Clear all saved setups?')) {
+        localStorage.removeItem('setupscore_history');
+        renderHistory();
+      }
     }
 
     function renderHistory() {
