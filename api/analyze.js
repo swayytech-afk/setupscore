@@ -1,6 +1,6 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // CORS & Preflight headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -11,28 +11,25 @@ export default async function handler(req, res) {
   }
 
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed. Please send a POST request.' });
+    return res.status(405).json({ error: 'Method not allowed.' });
   }
 
   try {
     const { image } = req.body || {};
     if (!image) {
-      return res.status(400).json({ error: 'No image data provided in request body.' });
+      return res.status(400).json({ error: 'No image data provided.' });
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      return res.status(500).json({ 
-        error: 'Server misconfiguration: GEMINI_API_KEY environment variable is missing on Vercel.' 
-      });
+      return res.status(500).json({ error: 'GEMINI_API_KEY environment variable is missing on Vercel.' });
     }
 
-    // Dynamic MIME type detection (supports JPEG, PNG, WEBP)
+    // Dynamic MIME type detection
     const mimeMatch = image.match(/^data:(image\/\w+);base64,/);
     const mimeType = mimeMatch ? mimeMatch[1] : "image/jpeg";
     const base64Data = image.replace(/^data:image\/\w+;base64,/, "");
 
-    // Initialize Gemini AI with forced JSON mode
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ 
       model: "gemini-1.5-flash",
@@ -49,7 +46,7 @@ export default async function handler(req, res) {
       2. Category scores (float from 1.0 to 10.0 each): Cables, Lighting, Aesthetics, Ergonomics, Hardware.
       3. Key Strengths (3 concise bullet points).
       4. Recommended Improvements (3 actionable bullet points).
-      5. Summary (2 concise sentences summarizing the workspace quality).
+      5. Summary (2 concise sentences summarizing workspace quality).
 
       Return a JSON object with this exact structure:
       {
@@ -80,17 +77,13 @@ export default async function handler(req, res) {
     const rawText = result.response.text();
     const parsedData = JSON.parse(rawText);
 
-    if (!parsedData.overallScore || !parsedData.categories) {
-      throw new Error("Received malformed review structure from model response.");
-    }
-
     return res.status(200).json(parsedData);
 
   } catch (err) {
-    console.error("SetupScore API Error:", err);
+    console.error("API Error:", err);
     return res.status(500).json({ 
       error: "Failed to analyze setup photo.", 
-      details: err.message || "Internal server error"
+      details: err.message || "Internal server error" 
     });
   }
-}
+};
