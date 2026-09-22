@@ -65,7 +65,7 @@
       <span class="beta-badge">VIP Launch Beta</span>
       <h2 style="font-size: 20px;">Enter Beta Access Key</h2>
       <p style="color: var(--text-muted); font-size: 13px; margin-top: 6px;">SetupScore is currently in exclusive launch mode. Enter your access key to begin.</p>
-      <input type="text" id="betaKeyInput" class="input-field" placeholder="SETUP-VIP-001">
+      <input type="text" id="betaKeyInput" class="input-field" placeholder="SETUP2026">
       <button class="btn btn-primary" onclick="validateBetaKey()">Unlock SetupScore</button>
       <p id="betaKeyError" style="color: #ff4d4d; font-size: 12px; margin-top: 10px; display: none;">Invalid key. Try SETUP2026</p>
     </div>
@@ -136,8 +136,8 @@
   </div>
 
   <nav class="bottom-nav">
-    <div class="nav-item active" onclick="showScreen('homeScreen')">Home</div>
-    <div class="nav-item" onclick="showScreen('historyScreen')">History</div>
+    <div class="nav-item active" id="navHome" onclick="switchTab('homeScreen')">Home</div>
+    <div class="nav-item" id="navHistory" onclick="switchTab('historyScreen')">History</div>
   </nav>
 
   <script>
@@ -172,7 +172,13 @@
       if (screenId === 'historyScreen') renderHistory();
     }
 
-    // Client-side HTML5 Canvas Image Compression
+    function switchTab(screenId) {
+      showScreen(screenId);
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      if (screenId === 'homeScreen') document.getElementById('navHome').classList.add('active');
+      if (screenId === 'historyScreen') document.getElementById('navHistory').classList.add('active');
+    }
+
     function handleImageUpload(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -243,13 +249,12 @@
 
         clearInterval(loadingInterval);
 
-        // Read raw text first to handle non-JSON server errors cleanly
         const responseText = await res.text();
         let data;
         try {
           data = JSON.parse(responseText);
         } catch (e) {
-          throw new Error(`Server Response: ${responseText.substring(0, 180)}`);
+          throw new Error(`Server Output: ${responseText.substring(0, 180)}`);
         }
 
         if (!res.ok) {
@@ -264,6 +269,29 @@
         showScreen('photoScreen');
       }
     }
+
+    function displayResults(data) {
+      document.getElementById('scoreValue').innerText = (data.overallScore || 8.0) + " / 10";
+      document.getElementById('summaryText').innerText = data.summary || "Setup analysis complete.";
+      
+      const catContainer = document.getElementById('categoriesContainer');
+      catContainer.innerHTML = '';
+      
+      if (data.categories) {
+        Object.entries(data.categories).forEach(([key, score]) => {
+          catContainer.innerHTML += `
+            <div style="margin-bottom: 12px;">
+              <div style="display:flex; justify-content:space-between; font-size: 13px; font-weight: 600;">
+                <span style="text-transform: capitalize;">${key}</span>
+                <span>${score}/10</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${score * 10}%;"></div>
+              </div>
+            </div>
+          `;
+        });
+      }
 
       const strContainer = document.getElementById('strengthsContainer');
       strContainer.innerHTML = (data.strengths || []).map(s => `
