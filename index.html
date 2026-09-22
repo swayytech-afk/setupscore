@@ -242,7 +242,15 @@
         });
 
         clearInterval(loadingInterval);
-        const data = await res.json();
+
+        // Read raw text first to handle non-JSON server errors cleanly
+        const responseText = await res.text();
+        let data;
+        try {
+          data = JSON.parse(responseText);
+        } catch (e) {
+          throw new Error(`Server Response: ${responseText.substring(0, 180)}`);
+        }
 
         if (!res.ok) {
           throw new Error(data.error || `HTTP ${res.status}`);
@@ -256,29 +264,6 @@
         showScreen('photoScreen');
       }
     }
-
-    function displayResults(data) {
-      document.getElementById('scoreValue').innerText = (data.overallScore || 8.0) + " / 10";
-      document.getElementById('summaryText').innerText = data.summary || "Setup analysis complete.";
-      
-      const catContainer = document.getElementById('categoriesContainer');
-      catContainer.innerHTML = '';
-      
-      if (data.categories) {
-        Object.entries(data.categories).forEach(([key, score]) => {
-          catContainer.innerHTML += `
-            <div style="margin-bottom: 12px;">
-              <div style="display:flex; justify-content:space-between; font-size: 13px; font-weight: 600;">
-                <span style="text-transform: capitalize;">${key}</span>
-                <span>${score}/10</span>
-              </div>
-              <div class="progress-bar">
-                <div class="progress-fill" style="width: ${score * 10}%;"></div>
-              </div>
-            </div>
-          `;
-        });
-      }
 
       const strContainer = document.getElementById('strengthsContainer');
       strContainer.innerHTML = (data.strengths || []).map(s => `
