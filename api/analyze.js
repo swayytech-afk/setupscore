@@ -1,5 +1,3 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-
 module.exports = async function handler(req, res) {
   // CORS & Preflight headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -25,21 +23,12 @@ module.exports = async function handler(req, res) {
       return res.status(500).json({ error: 'GEMINI_API_KEY environment variable is missing on Vercel.' });
     }
 
-    // Dynamic MIME type detection
+    // Dynamic MIME type detection & Base64 cleaning
     const mimeMatch = image.match(/^data:(image\/\w+);base64,/);
     const mimeType = mimeMatch ? mimeMatch[1] : "image/jpeg";
     const base64Data = image.replace(/^data:image\/\w+;base64,/, "");
 
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ 
-      model: "gemini-1.5-flash",
-      generationConfig: {
-        responseMimeType: "application/json",
-        temperature: 0.4
-      }
-    });
-
-    const prompt = `
+    const promptText = `
       You are an expert desk setup, workspace aesthetic, and gaming rig reviewer.
       Analyze this desk setup photo and evaluate these criteria:
       1. Overall Score (float from 1.0 to 10.0)
@@ -64,23 +53,53 @@ module.exports = async function handler(req, res) {
       }
     `;
 
-    const result = await model.generateContent([
-      prompt,
-      {
-        inlineData: {
-          data: base64Data,
-          mimeType: mimeType
+    // Direct Gemini REST API endpoint
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+    const geminiRes = await fetch(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              { text: promptText },
+              {
+                inline_data: {
+                  mime_type: mimeType,
+                  data: base64Data
+                }
+              }
+            ]
+          }
+        ],
+        generationConfig: {
+          responseMimeType: "application/json",
+          temperature: 0.4
         }
-      }
-    ]);
+      })
+    });
 
-    const rawText = result.response.text();
-    const parsedData = JSON.parse(rawText);
+    if (!geminiRes.ok) {
+      const errText = await geminiRes.text();
+      return res.status(geminiRes.status).json({ 
+        error: "Gemini API HTTP Error", 
+        details: errText 
+      });
+    }
 
+    const geminiData = await geminiRes.json();
+    const candidateText = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!candidateText) {
+      return res.status(500).json({ error: "Empty response received from Gemini API." });
+    }
+
+    const parsedData = JSON.parse(candidateText);
     return res.status(200).json(parsedData);
 
   } catch (err) {
-    console.error("API Error:", err);
+    console.error("Vercel Function Error:", err);
     return res.status(500).json({ 
       error: "Failed to analyze setup photo.", 
       details: err.message || "Internal server error" 
