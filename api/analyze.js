@@ -1,5 +1,5 @@
 module.exports = async function handler(req, res) {
-  // Enable CORS
+  // CORS Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -25,7 +25,6 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    // Clean Base64 header prefix
     const base64Data = image.replace(/^data:image\/\w+;base64,/, '');
 
     const prompt = `Analyse this gaming/desk setup photo as a professional setup reviewer.
@@ -56,47 +55,65 @@ Return ONLY valid JSON using this exact structure:
 
 All scores must be numbers between 0 and 10. Do not wrap the JSON in markdown code blocks.`;
 
-    // Updated API endpoint targeting gemini-3.6-flash
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
+    // Candidate models to try in sequence if one hits high demand
+    const models = ['gemini-3.6-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+    let lastErrorMessage = '';
 
-    const response = await fetch(geminiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              { text: prompt },
-              {
-                inline_data: {
-                  mime_type: 'image/jpeg',
-                  data: base64Data,
+    for (const model of models) {
+      for (let attempt = 1; attempt <= 2; attempt++) {
+        try {
+          const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+
+          const response = await fetch(geminiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [
+                {
+                  parts: [
+                    { text: prompt },
+                    {
+                      inline_data: {
+                        mime_type: 'image/jpeg',
+                        data: base64Data,
+                      },
+                    },
+                  ],
                 },
-              },
-            ],
-          },
-        ],
-      })
+              ],
+            })
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (rawText) {
+              const cleanedJsonText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+              const parsedJson = JSON.parse(cleanedJsonText);
+              return res.status(200).json(parsedJson);
+            }
+          }
+
+          lastErrorMessage = data.error?.message || `HTTP ${response.status}`;
+
+          // If high demand or rate limit, wait 1 second before retrying
+          if (response.status === 429 || response.status === 503 || lastErrorMessage.includes('high demand')) {
+            await new Promise(r => setTimeout(r, 1000));
+          } else {
+            // Move on to next model if it's a non-capacity issue
+            break;
+          }
+        } catch (err) {
+          lastErrorMessage = err.message;
+          await new Promise(r => setTimeout(r, 1000));
+        }
+      }
+    }
+
+    return res.status(503).json({ 
+      error: `Gemini API is temporarily busy across all models. Please try again in 10 seconds. (${lastErrorMessage})` 
     });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return res.status(response.status).json({ 
-        error: data.error?.message || 'Gemini API rejected the request.', 
-        details: data 
-      });
-    }
-
-    const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!rawText) {
-      return res.status(500).json({ error: 'Gemini returned an empty response.' });
-    }
-
-    const cleanedJsonText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
-    const parsedJson = JSON.parse(cleanedJsonText);
-
-    return res.status(200).json(parsedJson);
 
   } catch (err) {
     return res.status(500).json({ 
