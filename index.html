@@ -2,755 +2,352 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>SetupScore — Your Setup. Rated by AI.</title>
-  <style>
-    :root {
-      --bg: #07080c;
-      --card-bg: rgba(18, 21, 33, 0.75);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --accent-purple: #7928ca;
-      --accent-cyan: #00dfd8;
-      --accent-blue: #0070f3;
-      --text: #f3f4f6;
-      --text-muted: #9ca3af;
-      --radius-lg: 20px;
-      --radius-md: 14px;
-      --glow: rgba(0, 223, 216, 0.15);
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
-    
-    body { 
-      background-color: var(--bg); 
-      background-image: 
-        radial-gradient(circle at 15% 15%, rgba(121, 40, 202, 0.18) 0%, transparent 45%),
-        radial-gradient(circle at 85% 85%, rgba(0, 223, 216, 0.14) 0%, transparent 45%);
-      background-attachment: fixed;
-      color: var(--text); 
-      min-height: 100vh; 
-      padding-bottom: 90px; 
-      overflow-x: hidden; 
-    }
-
-    /* Modal Overlay */
-    .modal-overlay { 
-      position: fixed; 
-      inset: 0; 
-      background: rgba(4, 5, 8, 0.88); 
-      backdrop-filter: blur(16px); 
-      -webkit-backdrop-filter: blur(16px);
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      z-index: 999; 
-      padding: 20px; 
-      animation: fadeIn 0.2s ease;
-    }
-    
-    .modal-card { 
-      background: rgba(15, 18, 28, 0.95); 
-      border: 1px solid var(--card-border); 
-      border-radius: var(--radius-lg); 
-      padding: 28px; 
-      width: 100%; 
-      max-width: 480px; 
-      box-shadow: 0 20px 50px rgba(0,0,0,0.8); 
-      position: relative;
-      max-height: 85vh;
-      overflow-y: auto;
-    }
-
-    .close-modal-btn {
-      position: absolute;
-      top: 16px;
-      right: 18px;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 22px;
-      cursor: pointer;
-    }
-    .close-modal-btn:hover { color: #fff; }
-
-    .beta-badge { 
-      display: inline-block; 
-      background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue)); 
-      font-size: 11px; 
-      font-weight: 700; 
-      padding: 4px 10px; 
-      border-radius: 20px; 
-      margin-bottom: 12px; 
-      text-transform: uppercase; 
-      letter-spacing: 1px; 
-    }
-
-    /* Top Navigation Header */
-    .header { 
-      padding: 20px 30px; 
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    
-    .logo { 
-      font-weight: 900; 
-      font-size: 24px; 
-      letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #fff 40%, var(--accent-cyan)); 
-      -webkit-background-clip: text; 
-      -webkit-text-fill-color: transparent; 
-      cursor: pointer;
-      user-select: none;
-      transition: transform 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .logo:hover { transform: scale(1.02); }
-    
-    .logo-badge {
-      font-size: 10px;
-      color: var(--accent-cyan);
-      background: rgba(0, 223, 216, 0.1);
-      border: 1px solid rgba(0, 223, 216, 0.3);
-      padding: 2px 6px;
-      border-radius: 10px;
-      letter-spacing: 0px;
-      font-weight: 700;
-      -webkit-text-fill-color: var(--accent-cyan);
-    }
-
-    .header-actions { display: flex; gap: 10px; align-items: center; }
-
-    .changelog-trigger-btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--card-border);
-      color: var(--text);
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-    }
-    .changelog-trigger-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255,255,255,0.2);
-    }
-    
-    /* Layout Containers */
-    .screen { 
-      display: none; 
-      padding: 20px; 
-      max-width: 1050px; 
-      margin: 0 auto; 
-      animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); 
-    }
-    .screen.active { display: block; }
-    
-    @keyframes fadeIn { 
-      from { opacity: 0; transform: translateY(8px); } 
-      to { opacity: 1; transform: translateY(0); } 
-    }
-
-    /* Desktop Responsive Grid Layouts */
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 28px;
-      align-items: center;
-      margin-top: 10px;
-    }
-
-    .upload-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
-    }
-
-    .results-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
-    }
-
-    @media (min-width: 768px) {
-      .hero-grid {
-        grid-template-columns: 1.2fr 0.8fr;
-        padding: 40px 0;
-      }
-
-      .upload-grid {
-        grid-template-columns: 1fr 1fr;
-        align-items: start;
-      }
-
-      .results-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .results-full-width { grid-column: 1 / -1; }
-
-      .hero-title { font-size: 48px !important; text-align: left !important; }
-      .hero-sub { text-align: left !important; font-size: 17px !important; }
-    }
-
-    .hero-title { font-size: 34px; font-weight: 900; text-align: center; line-height: 1.12; letter-spacing: -0.5px; }
-    .hero-sub { color: var(--text-muted); text-align: center; margin: 14px 0 24px; font-size: 15px; line-height: 1.5; }
-
-    /* UI Controls & Buttons */
-    .btn { 
-      width: 100%; 
-      padding: 16px; 
-      border-radius: var(--radius-md); 
-      border: none; 
-      font-weight: 700; 
-      font-size: 16px; 
-      cursor: pointer; 
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      gap: 8px; 
-    }
-    .btn:hover { transform: translateY(-2px); }
-    .btn:active { transform: translateY(0); }
-
-    .btn-primary { 
-      background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue)); 
-      color: white; 
-      box-shadow: 0 4px 25px rgba(121, 40, 202, 0.4); 
-    }
-    .btn-primary:hover { box-shadow: 0 6px 30px rgba(121, 40, 202, 0.6); }
-    
-    .btn-secondary { 
-      background: var(--card-bg); 
-      border: 1px solid var(--card-border); 
-      color: var(--text); 
-      backdrop-filter: blur(10px);
-    }
-    .btn-secondary:hover { background: rgba(255, 255, 255, 0.08); }
-    
-    .input-field { 
-      width: 100%; 
-      padding: 14px; 
-      border-radius: var(--radius-md); 
-      background: rgba(255,255,255,0.04); 
-      border: 1px solid var(--card-border); 
-      color: white; 
-      font-size: 16px; 
-      text-align: center; 
-      margin: 16px 0; 
-      text-transform: uppercase; 
-      letter-spacing: 2px; 
-    }
-    .input-field:focus { outline: none; border-color: var(--accent-cyan); }
-
-    .card { 
-      background: var(--card-bg); 
-      border: 1px solid var(--card-border); 
-      border-radius: var(--radius-lg); 
-      padding: 24px; 
-      margin-bottom: 16px; 
-      backdrop-filter: blur(14px); 
-      -webkit-backdrop-filter: blur(14px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    }
-
-    .upload-box { 
-      border: 2px dashed rgba(255,255,255,0.15); 
-      border-radius: var(--radius-lg); 
-      padding: 40px 20px; 
-      text-align: center; 
-      cursor: pointer; 
-      background: rgba(255,255,255,0.015); 
-      transition: all 0.2s ease;
-    }
-    .upload-box:hover {
-      border-color: var(--accent-cyan);
-      background: rgba(0, 223, 216, 0.03);
-    }
-
-    .preview-img { 
-      width: 100%; 
-      border-radius: var(--radius-md); 
-      max-height: 380px; 
-      object-fit: cover; 
-      border: 1px solid var(--card-border);
-    }
-
-    /* Navigation Bar */
-    .bottom-nav { 
-      position: fixed; 
-      bottom: 0; 
-      left: 0; 
-      right: 0; 
-      background: rgba(7, 8, 12, 0.9); 
-      backdrop-filter: blur(20px); 
-      -webkit-backdrop-filter: blur(20px);
-      border-top: 1px solid var(--card-border); 
-      display: flex; 
-      justify-content: center; 
-      gap: 40px;
-      padding: 14px 0; 
-      z-index: 100; 
-    }
-    .nav-item { 
-      color: var(--text-muted); 
-      text-decoration: none; 
-      font-size: 13px; 
-      font-weight: 600; 
-      text-align: center; 
-      cursor: pointer; 
-      transition: color 0.2s ease;
-    }
-    .nav-item:hover { color: #fff; }
-    .nav-item.active { color: var(--accent-cyan); }
-
-    .progress-bar { height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; margin-top: 8px; }
-    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan)); width: 0%; transition: width 1s ease; }
-
-    .list-item { font-size: 14px; color: var(--text); margin-bottom: 10px; display: flex; align-items: flex-start; gap: 10px; line-height: 1.4; }
-    .list-bullet { color: var(--accent-cyan); font-weight: bold; }
-
-    /* Update Log Timeline UI */
-    .changelog-item {
-      border-left: 2px solid var(--accent-purple);
-      padding-left: 14px;
-      margin-bottom: 20px;
-      text-align: left;
-    }
-    .changelog-version {
-      font-size: 14px;
-      font-weight: 800;
-      color: var(--accent-cyan);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .changelog-date { font-size: 11px; color: var(--text-muted); font-weight: 400; }
-    .changelog-list {
-      margin-top: 8px;
-      font-size: 13px;
-      color: var(--text-muted);
-      list-style-type: none;
-    }
-    .changelog-list li { margin-bottom: 4px; line-height: 1.4; }
-    .changelog-list li::before { content: "• "; color: var(--accent-purple); font-weight: bold; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Desk Setup & Cost Analyzer v0.5</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans pb-12">
 
-  <!-- BETA GATE MODAL -->
-  <div id="betaModal" class="modal-overlay" style="display: none;">
-    <div class="modal-card" style="text-align: center;">
-      <span class="beta-badge">VIP Launch Beta</span>
-      <h2 style="font-size: 22px;">Enter Beta Access Key</h2>
-      <p style="color: var(--text-muted); font-size: 13px; margin-top: 6px;">SetupScore is currently in exclusive launch mode. Enter your access key to begin.</p>
-      <input type="text" id="betaKeyInput" class="input-field" placeholder="SETUP2026">
-      <button class="btn btn-primary" onclick="validateBetaKey()">Unlock SetupScore</button>
-      <p id="betaKeyError" style="color: #ff4d4d; font-size: 12px; margin-top: 10px; display: none;">Invalid access code. Try SETUP2026</p>
-    </div>
-  </div>
-
-  <!-- UPDATE LOG MODAL -->
-  <div id="changelogModal" class="modal-overlay" style="display: none;">
-    <div class="modal-card">
-      <button class="close-modal-btn" onclick="toggleChangelogModal(false)">&times;</button>
-      <h2 style="font-size: 20px; margin-bottom: 4px;">What's New</h2>
-      <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">Latest updates and improvements to SetupScore.</p>
+  <header class="border-b border-slate-800 bg-slate-950 py-6 px-4">
+    <div class="max-w-4xl mx-auto flex flex-wrap justify-between items-center gap-4">
+      <div>
+        <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-teal-400 bg-clip-text text-transparent">
+          Workspace AI & Cost Analyzer
+        </h1>
+        <p class="text-xs text-slate-400 mt-1">Version 0.5 — Visual Aesthetics & Budget Evaluator</p>
+      </div>
       
-      <div class="changelog-item">
-        <div class="changelog-version">v0.3.76 — Access Gate Fix <span class="changelog-date">Current</span></div>
-        <ul class="changelog-list">
-          <li>Fixed beta key validation bug across non-HTTPS preview environments.</li>
-          <li>Interactive logo navigation: click header logo to reset app state instantly.</li>
-          <li>Added "Try Sample Setup" demo mode for instant testing.</li>
-          <li>Added "Copy Review Summary" share feature.</li>
-        </ul>
+      <!-- Currency Selector -->
+      <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
+        <label for="currencySelect" class="text-xs text-slate-400 font-medium">Currency:</label>
+        <select id="currencySelect" onchange="calculateTotalCost()" class="bg-slate-900 text-slate-200 text-sm font-semibold rounded px-2 py-1 outline-none border border-slate-700">
+          <option value="USD">USD ($)</option>
+          <option value="AUD" selected>AUD ($)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="GBP">GBP (£)</option>
+        </select>
       </div>
+    </div>
+  </header>
 
-      <div class="changelog-item" style="border-color: rgba(255,255,255,0.2);">
-        <div class="changelog-version" style="color: #fff;">v0.3.5 — Desktop UI Overhaul</div>
-        <ul class="changelog-list">
-          <li>Complete desktop visual redesign with responsive multi-column layouts.</li>
-          <li>Added Update Log modal.</li>
-          <li>Enhanced ambient background glassmorphic lighting effects.</li>
-        </ul>
+  <main class="max-w-4xl mx-auto px-4 py-8 space-y-8">
+
+    <!-- Manual Specs Input Section -->
+    <section class="bg-slate-800/80 border border-slate-700 rounded-2xl p-6 shadow-xl">
+      <h2 class="text-lg font-semibold text-slate-200 mb-4 flex items-center gap-2">
+        <span>💻</span> Step 1: Hardware Specs (Internal Specs)
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Graphics Card (GPU)</label>
+          <select id="gpuSelect" onchange="calculateTotalCost()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-200">
+            <option value="300">Entry Level (e.g. RTX 3050 / RX 6600)</option>
+            <option value="600" selected>Mid-Range (e.g. RTX 4060 Ti / RX 7700 XT)</option>
+            <option value="1100">High-End (e.g. RTX 4080 Super / RX 7900 XTX)</option>
+            <option value="2000">Enthusiast (e.g. RTX 4090 / RTX 5090)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">CPU & Platform</label>
+          <select id="cpuSelect" onchange="calculateTotalCost()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-200">
+            <option value="250">Budget 6-Core (e.g. i5-13400 / Ryzen 5 7600)</option>
+            <option value="450" selected>Mid-Range (e.g. i7-14700K / Ryzen 7 7800X3D)</option>
+            <option value="800">Flagship (e.g. i9-14900K / Ryzen 9 9950X)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Display / Monitors</label>
+          <select id="monitorSelect" onchange="calculateTotalCost()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-200">
+            <option value="200">Single 1080p / 144Hz Monitor</option>
+            <option value="500" selected>Single 1440p / 240Hz Gaming Display</option>
+            <option value="900">Dual 1440p Setup / Ultrawide</option>
+            <option value="1600">4K OLED Gaming Display / Triple Monitors</option>
+          </select>
+        </div>
       </div>
+    </section>
 
-      <button class="btn btn-secondary" style="margin-top: 10px;" onclick="toggleChangelogModal(false)">Close</button>
-    </div>
-  </div>
+    <!-- Upload Image Section -->
+    <section class="bg-slate-800/80 border border-slate-700 rounded-2xl p-6 shadow-xl text-center">
+      <h2 class="text-lg font-semibold text-slate-200 mb-2 flex items-center justify-center gap-2">
+        <span>📸</span> Step 2: Upload Setup Photo
+      </h2>
+      <p class="text-xs text-slate-400 mb-4">Gemini AI will score aesthetics and estimate desk, seating, audio, and lighting costs.</p>
 
-  <div class="header">
-    <div class="logo" onclick="resetToHome()" title="Reset to Home Screen">
-      SetupScore <span class="logo-badge">RESET</span>
-    </div>
-    <div class="header-actions">
-      <button class="changelog-trigger-btn" onclick="toggleChangelogModal(true)">
-        <span style="font-size: 10px; color: var(--accent-cyan);">●</span> v0.3.76
+      <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="handleImageSelect(event)">
+      <button onclick="document.getElementById('imageInput').click()" class="bg-slate-700 hover:bg-slate-600 text-slate-200 font-medium text-sm py-2.5 px-5 rounded-lg border border-slate-600 transition">
+        Choose Image File
       </button>
-    </div>
-  </div>
 
-  <!-- HOME SCREEN -->
-  <div id="homeScreen" class="screen active">
-    <div class="hero-grid">
-      <div>
-        <h1 class="hero-title">Your Desk Setup.<br>Rated by AI.</h1>
-        <p class="hero-sub">Upload a photo of your gaming or workspace desk setup. Gemini AI analyzes cable management, lighting, ergonomics, aesthetics, and hardware balance.</p>
-        <div style="display: flex; gap: 12px; flex-direction: column;">
-          <button class="btn btn-primary" onclick="showScreen('photoScreen')">Rate My Setup</button>
-          <button class="btn btn-secondary" onclick="loadSampleDemo()">Try Sample Setup Demo</button>
-        </div>
+      <div id="previewContainer" class="hidden mt-4">
+        <img id="imagePreview" class="max-h-64 mx-auto rounded-lg border border-slate-700 object-cover">
+        <button onclick="runAnalysis()" id="analyzeBtn" class="mt-4 bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold px-6 py-2.5 rounded-lg transition shadow-lg">
+          Analyze Setup & Calculate Cost
+        </button>
       </div>
-      
-      <div class="card" style="text-align: center;">
-        <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 8px;">Featured AI Analysis</div>
-        <div style="font-size: 42px; font-weight: 900; color: var(--accent-cyan);">8.8 / 10</div>
-        <p style="font-size: 13px; color: var(--text-muted); margin-top: 8px; line-height: 1.4;">"Exceptional dual-monitor arm placement and balanced ambient backlighting, but hiding desk drop cables will push this into S-Tier."</p>
+      <div id="loading" class="hidden mt-4 text-teal-400 text-sm font-medium animate-pulse">
+        Analyzing visual aesthetics and calculating setup valuations...
       </div>
-    </div>
-  </div>
+    </section>
 
-  <!-- PHOTO SCREEN -->
-  <div id="photoScreen" class="screen">
-    <h2 style="font-size: 24px; margin-bottom: 16px;">Select Setup Photo</h2>
-    
-    <div class="upload-grid">
-      <div>
-        <div class="upload-box" onclick="document.getElementById('fileInput').click()">
-          <div style="font-size: 32px; margin-bottom: 8px;">📸</div>
-          <p style="font-size: 15px; font-weight: 600; color: #fff;">Tap or Drag Image Here</p>
-          <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Supports JPG & PNG photos</p>
-          <input type="file" id="fileInput" accept="image/*" capture="environment" style="display:none;" onchange="handleImageUpload(event)">
+    <!-- Results Dashboard -->
+    <section id="results" class="hidden space-y-6">
+
+      <!-- Aesthetics & Cost Overview Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 text-center">
+          <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Aesthetic Score</p>
+          <p id="overallScore" class="text-4xl font-extrabold text-teal-400 mt-2">0.0</p>
+          <p class="text-xs text-slate-500 mt-1">out of 10.0</p>
         </div>
 
-        <button id="analyzeBtn" class="btn btn-primary" style="margin-top: 16px; display: none;" onclick="startAnalysis()">Analyse My Setup</button>
-        <button class="btn btn-secondary" style="margin-top: 10px;" onclick="showScreen('homeScreen')">Cancel</button>
-      </div>
-
-      <div>
-        <img id="imagePreview" class="preview-img" style="display:none;">
-      </div>
-    </div>
-  </div>
-
-  <!-- LOADING SCREEN -->
-  <div id="loadingScreen" class="screen" style="text-align: center; padding: 60px 20px;">
-    <div class="card" style="max-width: 480px; margin: 0 auto;">
-      <h2 style="font-size: 22px;">Analysing setup photo…</h2>
-      <p id="loadingStatus" style="color: var(--accent-cyan); margin-top: 14px; font-weight: 600;">Looking at your layout...</p>
-    </div>
-  </div>
-
-  <!-- RESULTS SCREEN -->
-  <div id="resultsScreen" class="screen">
-    <div class="results-grid">
-      
-      <!-- Top Score Header -->
-      <div class="results-full-width card" style="text-align: center; background: linear-gradient(135deg, rgba(121, 40, 202, 0.2), rgba(0, 223, 216, 0.1));">
-        <h3 style="color: var(--text-muted); font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase;">OVERALL SETUP SCORE</h3>
-        <div style="font-size: 64px; font-weight: 900; margin: 6px 0; color: var(--accent-cyan);" id="scoreValue">8.4</div>
-        <p id="summaryText" style="font-size: 15px; line-height: 1.5; color: var(--text); max-width: 700px; margin: 0 auto;"></p>
-      </div>
-
-      <!-- Left Column: Category Scores -->
-      <div class="card">
-        <h4 style="font-size: 15px; margin-bottom: 16px; color: #fff;">Breakdown by Category</h4>
-        <div id="categoriesContainer"></div>
-      </div>
-
-      <!-- Right Column: Strengths & Improvements -->
-      <div>
-        <div class="card">
-          <h4 style="font-size: 15px; margin-bottom: 12px; color: var(--accent-cyan);">What's Working</h4>
-          <div id="strengthsContainer"></div>
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 text-center">
+          <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Estimated Total Value</p>
+          <p id="totalCostDisplay" class="text-4xl font-extrabold text-blue-400 mt-2">$0</p>
+          <p id="costTierDisplay" class="text-xs text-slate-400 mt-1">Tier: Calculating...</p>
         </div>
 
-        <div class="card">
-          <h4 style="font-size: 15px; margin-bottom: 12px; color: #ff6b6b;">Recommended Improvements</h4>
-          <div id="improvementsContainer"></div>
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 text-center">
+          <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Cost / Aesthetic Ratio</p>
+          <p id="ratioDisplay" class="text-4xl font-extrabold text-purple-400 mt-2">$0</p>
+          <p class="text-xs text-slate-400 mt-1">Cost per score point</p>
         </div>
       </div>
 
-      <div class="results-full-width" style="display:flex; gap:12px; flex-direction:column;">
-        <button id="copyShareBtn" class="btn btn-secondary" onclick="copyReviewSummary()">📋 Copy Review Summary</button>
-        <button class="btn btn-primary" onclick="showScreen('photoScreen')">Rate Another Setup</button>
+      <!-- Cost Breakdown Table -->
+      <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl">
+        <h3 class="text-md font-semibold text-slate-200 mb-4">Estimated Cost Breakdown</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm text-slate-300">
+            <thead class="bg-slate-900/50 text-slate-400 text-xs uppercase border-b border-slate-700">
+              <tr>
+                <th class="py-3 px-4">Category</th>
+                <th class="py-3 px-4">Detection Source</th>
+                <th class="py-3 px-4 text-right">Estimated Cost</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-700/50">
+              <tr>
+                <td class="py-3 px-4 font-medium">PC Core Hardware</td>
+                <td class="py-3 px-4 text-xs text-slate-400">Manual Spec Selection</td>
+                <td id="costPc" class="py-3 px-4 text-right font-mono">$0</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4 font-medium">Monitors & Displays</td>
+                <td class="py-3 px-4 text-xs text-slate-400">Manual Spec Selection</td>
+                <td id="costMonitors" class="py-3 px-4 text-right font-mono">$0</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4 font-medium">Desk & Ergonomic Seating</td>
+                <td class="py-3 px-4 text-xs text-teal-400">AI Visual Analysis</td>
+                <td id="costFurniture" class="py-3 px-4 text-right font-mono">$0</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4 font-medium">Peripherals & Audio</td>
+                <td class="py-3 px-4 text-xs text-teal-400">AI Visual Analysis</td>
+                <td id="costPeripherals" class="py-3 px-4 text-right font-mono">$0</td>
+              </tr>
+              <tr>
+                <td class="py-3 px-4 font-medium">Lighting & Wall Decor</td>
+                <td class="py-3 px-4 text-xs text-teal-400">AI Visual Analysis</td>
+                <td id="costLighting" class="py-3 px-4 text-right font-mono">$0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
-    </div>
-  </div>
+      <!-- Strengths, Improvements & High ROI Upgrades -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6">
+          <h3 class="text-md font-semibold text-emerald-400 mb-3">Key Setup Strengths</h3>
+          <ul id="strengthsList" class="list-disc list-inside text-xs text-slate-300 space-y-2"></ul>
+        </div>
 
-  <!-- HISTORY SCREEN -->
-  <div id="historyScreen" class="screen">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px;">
-      <h2 style="font-size: 24px;">Saved Setups</h2>
-      <button class="btn-secondary" style="padding:6px 12px; font-size:12px; border-radius:8px;" onclick="clearHistory()">Clear All</button>
-    </div>
-    <div id="historyContainer" class="results-grid"></div>
-  </div>
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6">
+          <h3 class="text-md font-semibold text-amber-400 mb-3">Recommended Improvements</h3>
+          <ul id="improvementsList" class="list-disc list-inside text-xs text-slate-300 space-y-2"></ul>
+        </div>
+      </div>
 
-  <nav class="bottom-nav">
-    <div class="nav-item active" id="navHome" onclick="switchTab('homeScreen')">Home</div>
-    <div class="nav-item" id="navHistory" onclick="switchTab('historyScreen')">Saved History</div>
-  </nav>
+      <!-- Upgrade ROI Suggestions -->
+      <div class="bg-slate-800/90 border border-slate-700 rounded-2xl p-6">
+        <h3 class="text-md font-semibold text-teal-300 mb-2">💡 High ROI Upgrade Suggestions (&lt; $150)</h3>
+        <p class="text-xs text-slate-400 mb-4">Targeted upgrades to maximize visual aesthetic and ergonomic rating per dollar spent:</p>
+        <div id="roiSuggestions" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
+      </div>
+
+    </section>
+
+  </main>
 
   <script>
-    // Bulletproof Beta Access Verification (Synchronous & compatible with HTTP/HTTPS/Local)
-    const VALID_KEYS = ['SETUP2026', 'VIP-TEST'];
-    for (let i = 1; i <= 999; i++) {
-      VALID_KEYS.push(`SETUP-VIP-${String(i).padStart(3, '0')}`);
-    }
+    let base64Image = null;
+    let latestAiScores = null;
 
-    let selectedImageBase64 = null;
-    let loadingInterval = null;
-    let currentReviewData = null;
+    const currencyRates = {
+      USD: { rate: 1.0, symbol: "$" },
+      AUD: { rate: 1.5, symbol: "$" },
+      EUR: { rate: 0.92, symbol: "€" },
+      GBP: { rate: 0.78, symbol: "£" }
+    };
 
-    function checkBetaAccess() {
-      const savedKey = localStorage.getItem('setupscore_beta_key');
-      if (savedKey && VALID_KEYS.includes(savedKey.trim().toUpperCase())) {
-        document.getElementById('betaModal').style.display = 'none';
-      } else {
-        document.getElementById('betaModal').style.display = 'flex';
-      }
-    }
-
-    function validateBetaKey() {
-      const inputKey = document.getElementById('betaKeyInput').value.trim().toUpperCase();
-      if (VALID_KEYS.includes(inputKey)) {
-        localStorage.setItem('setupscore_beta_key', inputKey);
-        document.getElementById('betaModal').style.display = 'none';
-        document.getElementById('betaKeyError').style.display = 'none';
-      } else {
-        document.getElementById('betaKeyError').style.display = 'block';
-      }
-    }
-
-    function resetToHome() {
-      selectedImageBase64 = null;
-      document.getElementById('imagePreview').style.display = 'none';
-      document.getElementById('analyzeBtn').style.display = 'none';
-      document.getElementById('fileInput').value = '';
-      switchTab('homeScreen');
-    }
-
-    function toggleChangelogModal(show) {
-      document.getElementById('changelogModal').style.display = show ? 'flex' : 'none';
-    }
-
-    function showScreen(screenId) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById(screenId).classList.add('active');
-      if (screenId === 'historyScreen') renderHistory();
-    }
-
-    function switchTab(screenId) {
-      showScreen(screenId);
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      if (screenId === 'homeScreen') document.getElementById('navHome').classList.add('active');
-      if (screenId === 'historyScreen') document.getElementById('navHistory').classList.add('active');
-    }
-
-    function handleImageUpload(event) {
+    function handleImageSelect(event) {
       const file = event.target.files[0];
       if (!file) return;
 
       const reader = new FileReader();
       reader.onload = function(e) {
-        compressAndSetImage(e.target.result);
+        base64Image = e.target.result;
+        document.getElementById('imagePreview').src = base64Image;
+        document.getElementById('previewContainer').classList.remove('hidden');
       };
       reader.readAsDataURL(file);
     }
 
-    function compressAndSetImage(dataUrl) {
-      const img = new Image();
-      img.onload = function() {
-        const canvas = document.createElement('canvas');
-        let width = img.width;
-        let height = img.height;
-        const maxDim = 1200;
+    async function runAnalysis() {
+      if (!base64Image) return;
 
-        if (width > height && width > maxDim) {
-          height *= maxDim / width;
-          width = maxDim;
-        } else if (height > maxDim) {
-          width *= maxDim / height;
-          height = maxDim;
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-
-        selectedImageBase64 = canvas.toDataURL('image/jpeg', 0.8);
-        
-        const preview = document.getElementById('imagePreview');
-        preview.src = selectedImageBase64;
-        preview.style.display = 'block';
-        document.getElementById('analyzeBtn').style.display = 'block';
-      };
-      img.src = dataUrl;
-    }
-
-    function loadSampleDemo() {
-      showScreen('photoScreen');
-      const canvas = document.createElement('canvas');
-      canvas.width = 800; canvas.height = 600;
-      const ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#11131e'; ctx.fillRect(0,0,800,600);
-      ctx.fillStyle = '#00dfd8'; ctx.fillRect(150,150,500,280);
-      ctx.fillStyle = '#7928ca'; ctx.fillRect(100,450,600,20);
-      
-      compressAndSetImage(canvas.toDataURL('image/jpeg'));
-    }
-
-    function startLoadingMessages() {
-      const messages = [
-        "Looking at your layout...",
-        "Checking ambient backlighting...",
-        "Analysing cable management...",
-        "Evaluating gear & peripherals...",
-        "Calculating final setup score..."
-      ];
-      let index = 0;
-      const statusEl = document.getElementById('loadingStatus');
-      statusEl.innerText = messages[0];
-
-      loadingInterval = setInterval(() => {
-        index = (index + 1) % messages.length;
-        statusEl.innerText = messages[index];
-      }, 1200);
-    }
-
-    async function startAnalysis() {
-      if (!selectedImageBase64) return;
-      showScreen('loadingScreen');
-      startLoadingMessages();
+      document.getElementById('loading').classList.remove('hidden');
+      document.getElementById('results').classList.add('hidden');
 
       try {
         const res = await fetch('/api/analyze', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ image: selectedImageBase64 })
+          body: JSON.stringify({ image: base64Image })
         });
 
-        clearInterval(loadingInterval);
-
-        const responseText = await res.text();
-        let data;
-        try {
-          data = JSON.parse(responseText);
-        } catch (e) {
-          throw new Error(`Server Output: ${responseText.substring(0, 180)}`);
-        }
-
+        const data = await res.json();
         if (!res.ok) {
-          throw new Error(data.error || `HTTP ${res.status}`);
+          throw new Error(data.details || data.error || 'Failed to analyze image');
         }
 
-        currentReviewData = data;
-        saveToHistory(data, selectedImageBase64);
+        latestAiScores = data;
         displayResults(data);
+
       } catch (err) {
-        clearInterval(loadingInterval);
-        alert(`API Error: ${err.message}`);
-        showScreen('photoScreen');
+        alert("Analysis Error: " + err.message);
+      } finally {
+        document.getElementById('loading').classList.add('hidden');
       }
     }
 
     function displayResults(data) {
-      document.getElementById('scoreValue').innerText = (data.overallScore || 8.0) + " / 10";
-      document.getElementById('summaryText').innerText = data.summary || "Setup analysis complete.";
-      
-      const catContainer = document.getElementById('categoriesContainer');
-      catContainer.innerHTML = '';
-      
-      if (data.categories) {
-        Object.entries(data.categories).forEach(([key, score]) => {
-          catContainer.innerHTML += `
-            <div style="margin-bottom: 14px;">
-              <div style="display:flex; justify-content:space-between; font-size: 13px; font-weight: 600;">
-                <span style="text-transform: capitalize;">${key}</span>
-                <span>${score}/10</span>
-              </div>
-              <div class="progress-bar">
-                <div class="progress-fill" style="width: ${score * 10}%;"></div>
-              </div>
-            </div>
-          `;
+      document.getElementById('results').classList.remove('hidden');
+      document.getElementById('overallScore').textContent = data.overallScore ? data.overallScore.toFixed(1) : "N/A";
+
+      // Populate strengths & improvements
+      const strengthsList = document.getElementById('strengthsList');
+      strengthsList.innerHTML = (data.strengths || []).map(s => `<li>${s}</li>`).join('');
+
+      const improvementsList = document.getElementById('improvementsList');
+      improvementsList.innerHTML = (data.improvements || []).map(i => `<li>${i}</li>`).join('');
+
+      calculateTotalCost();
+    }
+
+    function calculateTotalCost() {
+      if (!latestAiScores) return;
+
+      const currKey = document.getElementById('currencySelect').value;
+      const { rate, symbol } = currencyRates[currKey];
+
+      // Manual Spec Costs (USD base)
+      const gpuCost = parseFloat(document.getElementById('gpuSelect').value);
+      const cpuCost = parseFloat(document.getElementById('cpuSelect').value);
+      const monitorCost = parseFloat(document.getElementById('monitorSelect').value);
+      const pcHardwareUsd = gpuCost + cpuCost + 300; // + $300 base for case/RAM/PSU/storage
+
+      // AI Visual Estimates based on category scores
+      const ergoScore = latestAiScores.categories?.ergonomics || 7.0;
+      const lightingScore = latestAiScores.categories?.lighting || 7.0;
+      const aestheticScore = latestAiScores.categories?.aesthetics || 7.0;
+
+      const furnitureUsd = Math.round(150 + (ergoScore * 55));
+      const peripheralsUsd = Math.round(100 + (aestheticScore * 35));
+      const lightingUsd = Math.round(40 + (lightingScore * 25));
+
+      // Currency conversion
+      const pcHardware = Math.round(pcHardwareUsd * rate);
+      const monitors = Math.round(monitorCost * rate);
+      const furniture = Math.round(furnitureUsd * rate);
+      const peripherals = Math.round(peripheralsUsd * rate);
+      const lighting = Math.round(lightingUsd * rate);
+
+      const totalCost = pcHardware + monitors + furniture + peripherals + lighting;
+
+      // Update Breakdown Table
+      document.getElementById('costPc').textContent = `${symbol}${pcHardware.toLocaleString()}`;
+      document.getElementById('costMonitors').textContent = `${symbol}${monitors.toLocaleString()}`;
+      document.getElementById('costFurniture').textContent = `${symbol}${furniture.toLocaleString()}`;
+      document.getElementById('costPeripherals').textContent = `${symbol}${peripherals.toLocaleString()}`;
+      document.getElementById('costLighting').textContent = `${symbol}${lighting.toLocaleString()}`;
+
+      document.getElementById('totalCostDisplay').textContent = `${symbol}${totalCost.toLocaleString()}`;
+
+      // Tier Calculation
+      let tier = "Budget / Minimalist";
+      if (totalCost > 4500 * rate) tier = "Enthusiast / Ultra Tier";
+      else if (totalCost > 2500 * rate) tier = "High-End Workstation";
+      else if (totalCost > 1500 * rate) tier = "Mid-Range Gaming Setup";
+      document.getElementById('costTierDisplay').textContent = `Tier: ${tier}`;
+
+      // Cost vs Aesthetic Ratio
+      const overallScore = latestAiScores.overallScore || 1.0;
+      const costPerPoint = Math.round(totalCost / overallScore);
+      document.getElementById('ratioDisplay').textContent = `${symbol}${costPerPoint.toLocaleString()}`;
+
+      // High ROI Suggestions based on scores
+      renderRoiSuggestions(latestAiScores.categories, rate, symbol);
+    }
+
+    function renderRoiSuggestions(categories = {}, rate, symbol) {
+      const suggestions = [];
+
+      if ((categories.cables || 10) < 8.0) {
+        suggestions.push({
+          title: "Under-Desk Cable Tray",
+          cost: Math.round(30 * rate),
+          desc: "Hides power strips and loose cords for an immediate cleanliness boost."
+        });
+      }
+      if ((categories.lighting || 10) < 8.0) {
+        suggestions.push({
+          title: "Monitor Light Bar / Bias Light",
+          cost: Math.round(60 * rate),
+          desc: "Reduces eye strain and gives professional desktop illumination."
+        });
+      }
+      if ((categories.ergonomics || 10) < 8.0) {
+        suggestions.push({
+          title: "Heavy-Duty Monitor Arm",
+          cost: Math.round(90 * rate),
+          desc: "Frees up desk real estate and positions display at ideal eye level."
         });
       }
 
-      const strContainer = document.getElementById('strengthsContainer');
-      strContainer.innerHTML = (data.strengths || []).map(s => `
-        <div class="list-item"><span class="list-bullet">✓</span> ${s}</div>
-      `).join('');
-
-      const impContainer = document.getElementById('improvementsContainer');
-      impContainer.innerHTML = (data.improvements || []).map(i => `
-        <div class="list-item"><span class="list-bullet" style="color:#ff6b6b;">•</span> ${i}</div>
-      `).join('');
-
-      showScreen('resultsScreen');
-    }
-
-    function copyReviewSummary() {
-      if (!currentReviewData) return;
-      const text = `🎮 My SetupScore: ${currentReviewData.overallScore}/10!\n\n"${currentReviewData.summary}"\n\nRated with SetupScore AI.`;
-      navigator.clipboard.writeText(text).then(() => {
-        const btn = document.getElementById('copyShareBtn');
-        btn.innerText = "✓ Copied to Clipboard!";
-        setTimeout(() => { btn.innerText = "📋 Copy Review Summary"; }, 2500);
-      });
-    }
-
-    function saveToHistory(data, image) {
-      const history = JSON.parse(localStorage.getItem('setupscore_history') || '[]');
-      history.unshift({
-        id: Date.now(),
-        date: new Date().toLocaleDateString(),
-        score: data.overallScore,
-        image: image,
-        data: data
-      });
-      localStorage.setItem('setupscore_history', JSON.stringify(history.slice(0, 10)));
-    }
-
-    function clearHistory() {
-      if (confirm('Clear all saved setups?')) {
-        localStorage.removeItem('setupscore_history');
-        renderHistory();
+      if (suggestions.length === 0) {
+        suggestions.push({
+          title: "XL Felt Desk Mat",
+          cost: Math.round(35 * rate),
+          desc: "Adds texture contrast and unifies keyboard and mouse aesthetics."
+        });
       }
-    }
 
-    function renderHistory() {
-      const history = JSON.parse(localStorage.getItem('setupscore_history') || '[]');
-      const container = document.getElementById('historyContainer');
-      if (history.length === 0) {
-        container.innerHTML = '<p style="color:var(--text-muted); font-size:14px; grid-column:1/-1;">No saved setups yet.</p>';
-        return;
-      }
-      container.innerHTML = history.map(item => `
-        <div class="card" style="display:flex; gap:16px; align-items:center;">
-          <img src="${item.image}" style="width:70px; height:70px; border-radius:12px; object-fit:cover; border:1px solid var(--card-border);">
-          <div>
-            <div style="font-weight:bold; font-size:18px; color:var(--accent-cyan);">${item.score} / 10</div>
-            <div style="color:var(--text-muted); font-size:12px; margin-top:2px;">Scanned on ${item.date}</div>
+      const container = document.getElementById('roiSuggestions');
+      container.innerHTML = suggestions.map(item => `
+        <div class="bg-slate-900/80 border border-slate-700 p-3 rounded-xl">
+          <div class="flex justify-between items-center mb-1">
+            <span class="text-xs font-bold text-slate-200">${item.title}</span>
+            <span class="text-xs font-mono font-semibold text-teal-400">${symbol}${item.cost}</span>
           </div>
+          <p class="text-[11px] text-slate-400">${item.desc}</p>
         </div>
       `).join('');
     }
-
-    window.onload = checkBetaAccess;
   </script>
 </body>
 </html>
