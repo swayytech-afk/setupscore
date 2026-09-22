@@ -26,7 +26,7 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    // Robust MIME detection and Base64 extraction
+    // Dynamic MIME detection and Base64 extraction
     const mimeMatch = image.match(/^data:(image\/\w+);base64,/);
     const mimeType = mimeMatch ? mimeMatch[1] : "image/jpeg";
     const base64Data = image.includes(',') ? image.split(',')[1] : image;
@@ -56,33 +56,53 @@ module.exports = async function handler(req, res) {
       }
     `;
 
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    // Candidate list starting with Gemini 3.6 Flash
+    const candidateModels = [
+      "gemini-3.6-flash",
+      "gemini-3.5-flash",
+      "gemini-2.0-flash",
+      "gemini-1.5-flash"
+    ];
 
-    const geminiRes = await fetch(apiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              { text: promptText },
-              {
-                inline_data: {
-                  mime_type: mimeType,
-                  data: base64Data
+    let lastError = null;
+
+    for (const modelName of candidateModels) {
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+
+      const geminiRes = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                { text: promptText },
+                {
+                  inline_data: {
+                    mime_type: mimeType,
+                    data: base64Data
+                  }
                 }
-              }
-            ]
+              ]
+            }
+          ],
+          generationConfig: {
+            responseMimeType: "application/json",
+            temperature: 0.4
           }
-        ],
-        generationConfig: {
-          responseMimeType: "application/json",
-          temperature: 0.4
-        }
-      })
-    });
+        })
+      });
 
-    if (!geminiRes.ok) {
+      if (geminiRes.ok) {
+        const geminiData = await geminiRes.json();
+        const candidateText = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (candidateText) {
+          const parsedData = JSON.parse(candidateText);
+          return res.status(200).json(parsedData);
+        }
+      }
+
       const errText = await geminiRes.text();
       let googleErrorMsg = errText;
       try {
@@ -92,24 +112,13 @@ module.exports = async function handler(req, res) {
         }
       } catch (e) {}
 
-      return res.status(geminiRes.status).json({ 
-        error: `Gemini API Error (${geminiRes.status})`, 
-        details: googleErrorMsg 
-      });
+      lastError = { status: geminiRes.status, message: googleErrorMsg };
     }
 
-    const geminiData = await geminiRes.json();
-    const candidateText = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-    if (!candidateText) {
-      return res.status(500).json({ 
-        error: "Empty Response", 
-        details: "No response text was returned by the Gemini model." 
-      });
-    }
-
-    const parsedData = JSON.parse(candidateText);
-    return res.status(200).json(parsedData);
+    return res.status(lastError?.status || 500).json({
+      error: `Gemini API Error (${lastError?.status || 500})`,
+      details: lastError?.message || "Failed across all candidate models."
+    });
 
   } catch (err) {
     console.error("Vercel Function Error:", err);
