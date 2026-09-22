@@ -6,8 +6,8 @@
   <title>SetupScore — Your Setup. Rated by AI.</title>
   <style>
     :root {
-      --bg: #090a0f;
-      --card-bg: rgba(22, 25, 38, 0.75);
+      --bg: #07080c;
+      --card-bg: rgba(18, 21, 33, 0.7);
       --card-border: rgba(255, 255, 255, 0.08);
       --accent-purple: #7928ca;
       --accent-cyan: #00dfd8;
@@ -16,54 +16,326 @@
       --text-muted: #9ca3af;
       --radius-lg: 20px;
       --radius-md: 14px;
+      --glow: rgba(0, 223, 216, 0.15);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 80px; overflow-x: hidden; }
-
-    /* Modal Gate */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.88); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; z-index: 999; padding: 20px; }
-    .modal-card { background: #121520; border: 1px solid var(--card-border); border-radius: var(--radius-lg); padding: 28px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
-    .beta-badge { display: inline-block; background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue)); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
-
-    .header { padding: 20px; text-align: center; }
-    .logo { font-weight: 800; font-size: 22px; background: linear-gradient(135deg, #fff 30%, var(--accent-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     
-    .screen { display: none; padding: 20px; max-width: 500px; margin: 0 auto; animation: fadeIn 0.3s ease; }
+    body { 
+      background-color: var(--bg); 
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(121, 40, 202, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(0, 223, 216, 0.12) 0%, transparent 40%);
+      background-attachment: fixed;
+      color: var(--text); 
+      min-height: 100vh; 
+      padding-bottom: 90px; 
+      overflow-x: hidden; 
+    }
+
+    /* Modal Overlay */
+    .modal-overlay { 
+      position: fixed; 
+      inset: 0; 
+      background: rgba(4, 5, 8, 0.85); 
+      backdrop-filter: blur(14px); 
+      -webkit-backdrop-filter: blur(14px);
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      z-index: 999; 
+      padding: 20px; 
+      animation: fadeIn 0.2s ease;
+    }
+    
+    .modal-card { 
+      background: rgba(15, 18, 28, 0.95); 
+      border: 1px solid var(--card-border); 
+      border-radius: var(--radius-lg); 
+      padding: 28px; 
+      width: 100%; 
+      max-width: 480px; 
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8); 
+      position: relative;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    .close-modal-btn {
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 22px;
+      cursor: pointer;
+    }
+    .close-modal-btn:hover { color: #fff; }
+
+    .beta-badge { 
+      display: inline-block; 
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue)); 
+      font-size: 11px; 
+      font-weight: 700; 
+      padding: 4px 10px; 
+      border-radius: 20px; 
+      margin-bottom: 12px; 
+      text-transform: uppercase; 
+      letter-spacing: 1px; 
+    }
+
+    /* Top Navigation Header */
+    .header { 
+      padding: 20px 30px; 
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    
+    .logo { 
+      font-weight: 900; 
+      font-size: 24px; 
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #fff 40%, var(--accent-cyan)); 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+    }
+
+    .changelog-trigger-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .changelog-trigger-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255,255,255,0.2);
+    }
+    
+    /* Layout Containers */
+    .screen { 
+      display: none; 
+      padding: 20px; 
+      max-width: 1050px; 
+      margin: 0 auto; 
+      animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); 
+    }
     .screen.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-
-    .hero-title { font-size: 32px; font-weight: 800; text-align: center; margin-top: 10px; line-height: 1.15; }
-    .hero-sub { color: var(--text-muted); text-align: center; margin: 12px 0 24px; font-size: 15px; }
-
-    .btn { width: 100%; padding: 16px; border-radius: var(--radius-md); border: none; font-weight: 700; font-size: 16px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .btn-primary { background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue)); color: white; box-shadow: 0 4px 20px rgba(121, 40, 202, 0.4); }
-    .btn-secondary { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text); margin-top: 10px; }
     
-    .input-field { width: 100%; padding: 14px; border-radius: var(--radius-md); background: rgba(255,255,255,0.05); border: 1px solid var(--card-border); color: white; font-size: 16px; text-align: center; margin: 16px 0; text-transform: uppercase; letter-spacing: 2px; }
+    @keyframes fadeIn { 
+      from { opacity: 0; transform: translateY(8px); } 
+      to { opacity: 1; transform: translateY(0); } 
+    }
 
-    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 16px; backdrop-filter: blur(10px); }
-    .upload-box { border: 2px dashed rgba(255,255,255,0.15); border-radius: var(--radius-lg); padding: 30px 20px; text-align: center; cursor: pointer; background: rgba(255,255,255,0.02); }
-    .preview-img { width: 100%; border-radius: var(--radius-md); max-height: 280px; object-fit: cover; margin-top: 12px; }
+    /* Desktop Responsive Grid Layouts */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+      align-items: center;
+      margin-top: 10px;
+    }
 
-    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(9, 10, 15, 0.9); backdrop-filter: blur(20px); border-top: 1px solid var(--card-border); display: flex; justify-content: space-around; padding: 12px 0; z-index: 100; }
-    .nav-item { color: var(--text-muted); text-decoration: none; font-size: 12px; font-weight: 600; text-align: center; cursor: pointer; }
+    .upload-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .hero-grid {
+        grid-template-columns: 1.2fr 0.8fr;
+        padding: 40px 0;
+      }
+
+      .upload-grid {
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+      }
+
+      .results-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .results-full-width {
+        grid-column: 1 / -1;
+      }
+
+      .hero-title { font-size: 46px !important; text-align: left !important; }
+      .hero-sub { text-align: left !important; font-size: 17px !important; }
+    }
+
+    .hero-title { font-size: 32px; font-weight: 900; text-align: center; line-height: 1.12; letter-spacing: -0.5px; }
+    .hero-sub { color: var(--text-muted); text-align: center; margin: 14px 0 24px; font-size: 15px; line-height: 1.5; }
+
+    /* UI Controls & Buttons */
+    .btn { 
+      width: 100%; 
+      padding: 16px; 
+      border-radius: var(--radius-md); 
+      border: none; 
+      font-weight: 700; 
+      font-size: 16px; 
+      cursor: pointer; 
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 8px; 
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn:active { transform: translateY(0); }
+
+    .btn-primary { 
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue)); 
+      color: white; 
+      box-shadow: 0 4px 25px rgba(121, 40, 202, 0.4); 
+    }
+    .btn-primary:hover {
+      box-shadow: 0 6px 30px rgba(121, 40, 202, 0.6);
+    }
+    
+    .btn-secondary { 
+      background: var(--card-bg); 
+      border: 1px solid var(--card-border); 
+      color: var(--text); 
+      margin-top: 10px; 
+      backdrop-filter: blur(10px);
+    }
+    .btn-secondary:hover { background: rgba(255, 255, 255, 0.08); }
+    
+    .input-field { 
+      width: 100%; 
+      padding: 14px; 
+      border-radius: var(--radius-md); 
+      background: rgba(255,255,255,0.04); 
+      border: 1px solid var(--card-border); 
+      color: white; 
+      font-size: 16px; 
+      text-align: center; 
+      margin: 16px 0; 
+      text-transform: uppercase; 
+      letter-spacing: 2px; 
+    }
+    .input-field:focus { outline: none; border-color: var(--accent-cyan); }
+
+    .card { 
+      background: var(--card-bg); 
+      border: 1px solid var(--card-border); 
+      border-radius: var(--radius-lg); 
+      padding: 24px; 
+      margin-bottom: 16px; 
+      backdrop-filter: blur(12px); 
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .upload-box { 
+      border: 2px dashed rgba(255,255,255,0.15); 
+      border-radius: var(--radius-lg); 
+      padding: 40px 20px; 
+      text-align: center; 
+      cursor: pointer; 
+      background: rgba(255,255,255,0.015); 
+      transition: all 0.2s ease;
+    }
+    .upload-box:hover {
+      border-color: var(--accent-cyan);
+      background: rgba(0, 223, 216, 0.03);
+    }
+
+    .preview-img { 
+      width: 100%; 
+      border-radius: var(--radius-md); 
+      max-height: 380px; 
+      object-fit: cover; 
+      border: 1px solid var(--card-border);
+    }
+
+    /* Navigation Bar */
+    .bottom-nav { 
+      position: fixed; 
+      bottom: 0; 
+      left: 0; 
+      right: 0; 
+      background: rgba(7, 8, 12, 0.88); 
+      backdrop-filter: blur(20px); 
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--card-border); 
+      display: flex; 
+      justify-content: center; 
+      gap: 40px;
+      padding: 14px 0; 
+      z-index: 100; 
+    }
+    .nav-item { 
+      color: var(--text-muted); 
+      text-decoration: none; 
+      font-size: 13px; 
+      font-weight: 600; 
+      text-align: center; 
+      cursor: pointer; 
+      transition: color 0.2s ease;
+    }
+    .nav-item:hover { color: #fff; }
     .nav-item.active { color: var(--accent-cyan); }
 
-    .progress-bar { height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; margin-top: 6px; }
+    .progress-bar { height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; margin-top: 8px; }
     .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan)); width: 0%; transition: width 1s ease; }
 
-    .list-item { font-size: 13px; color: var(--text); margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px; }
+    .list-item { font-size: 14px; color: var(--text); margin-bottom: 10px; display: flex; align-items: flex-start; gap: 10px; line-height: 1.4; }
     .list-bullet { color: var(--accent-cyan); font-weight: bold; }
+
+    /* Update Log Timeline UI */
+    .changelog-item {
+      border-left: 2px solid var(--accent-purple);
+      padding-left: 14px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    .changelog-version {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .changelog-date { font-size: 11px; color: var(--text-muted); font-weight: 400; }
+    .changelog-list {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      list-style-type: none;
+    }
+    .changelog-list li { margin-bottom: 4px; line-height: 1.4; }
+    .changelog-list li::before { content: "• "; color: var(--accent-purple); font-weight: bold; }
   </style>
 </head>
 <body>
 
   <!-- BETA GATE MODAL -->
   <div id="betaModal" class="modal-overlay" style="display: none;">
-    <div class="modal-card">
+    <div class="modal-card" style="text-align: center;">
       <span class="beta-badge">VIP Launch Beta</span>
-      <h2 style="font-size: 20px;">Enter Beta Access Key</h2>
+      <h2 style="font-size: 22px;">Enter Beta Access Key</h2>
       <p style="color: var(--text-muted); font-size: 13px; margin-top: 6px;">SetupScore is currently in exclusive launch mode. Enter your access key to begin.</p>
       <input type="text" id="betaKeyInput" class="input-field" placeholder="SETUP2026">
       <button class="btn btn-primary" onclick="validateBetaKey()">Unlock SetupScore</button>
@@ -71,73 +343,148 @@
     </div>
   </div>
 
+  <!-- UPDATE LOG MODAL -->
+  <div id="changelogModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+      <button class="close-modal-btn" onclick="toggleChangelogModal(false)">&times;</button>
+      <h2 style="font-size: 20px; margin-bottom: 4px;">What's New</h2>
+      <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">Latest updates and improvements to SetupScore.</p>
+      
+      <div class="changelog-item">
+        <div class="changelog-version">v0.3.5 — Desktop & UI Overhaul <span class="changelog-date">Current</span></div>
+        <ul class="changelog-list">
+          <li>Complete desktop visual redesign with responsive multi-column layouts.</li>
+          <li>Added Update Log modal to track app updates.</li>
+          <li>Enhanced background glassmorphic depth & lighting glow effects.</li>
+          <li>Optimized Gemini 3.6 Flash backend engine & multi-model failover.</li>
+        </ul>
+      </div>
+
+      <div class="changelog-item" style="border-color: rgba(255,255,255,0.2);">
+        <div class="changelog-version" style="color: #fff;">v0.3.0 — AI Proxy Engine</div>
+        <ul class="changelog-list">
+          <li>Migrated to secure Vercel Serverless proxy backend.</li>
+          <li>Integrated Gemini 3.6 Flash Vision vision analysis.</li>
+          <li>Added LocalStorage saved setups history feature.</li>
+        </ul>
+      </div>
+
+      <div class="changelog-item" style="border-color: rgba(255,255,255,0.1);">
+        <div class="changelog-version" style="color: var(--text-muted);">v0.2.0 — Beta Access Gate</div>
+        <ul class="changelog-list">
+          <li>Implemented VIP Beta access key gate.</li>
+          <li>Client-side HTML5 Canvas image auto-compression for fast uploads.</li>
+        </ul>
+      </div>
+
+      <button class="btn btn-secondary" onclick="toggleChangelogModal(false)">Close</button>
+    </div>
+  </div>
+
   <div class="header">
     <div class="logo">SetupScore</div>
+    <button class="changelog-trigger-btn" onclick="toggleChangelogModal(true)">
+      <span style="font-size: 10px; color: var(--accent-cyan);">●</span> v0.3.5 What's New
+    </button>
   </div>
 
   <!-- HOME SCREEN -->
   <div id="homeScreen" class="screen active">
-    <h1 class="hero-title">Your Setup.<br>Rated by AI.</h1>
-    <p class="hero-sub">Upload a photo of your desk setup and let Gemini AI break down layout, cable management, lighting, and aesthetics.</p>
-    
-    <button class="btn btn-primary" onclick="showScreen('photoScreen')">Rate My Setup</button>
-    <button class="btn btn-secondary" onclick="showScreen('historyScreen')">View Saved Setups</button>
+    <div class="hero-grid">
+      <div>
+        <h1 class="hero-title">Your Desk Setup.<br>Rated by AI.</h1>
+        <p class="hero-sub">Upload a photo of your gaming or workspace desk setup. Gemini AI analyzes cable management, lighting, ergonomics, aesthetics, and hardware balance.</p>
+        <div style="display: flex; gap: 12px; flex-direction: column;">
+          <button class="btn btn-primary" onclick="showScreen('photoScreen')">Rate My Setup</button>
+          <button class="btn btn-secondary" onclick="showScreen('historyScreen')">View Saved Setups</button>
+        </div>
+      </div>
+      
+      <div class="card" style="text-align: center; border-color: var(--border-glow);">
+        <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 8px;">Featured Review</div>
+        <div style="font-size: 42px; font-weight: 900; color: var(--accent-cyan);">8.8 / 10</div>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 8px; line-height: 1.4;">"Exceptional monitor arm setup and clean desk space, but bundling cables under the desk could push this into S-Tier."</p>
+      </div>
+    </div>
   </div>
 
   <!-- PHOTO SCREEN -->
   <div id="photoScreen" class="screen">
-    <h2 style="font-size: 22px; margin-bottom: 12px;">Select Setup Photo</h2>
+    <h2 style="font-size: 24px; margin-bottom: 16px;">Select Setup Photo</h2>
     
-    <div class="upload-box" onclick="document.getElementById('fileInput').click()">
-      <p style="font-size: 14px; color: var(--text-muted);">Tap to take photo or choose file</p>
-      <input type="file" id="fileInput" accept="image/*" capture="environment" style="display:none;" onchange="handleImageUpload(event)">
+    <div class="upload-grid">
+      <div>
+        <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+          <div style="font-size: 32px; margin-bottom: 8px;">📸</div>
+          <p style="font-size: 15px; font-weight: 600; color: #fff;">Tap or Drag Image Here</p>
+          <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Supports JPG & PNG up to 10MB</p>
+          <input type="file" id="fileInput" accept="image/*" capture="environment" style="display:none;" onchange="handleImageUpload(event)">
+        </div>
+
+        <button id="analyzeBtn" class="btn btn-primary" style="margin-top: 16px; display: none;" onclick="startAnalysis()">Analyse My Setup</button>
+        <button class="btn btn-secondary" onclick="showScreen('homeScreen')">Cancel</button>
+      </div>
+
+      <div>
+        <img id="imagePreview" class="preview-img" style="display:none;">
+      </div>
     </div>
-
-    <img id="imagePreview" class="preview-img" style="display:none;">
-
-    <button id="analyzeBtn" class="btn btn-primary" style="margin-top: 16px; display: none;" onclick="startAnalysis()">Analyse My Setup</button>
-    <button class="btn btn-secondary" onclick="showScreen('homeScreen')">Cancel</button>
   </div>
 
   <!-- LOADING SCREEN -->
-  <div id="loadingScreen" class="screen" style="text-align: center; padding-top: 40px;">
-    <h2>Analysing your setup…</h2>
-    <p id="loadingStatus" style="color: var(--accent-cyan); margin-top: 14px;">Looking at your layout...</p>
+  <div id="loadingScreen" class="screen" style="text-align: center; padding: 60px 20px;">
+    <div class="card" style="max-width: 480px; margin: 0 auto;">
+      <h2 style="font-size: 22px;">Analysing your setup…</h2>
+      <p id="loadingStatus" style="color: var(--accent-cyan); margin-top: 14px; font-weight: 600;">Looking at your layout...</p>
+    </div>
   </div>
 
   <!-- RESULTS SCREEN -->
   <div id="resultsScreen" class="screen">
-    <h3 style="text-align: center; color: var(--text-muted); font-size: 13px; letter-spacing: 1px;">YOUR SETUP SCORE</h3>
-    <div style="text-align: center; font-size: 54px; font-weight: 900; margin: 10px 0; color: var(--accent-cyan);" id="scoreValue">8.4</div>
-    
-    <div class="card">
-      <p id="summaryText" style="font-size: 14px; line-height: 1.5; color: var(--text-muted);"></p>
+    <div class="results-grid">
+      
+      <!-- Top Score Header -->
+      <div class="results-full-width card" style="text-align: center; background: linear-gradient(135deg, rgba(121, 40, 202, 0.2), rgba(0, 223, 216, 0.1));">
+        <h3 style="color: var(--text-muted); font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase;">OVERALL SETUP SCORE</h3>
+        <div style="font-size: 64px; font-weight: 900; margin: 6px 0; color: var(--accent-cyan);" id="scoreValue">8.4</div>
+        <p id="summaryText" style="font-size: 15px; line-height: 1.5; color: var(--text); max-width: 700px; margin: 0 auto;"></p>
+      </div>
+
+      <!-- Left Column: Category Scores -->
+      <div class="card">
+        <h4 style="font-size: 15px; margin-bottom: 16px; color: #fff;">Breakdown by Category</h4>
+        <div id="categoriesContainer"></div>
+      </div>
+
+      <!-- Right Column: Strengths & Improvements -->
+      <div>
+        <div class="card">
+          <h4 style="font-size: 15px; margin-bottom: 12px; color: var(--accent-cyan);">What's Working</h4>
+          <div id="strengthsContainer"></div>
+        </div>
+
+        <div class="card">
+          <h4 style="font-size: 15px; margin-bottom: 12px; color: #ff6b6b;">Recommended Improvements</h4>
+          <div id="improvementsContainer"></div>
+        </div>
+      </div>
+
+      <div class="results-full-width">
+        <button class="btn btn-primary" onclick="showScreen('photoScreen')">Rate Another Setup</button>
+      </div>
+
     </div>
-
-    <div class="card" id="categoriesContainer"></div>
-
-    <div class="card">
-      <h4 style="font-size: 14px; margin-bottom: 10px; color: var(--accent-cyan);">What's Working</h4>
-      <div id="strengthsContainer"></div>
-    </div>
-
-    <div class="card">
-      <h4 style="font-size: 14px; margin-bottom: 10px; color: #ff6b6b;">What I'd Improve</h4>
-      <div id="improvementsContainer"></div>
-    </div>
-
-    <button class="btn btn-primary" onclick="showScreen('photoScreen')">Rate Another Setup</button>
   </div>
 
   <!-- HISTORY SCREEN -->
   <div id="historyScreen" class="screen">
-    <h2>Saved Setups</h2>
-    <div id="historyContainer" style="margin-top: 16px;"></div>
+    <h2 style="font-size: 24px; margin-bottom: 16px;">Saved Setups</h2>
+    <div id="historyContainer" class="results-grid"></div>
   </div>
 
   <nav class="bottom-nav">
     <div class="nav-item active" id="navHome" onclick="switchTab('homeScreen')">Home</div>
-    <div class="nav-item" id="navHistory" onclick="switchTab('historyScreen')">History</div>
+    <div class="nav-item" id="navHistory" onclick="switchTab('historyScreen')">Saved History</div>
   </nav>
 
   <script>
@@ -164,6 +511,10 @@
       } else {
         document.getElementById('betaKeyError').style.display = 'block';
       }
+    }
+
+    function toggleChangelogModal(show) {
+      document.getElementById('changelogModal').style.display = show ? 'flex' : 'none';
     }
 
     function showScreen(screenId) {
@@ -220,10 +571,10 @@
     function startLoadingMessages() {
       const messages = [
         "Looking at your layout...",
-        "Checking your lighting...",
+        "Checking your ambient lighting...",
         "Analysing cable management...",
-        "Reviewing your equipment...",
-        "Calculating your score..."
+        "Reviewing gear & peripherals...",
+        "Calculating your final score..."
       ];
       let index = 0;
       const statusEl = document.getElementById('loadingStatus');
@@ -280,7 +631,7 @@
       if (data.categories) {
         Object.entries(data.categories).forEach(([key, score]) => {
           catContainer.innerHTML += `
-            <div style="margin-bottom: 12px;">
+            <div style="margin-bottom: 14px;">
               <div style="display:flex; justify-content:space-between; font-size: 13px; font-weight: 600;">
                 <span style="text-transform: capitalize;">${key}</span>
                 <span>${score}/10</span>
@@ -322,15 +673,15 @@
       const history = JSON.parse(localStorage.getItem('setupscore_history') || '[]');
       const container = document.getElementById('historyContainer');
       if (history.length === 0) {
-        container.innerHTML = '<p style="color:var(--text-muted); font-size:14px;">No saved setups yet.</p>';
+        container.innerHTML = '<p style="color:var(--text-muted); font-size:14px; grid-column:1/-1;">No saved setups yet.</p>';
         return;
       }
       container.innerHTML = history.map(item => `
-        <div class="card" style="display:flex; gap:12px; align-items:center;">
-          <img src="${item.image}" style="width:60px; height:60px; border-radius:10px; object-fit:cover;">
+        <div class="card" style="display:flex; gap:16px; align-items:center;">
+          <img src="${item.image}" style="width:70px; height:70px; border-radius:12px; object-fit:cover; border:1px solid var(--card-border);">
           <div>
-            <div style="font-weight:bold; font-size:16px;">Score: ${item.score}/10</div>
-            <div style="color:var(--text-muted); font-size:12px;">${item.date}</div>
+            <div style="font-weight:bold; font-size:18px; color:var(--accent-cyan);">${item.score} / 10</div>
+            <div style="color:var(--text-muted); font-size:12px; margin-top:2px;">Scanned on ${item.date}</div>
           </div>
         </div>
       `).join('');
