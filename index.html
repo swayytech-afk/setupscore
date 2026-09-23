@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SetupScore • Public Edition</title>
+  <title>SetupScore • Public Edition v4.0</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -23,30 +23,13 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans pb-24 selection:bg-brand-500 selection:text-slate-950 antialiased overflow-x-hidden">
 
-  <!-- ==================== MAINTENANCE OVERLAY ==================== -->
-  <div id="maintenanceScreen" class="fixed inset-0 bg-slate-950/98 backdrop-blur-2xl z-[150] flex flex-col justify-center items-center p-4 hidden">
-    <div class="max-w-md w-full bg-slate-900 border border-amber-500/30 rounded-3xl p-8 text-center shadow-2xl space-y-4">
-      <div class="w-16 h-16 bg-amber-500/10 border border-amber-500/30 rounded-2xl flex items-center justify-center text-amber-400 text-2xl mx-auto">🛠️</div>
-      <h2 class="text-xl font-bold text-slate-100">Scheduled Maintenance</h2>
-      <p class="text-xs text-slate-400">SetupScore is currently being optimized for the public release. Please check back shortly.</p>
-    </div>
-  </div>
-
-  <!-- ==================== BAN OVERLAY ==================== -->
-  <div id="banScreen" class="fixed inset-0 bg-slate-950/98 backdrop-blur-2xl z-[150] flex flex-col justify-center items-center p-4 hidden">
-    <div class="max-w-md w-full bg-slate-900 border border-rose-500/30 rounded-3xl p-8 text-center shadow-2xl space-y-4">
-      <div class="w-16 h-16 bg-rose-500/10 border border-rose-500/30 rounded-2xl flex items-center justify-center text-rose-400 text-2xl mx-auto">🚫</div>
-      <h2 class="text-xl font-bold text-slate-100">Account Restricted</h2>
-      <p class="text-xs text-slate-400">This account has been suspended for violating community guidelines.</p>
-    </div>
-  </div>
-
   <!-- ==================== AUTH & PROFILE MODAL ==================== -->
   <div id="authScreen" class="fixed inset-0 bg-slate-950/95 backdrop-blur-xl z-[100] flex flex-col justify-center items-center p-4">
-    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl relative">
+    <div class="max-w-md w-full bg-slate-900 border border-brand-500/30 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+      <div class="absolute -right-12 -top-12 w-36 h-36 bg-brand-500/10 rounded-full blur-2xl pointer-events-none"></div>
       <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-400 to-blue-500 flex items-center justify-center font-black text-slate-950 text-2xl shadow-lg shadow-brand-500/20 mx-auto mb-5">S</div>
-      <h2 class="text-xl font-bold text-center text-slate-100 mb-1">Welcome to SetupScore</h2>
-      <p class="text-xs text-center text-slate-400 mb-6">Create or select your public creator profile.</p>
+      <h2 class="text-xl font-bold text-center text-slate-100 mb-1">Welcome to SetupScore v4.0</h2>
+      <p class="text-xs text-center text-slate-400 mb-6">Create or select your public creator profile to dive in.</p>
       
       <div id="existingProfilesContainer" class="space-y-2 mb-6 max-h-36 overflow-y-auto"></div>
 
@@ -59,7 +42,7 @@
           <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Bio / Tagline</label>
           <input type="text" id="authBio" placeholder="Minimalist setup enthusiast & dev" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brand-400 transition">
         </div>
-        <button type="submit" class="w-full bg-brand-400 hover:bg-brand-300 text-slate-950 font-bold text-xs uppercase tracking-wider py-3.5 rounded-xl transition shadow-lg shadow-brand-500/20">
+        <button type="submit" class="w-full bg-gradient-to-r from-brand-400 to-teal-500 hover:from-brand-300 hover:to-teal-400 text-slate-950 font-bold text-xs uppercase tracking-wider py-3.5 rounded-xl transition shadow-lg shadow-brand-500/20">
           Launch Profile
         </button>
       </form>
@@ -67,7 +50,7 @@
   </div>
 
   <!-- ==================== GLOBAL ANNOUNCEMENT BANNER ==================== -->
-  <div id="announcementBanner" class="bg-brand-500 text-slate-950 text-xs font-bold py-2 px-4 text-center hidden flex justify-between items-center relative z-40">
+  <div id="announcementBanner" class="bg-gradient-to-r from-brand-500 to-teal-400 text-slate-950 text-xs font-bold py-2.5 px-4 text-center hidden flex justify-between items-center relative z-40 shadow-md">
     <span id="announcementText" class="mx-auto">Announcement</span>
     <button onclick="dismissAnnouncement()" class="text-slate-950 font-black px-2 hover:opacity-75">✕</button>
   </div>
@@ -76,11 +59,11 @@
   <header class="border-b border-slate-800/80 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
     <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
       <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-400 to-blue-500 flex items-center justify-center font-black text-slate-950 text-lg shadow-md">S</div>
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-400 to-blue-500 flex items-center justify-center font-black text-slate-950 text-lg shadow-md shadow-brand-500/20">S</div>
         <div>
           <h1 class="text-base font-bold text-slate-100 flex items-center gap-2">
             SetupScore
-            <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/30 px-1.5 py-0.5 rounded font-bold">PUBLIC</span>
+            <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/30 px-1.5 py-0.5 rounded font-bold">v4.0 PUBLIC</span>
           </h1>
           <p id="headerUsername" class="text-[10px] text-slate-400 font-mono">@guest</p>
         </div>
@@ -88,8 +71,8 @@
 
       <div class="flex items-center gap-3">
         <button onclick="openAuthModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-xl text-xs font-bold transition">Profiles</button>
-        <div class="flex items-center gap-3 bg-slate-950/80 px-3 py-1.5 rounded-2xl border border-slate-800">
-          <button onclick="toggleAudioMute()" id="audioToggleBtn" class="text-xs p-1" title="Toggle Sound">🔊</button>
+        <div class="flex items-center gap-3 bg-slate-950/80 px-3.5 py-1.5 rounded-2xl border border-slate-800">
+          <button onclick="toggleAudioMute()" id="audioToggleBtn" class="text-xs p-1 hover:scale-110 transition" title="Toggle Sound">🔊</button>
           <div class="h-4 w-px bg-slate-800"></div>
           <div>
             <div class="flex gap-2 text-[9px] font-mono">
@@ -97,7 +80,7 @@
               <span id="xpText" class="text-slate-400">0/100 XP</span>
             </div>
             <div class="w-20 bg-slate-800 h-1.5 rounded-full overflow-hidden mt-0.5">
-              <div id="xpBar" class="bg-brand-400 h-full w-0 transition-all duration-300"></div>
+              <div id="xpBar" class="bg-gradient-to-r from-brand-400 to-teal-300 h-full w-0 transition-all duration-300"></div>
             </div>
           </div>
         </div>
@@ -106,11 +89,11 @@
 
     <!-- Navigation Tabs -->
     <div class="max-w-6xl mx-auto px-4 flex gap-2 border-t border-slate-800/60 pt-2 overflow-x-auto">
-      <button id="tabBtnFeed" onclick="switchTab('feed')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-brand-400 text-brand-400 whitespace-nowrap">Arena Feed</button>
-      <button id="tabBtnAudit" onclick="switchTab('audit')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap">Vision Audit</button>
-      <button id="tabBtnLeaderboard" onclick="switchTab('leaderboard')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap">Leaderboard</button>
-      <button id="tabBtnProfile" onclick="switchTab('profile')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap">My Profile</button>
-      <button id="tabBtnLogs" onclick="switchTab('logs')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap">Release Notes</button>
+      <button id="tabBtnFeed" onclick="switchTab('feed')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-brand-400 text-brand-400 whitespace-nowrap transition">Arena Feed</button>
+      <button id="tabBtnAudit" onclick="switchTab('audit')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Vision Audit</button>
+      <button id="tabBtnLeaderboard" onclick="switchTab('leaderboard')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Leaderboard</button>
+      <button id="tabBtnProfile" onclick="switchTab('profile')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">My Profile</button>
+      <button id="tabBtnLogs" onclick="switchTab('logs')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Release Notes</button>
     </div>
   </header>
 
@@ -119,45 +102,46 @@
 
     <!-- FEED TAB -->
     <div id="tabFeed" class="space-y-6">
-      <div class="flex justify-between items-center">
+      <div class="flex justify-between items-center bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-xl relative overflow-hidden">
+        <div class="absolute right-0 top-0 w-64 h-full bg-gradient-to-l from-brand-500/10 to-transparent pointer-events-none"></div>
         <div>
-          <h2 class="text-base font-bold text-slate-100">Community Arena</h2>
-          <p class="text-xs text-slate-400">Explore and vote on real creator workstations.</p>
+          <h2 class="text-lg font-bold text-slate-100">Community Arena</h2>
+          <p class="text-xs text-slate-400 mt-0.5">Explore, evaluate, and upvote real creator workstations.</p>
         </div>
-        <button onclick="switchTab('audit')" class="bg-brand-400/10 hover:bg-brand-400/20 text-brand-400 border border-brand-400/30 text-xs font-bold px-3 py-2 rounded-xl transition">+ Submit Setup</button>
+        <button onclick="switchTab('audit')" class="bg-brand-400 hover:bg-brand-300 text-slate-950 font-bold text-xs px-4 py-2.5 rounded-xl transition shadow-lg shadow-brand-500/20">+ Submit Setup</button>
       </div>
       <div id="feedContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
     </div>
 
     <!-- AUDIT TAB -->
     <div id="tabAudit" class="hidden space-y-6">
-      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative">
         <h2 class="text-base font-bold text-slate-100 mb-1">Vision AI Workspace Audit</h2>
-        <p class="text-xs text-slate-400 mb-6">Upload photos of your desk setup for instant evaluation.</p>
+        <p class="text-xs text-slate-400 mb-6">Upload photos of your desk setup for instant evaluation and scoring.</p>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-          <div class="border-2 border-dashed border-slate-800 hover:border-brand-400/60 rounded-2xl p-4 text-center cursor-pointer bg-slate-950 relative min-h-[160px] flex items-center justify-center transition" onclick="document.getElementById('imgInput0').click()">
+          <div class="border-2 border-dashed border-slate-800 hover:border-brand-400/60 rounded-2xl p-4 text-center cursor-pointer bg-slate-950 relative min-h-[160px] flex items-center justify-center transition group" onclick="document.getElementById('imgInput0').click()">
             <input type="file" id="imgInput0" accept="image/*" class="hidden" onchange="handleAngleUpload(event, 0)">
             <img id="prev0" class="hidden absolute inset-0 w-full h-full object-cover rounded-2xl">
-            <div id="holder0" class="space-y-1">
+            <div id="holder0" class="space-y-1 group-hover:scale-105 transition">
               <span class="text-2xl block">🖥️</span>
               <span class="text-xs font-bold text-slate-300 block">Main View</span>
               <span class="text-[10px] text-slate-500 block">Required</span>
             </div>
           </div>
-          <div class="border-2 border-dashed border-slate-800 hover:border-brand-400/60 rounded-2xl p-4 text-center cursor-pointer bg-slate-950 relative min-h-[160px] flex items-center justify-center transition" onclick="document.getElementById('imgInput1').click()">
+          <div class="border-2 border-dashed border-slate-800 hover:border-brand-400/60 rounded-2xl p-4 text-center cursor-pointer bg-slate-950 relative min-h-[160px] flex items-center justify-center transition group" onclick="document.getElementById('imgInput1').click()">
             <input type="file" id="imgInput1" accept="image/*" class="hidden" onchange="handleAngleUpload(event, 1)">
             <img id="prev1" class="hidden absolute inset-0 w-full h-full object-cover rounded-2xl">
-            <div id="holder1" class="space-y-1">
+            <div id="holder1" class="space-y-1 group-hover:scale-105 transition">
               <span class="text-2xl block">🔌</span>
               <span class="text-xs font-bold text-slate-300 block">Cable Mgmt</span>
               <span class="text-[10px] text-slate-500 block">Optional</span>
             </div>
           </div>
-          <div class="border-2 border-dashed border-slate-800 hover:border-brand-400/60 rounded-2xl p-4 text-center cursor-pointer bg-slate-950 relative min-h-[160px] flex items-center justify-center transition" onclick="document.getElementById('imgInput2').click()">
+          <div class="border-2 border-dashed border-slate-800 hover:border-brand-400/60 rounded-2xl p-4 text-center cursor-pointer bg-slate-950 relative min-h-[160px] flex items-center justify-center transition group" onclick="document.getElementById('imgInput2').click()">
             <input type="file" id="imgInput2" accept="image/*" class="hidden" onchange="handleAngleUpload(event, 2)">
             <img id="prev2" class="hidden absolute inset-0 w-full h-full object-cover rounded-2xl">
-            <div id="holder2" class="space-y-1">
+            <div id="holder2" class="space-y-1 group-hover:scale-105 transition">
               <span class="text-2xl block">💡</span>
               <span class="text-xs font-bold text-slate-300 block">Lighting</span>
               <span class="text-[10px] text-slate-500 block">Optional</span>
@@ -166,29 +150,29 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-          <input type="text" id="auditTitleInput" placeholder="Setup Title (e.g. Clean Developer Hub)" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
-          <select id="auditCategoryInput" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
+          <input type="text" id="auditTitleInput" placeholder="Setup Title (e.g. Clean Developer Hub)" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brand-400 transition">
+          <select id="auditCategoryInput" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brand-400 transition">
             <option value="Battlestation">Gaming Battlestation</option>
             <option value="Productivity">Productivity Suite</option>
             <option value="Developer">Developer Terminal</option>
           </select>
         </div>
 
-        <button onclick="runAiAudit()" class="w-full bg-brand-400 hover:bg-brand-300 text-slate-950 font-bold text-xs uppercase py-3.5 rounded-xl transition shadow-lg shadow-brand-500/20">
+        <button onclick="runAiAudit()" class="w-full bg-gradient-to-r from-brand-400 to-teal-500 hover:from-brand-300 hover:to-teal-400 text-slate-950 font-bold text-xs uppercase tracking-wider py-3.5 rounded-xl transition shadow-lg shadow-brand-500/20">
           Run Vision Audit
         </button>
       </div>
 
       <!-- Audit Results Card -->
-      <div id="auditResultCard" class="hidden bg-slate-900 border border-slate-800 rounded-3xl p-6">
+      <div id="auditResultCard" class="hidden bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
         <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
           <div>
-            <span class="text-[9px] font-mono uppercase text-brand-400 font-bold">Audit Complete</span>
+            <span class="text-[9px] font-mono uppercase text-brand-400 font-bold tracking-widest">Audit Complete</span>
             <h3 id="resTitle" class="text-xl font-bold text-slate-100">Title</h3>
           </div>
-          <div class="bg-slate-950 px-5 py-2 rounded-xl text-center border border-slate-800">
+          <div class="bg-slate-950 px-5 py-2.5 rounded-xl text-center border border-slate-800 shadow-inner">
             <span id="resOverallScore" class="text-3xl font-black text-brand-400 font-mono">0.0</span>
-            <span class="text-[9px] text-slate-500 block uppercase font-bold">Score</span>
+            <span class="text-[9px] text-slate-500 block uppercase font-bold tracking-wider">Score</span>
           </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -196,13 +180,13 @@
             <canvas id="radarChart" class="max-h-[220px]"></canvas>
           </div>
           <div class="space-y-3">
-            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-xs">
+            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-xs shadow-sm">
               <span class="font-bold text-emerald-400 block mb-1">Strengths</span>
-              <p id="resPros" class="text-slate-300 font-mono">Analysis...</p>
+              <p id="resPros" class="text-slate-300 font-mono text-[11px]">Analysis...</p>
             </div>
-            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-xs">
+            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-xs shadow-sm">
               <span class="font-bold text-amber-400 block mb-1">Recommended Upgrades</span>
-              <p id="resCons" class="text-slate-300 font-mono">Analysis...</p>
+              <p id="resCons" class="text-slate-300 font-mono text-[11px]">Analysis...</p>
             </div>
           </div>
         </div>
@@ -211,7 +195,7 @@
 
     <!-- LEADERBOARD TAB -->
     <div id="tabLeaderboard" class="hidden space-y-6">
-      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
         <h2 class="text-base font-bold text-slate-100 mb-4">Global Leaderboard</h2>
         <div id="leaderboardContainer" class="space-y-3"></div>
       </div>
@@ -219,10 +203,10 @@
 
     <!-- PROFILE TAB -->
     <div id="tabProfile" class="hidden space-y-6">
-      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-6 shadow-2xl">
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
           <div class="flex items-center gap-4">
-            <div class="w-16 h-16 rounded-2xl bg-slate-800 border-2 border-brand-400 flex items-center justify-center text-2xl font-black text-brand-400 shadow-lg">⚡</div>
+            <div class="w-16 h-16 rounded-2xl bg-slate-800 border-2 border-brand-400 flex items-center justify-center text-2xl font-black text-brand-400 shadow-lg shadow-brand-500/10">⚡</div>
             <div>
               <h2 id="profileName" class="text-xl font-bold text-slate-100">@username</h2>
               <p id="profileBio" class="text-xs text-slate-400 mt-0.5">No bio set yet.</p>
@@ -234,17 +218,17 @@
           </div>
           <div class="flex gap-2 w-full sm:w-auto">
             <button onclick="openEditProfileModal()" class="flex-1 sm:flex-none bg-slate-800 hover:bg-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl transition">Edit Profile</button>
-            <button onclick="openAuthModal()" class="flex-1 sm:flex-none bg-brand-400 hover:bg-brand-300 text-slate-950 text-xs font-bold px-4 py-2.5 rounded-xl transition">Switch Profile</button>
+            <button onclick="openAuthModal()" class="flex-1 sm:flex-none bg-brand-400 hover:bg-brand-300 text-slate-950 text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-md shadow-brand-500/20">Switch Profile</button>
           </div>
         </div>
 
         <div id="editProfileSection" class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3 hidden">
           <h3 class="text-xs font-bold text-slate-200">Update Creator Bio</h3>
           <div class="space-y-3">
-            <input type="text" id="editBioInput" placeholder="Write a short creator bio..." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200">
+            <input type="text" id="editBioInput" placeholder="Write a short creator bio..." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
             <div class="flex gap-2">
-              <button onclick="saveProfileBio()" class="bg-brand-400 hover:bg-brand-300 text-slate-950 text-xs font-bold px-4 py-2 rounded-xl">Save Changes</button>
-              <button onclick="document.getElementById('editProfileSection').classList.add('hidden')" class="bg-slate-800 text-slate-300 text-xs font-bold px-4 py-2 rounded-xl">Cancel</button>
+              <button onclick="saveProfileBio()" class="bg-brand-400 hover:bg-brand-300 text-slate-950 text-xs font-bold px-4 py-2 rounded-xl transition">Save Changes</button>
+              <button onclick="document.getElementById('editProfileSection').classList.add('hidden')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold px-4 py-2 rounded-xl transition">Cancel</button>
             </div>
           </div>
         </div>
@@ -260,39 +244,42 @@
     <div id="tabLogs" class="hidden space-y-6">
       
       <!-- Publisher Box (Unlocked with Admin Key) -->
-      <div class="bg-slate-900 border border-brand-400/40 rounded-3xl p-6 space-y-4">
+      <div class="bg-slate-900 border border-brand-400/40 rounded-3xl p-6 space-y-4 shadow-2xl relative">
         <div class="flex justify-between items-center">
           <div>
-            <h2 class="text-base font-bold text-slate-100">Publisher & Update Control</h2>
-            <p class="text-xs text-slate-400">Publish live release updates and broadcast notifications to users.</p>
+            <h2 class="text-base font-bold text-slate-100 flex items-center gap-2">
+              Publisher & Admin Panel
+              <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/30 px-1.5 py-0.5 rounded font-mono">SECURE</span>
+            </h2>
+            <p class="text-xs text-slate-400">Publish live release updates and broadcast notifications to users across the platform.</p>
           </div>
           <div id="publisherAuthSection">
-            <button onclick="promptPublisherLogin()" id="publisherLoginBtn" class="bg-brand-400/10 text-brand-400 border border-brand-400/30 text-xs font-bold px-3 py-2 rounded-xl">🔐 Publisher Login</button>
+            <button onclick="promptPublisherLogin()" id="publisherLoginBtn" class="bg-brand-400/10 hover:bg-brand-400/20 text-brand-400 border border-brand-400/30 text-xs font-bold px-3.5 py-2 rounded-xl transition">🔐 Publisher Login</button>
           </div>
         </div>
 
         <div id="publisherPanel" class="space-y-4 hidden border-t border-slate-800 pt-4">
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Version Title / Tag</label>
-            <input type="text" id="pubVersionTitle" placeholder="e.g. v4.1 Major UI Polish" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200">
+            <input type="text" id="pubVersionTitle" placeholder="e.g. v4.1 Major UI Polish" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
           </div>
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Update Log Description (HTML Supported)</label>
-            <textarea id="pubVersionDesc" rows="3" placeholder="• Added new features..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200"></textarea>
+            <textarea id="pubVersionDesc" rows="3" placeholder="• Added new features..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-brand-400"></textarea>
           </div>
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Global Top Banner Broadcast Text</label>
-            <input type="text" id="pubBannerText" placeholder="⚡ Website Update: Check out the new version notes!" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200">
+            <input type="text" id="pubBannerText" placeholder="⚡ Website Update: Check out the new version notes!" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
           </div>
-          <button onclick="publishNewUpdate()" class="w-full bg-brand-400 hover:bg-brand-300 text-slate-950 font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition">Publish & Broadcast Update</button>
+          <button onclick="publishNewUpdate()" class="w-full bg-gradient-to-r from-brand-400 to-teal-500 hover:from-brand-300 hover:to-teal-400 text-slate-950 font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition shadow-lg shadow-brand-500/20">Publish & Broadcast Update</button>
         </div>
       </div>
 
       <!-- Release History Feed -->
-      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4 shadow-2xl">
         <div>
           <h2 class="text-base font-bold text-slate-100 mb-1">Release History</h2>
-          <p class="text-xs text-slate-400">Past updates published on SetupScore.</p>
+          <p class="text-xs text-slate-400">Past updates published on SetupScore v4.0.</p>
         </div>
         <div id="releaseLogsContainer" class="space-y-3 font-mono text-xs"></div>
       </div>
@@ -330,13 +317,13 @@
         const now = ctx.currentTime;
         if (type === 'click') {
           osc.type = 'sine'; osc.frequency.setValueAtTime(440, now);
-          gain.gain.setValueAtTime(0.05, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+          gain.gain.setValueAtTime(0.06, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
           osc.start(now); osc.stop(now + 0.05);
         } else if (type === 'levelup') {
           osc.type = 'triangle';
           osc.frequency.setValueAtTime(261.63, now); osc.frequency.setValueAtTime(329.63, now + 0.08);
           osc.frequency.setValueAtTime(392.00, now + 0.16); osc.frequency.setValueAtTime(523.25, now + 0.24);
-          gain.gain.setValueAtTime(0.08, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+          gain.gain.setValueAtTime(0.09, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
           osc.start(now); osc.stop(now + 0.4);
         }
       } catch (e) {}
@@ -360,6 +347,7 @@
     function openAuthModal() {
       renderProfileList();
       document.getElementById('authScreen').classList.remove('hidden');
+      playSound('click');
     }
 
     function renderProfileList() {
@@ -401,7 +389,7 @@
 
       document.getElementById('authScreen').classList.add('hidden');
       loadUserData();
-      playSound('click');
+      playSound('levelup');
     }
 
     function loadUserData() {
@@ -453,20 +441,22 @@
 
     // Publisher & Admin System
     function promptPublisherLogin() {
-      const pass = prompt("Enter Publisher Passkey:");
+      const pass = prompt("Enter Publisher Passkey (try admin123):");
       if (pass === "admin123") {
         localStorage.setItem('ss_publisher_auth', 'true');
         checkPublisherSession();
         alert("Publisher access unlocked successfully.");
+        playSound('levelup');
       } else if (pass !== null) {
         alert("Incorrect passkey.");
+        playSound('click');
       }
     }
 
     function checkPublisherSession() {
       if (localStorage.getItem('ss_publisher_auth') === 'true') {
         document.getElementById('publisherPanel').classList.remove('hidden');
-        document.getElementById('publisherAuthSection').innerHTML = `<span class="text-xs text-brand-400 font-bold">🟢 Publisher Active</span>`;
+        document.getElementById('publisherAuthSection').innerHTML = `<span class="text-xs text-brand-400 font-bold bg-brand-500/10 border border-brand-500/30 px-3 py-1.5 rounded-xl">🟢 Publisher Active</span>`;
       }
     }
 
@@ -482,12 +472,11 @@
       const dateStr = new Date().toISOString().split('T')[0];
       const newLog = { title: versionTitle, date: dateStr, desc: versionDesc.replace(/\n/g, '<br>') };
 
-      // Load existing logs or default
       let logs = [];
       try {
         const rawLogs = localStorage.getItem('ss_release_logs');
         logs = rawLogs ? JSON.parse(rawLogs) : [
-          { title: "v4.0 Public Release Edition", date: "2026-09-23", desc: "• Streamlined interface optimized for public deployment.<br>• Upgraded public creator profiles with custom bios and upvote metrics." }
+          { title: "v4.0 Public Edition & Publisher Update", date: "2026-09-23", desc: "• Added Secure Admin & Publisher Panel directly in the Release Notes tab.<br>• Introduced Live Announcement System to broadcast top banner notifications instantly.<br>• Upgraded Creator Profiles with custom bios and upvote tracking." }
         ];
       } catch(e) { logs = []; }
 
@@ -514,18 +503,18 @@
       try {
         const rawLogs = localStorage.getItem('ss_release_logs');
         logs = rawLogs ? JSON.parse(rawLogs) : [
-          { title: "v4.0 Public Release Edition", date: "2026-09-23", desc: "• Streamlined interface optimized for public deployment.<br>• Upgraded public creator profiles with custom bios and upvote metrics." }
+          { title: "v4.0 Public Edition & Publisher Update", date: "2026-09-23", desc: "• Added Secure Admin & Publisher Panel directly in the Release Notes tab.<br>• Introduced Live Announcement System to broadcast top banner notifications instantly.<br>• Upgraded Creator Profiles with custom bios and upvote tracking." }
         ];
       } catch(e) { logs = []; }
 
       const container = document.getElementById('releaseLogsContainer');
       container.innerHTML = logs.map(l => `
-        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-1">
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-1 shadow-sm">
           <div class="flex justify-between text-brand-400 font-bold">
             <span>${l.title}</span>
             <span class="text-slate-500">${l.date}</span>
           </div>
-          <p class="text-slate-300 text-[11px] leading-relaxed">${l.desc}</p>
+          <p class="text-slate-300 text-[11px] leading-relaxed font-sans">${l.desc}</p>
         </div>
       `).join('');
     }
@@ -547,7 +536,7 @@
       localStorage.setItem(`ss_meta_${currentUser}`, JSON.stringify(meta));
       document.getElementById('profileBio').textContent = meta.bio;
       document.getElementById('editProfileSection').classList.add('hidden');
-      playSound('click');
+      playSound('levelup');
     }
 
     // Vision Audit
@@ -582,6 +571,7 @@
       if (userXp >= 100 && userLevel < ranks.length) { userLevel++; userXp = 0; playSound('levelup'); }
       else { playSound('click'); }
       saveUserData(); renderPortfolio(); renderFeed(); renderLeaderboard();
+      switchTab('audit');
     }
 
     function renderRadar() {
@@ -602,8 +592,8 @@
         return;
       }
       container.innerHTML = communityFeed.map(p => `
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden p-4 space-y-3 shadow-lg">
-          <img src="${p.img}" class="w-full h-48 object-cover rounded-xl">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden p-4 space-y-3 shadow-xl hover:border-brand-500/40 transition">
+          <img src="${p.img}" class="w-full h-48 object-cover rounded-xl shadow-inner">
           <div class="flex justify-between items-center">
             <div>
               <h3 class="text-sm font-bold text-slate-200">${p.title}</h3>
@@ -622,7 +612,7 @@
         return;
       }
       container.innerHTML = myPortfolio.map(p => `
-        <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex gap-3 items-center">
+        <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex gap-3 items-center shadow-sm">
           <img src="${p.img}" class="w-14 h-14 object-cover rounded-lg">
           <div>
             <h4 class="text-xs font-bold text-slate-200">${p.title}</h4>
@@ -636,15 +626,15 @@
       const container = document.getElementById('leaderboardContainer');
       const sorted = [...communityFeed].sort((a,b) => parseFloat(b.score) - parseFloat(a.score));
       container.innerHTML = sorted.map((p, idx) => `
-        <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex items-center justify-between text-xs">
+        <div class="bg-slate-950 border border-slate-800 p-3.5 rounded-xl flex items-center justify-between text-xs shadow-sm">
           <div class="flex items-center gap-3">
-            <span class="font-mono font-bold text-brand-400">#${idx+1}</span>
+            <span class="font-mono font-bold text-brand-400 text-sm">#${idx+1}</span>
             <div>
               <span class="font-bold text-slate-200">${p.title}</span>
               <span class="text-[10px] text-slate-400 block font-mono">${p.author}</span>
             </div>
           </div>
-          <span class="font-black text-brand-400 font-mono text-sm">${p.score}</span>
+          <span class="font-black text-brand-400 font-mono text-base">${p.score}</span>
         </div>
       `).join('');
     }
@@ -668,7 +658,7 @@
         const el = document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
         const btn = document.getElementById(`tabBtn${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
         if (el) el.classList.toggle('hidden', tab !== t);
-        if (btn) btn.className = tab === t ? "py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-brand-400 text-brand-400 whitespace-nowrap" : "py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap";
+        if (btn) btn.className = tab === t ? "py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-brand-400 text-brand-400 whitespace-nowrap transition" : "py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition";
       });
       playSound('click');
     }
