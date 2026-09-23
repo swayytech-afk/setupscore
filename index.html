@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SetupScore • Public Edition v4.5</title>
+  <title>SetupScore • Ultimate Edition v4.75</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -23,13 +23,29 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans pb-24 selection:bg-brand-500 selection:text-slate-950 antialiased overflow-x-hidden">
 
+  <!-- ==================== TUTORIAL MODAL ==================== -->
+  <div id="tutorialModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[120] flex items-center justify-center p-4 hidden">
+    <div class="max-w-md w-full bg-slate-900 border border-brand-500/40 rounded-3xl p-6 shadow-2xl relative">
+      <span class="text-[10px] font-mono uppercase text-brand-400 font-bold tracking-widest block mb-1">Welcome Guide</span>
+      <h3 id="tutTitle" class="text-lg font-bold text-slate-100 mb-2">1. Welcome to SetupScore</h3>
+      <p id="tutDesc" class="text-xs text-slate-400 mb-6 leading-relaxed">Evaluate your gaming or developer battlestation using advanced Vision AI, climb global leaderboards, and unlock achievement ranks.</p>
+      <div class="flex justify-between items-center">
+        <span id="tutStepIndicator" class="text-[10px] text-slate-500 font-mono">Step 1 of 3</span>
+        <div class="flex gap-2">
+          <button onclick="closeTutorial()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold px-3 py-2 rounded-xl transition">Skip</button>
+          <button onclick="nextTutorialStep()" id="tutNextBtn" class="bg-brand-400 hover:bg-brand-300 text-slate-950 text-xs font-bold px-4 py-2 rounded-xl transition shadow-md shadow-brand-500/20">Next ➔</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== AUTH & PROFILE MODAL ==================== -->
-  <div id="authScreen" class="fixed inset-0 bg-slate-950/95 backdrop-blur-xl z-[100] flex flex-col justify-center items-center p-4">
+  <div id="authScreen" class="fixed inset-0 bg-slate-950/95 backdrop-blur-xl z-[100] flex flex-col justify-center items-center p-4 hidden">
     <div class="max-w-md w-full bg-slate-900 border border-brand-500/30 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
       <div class="absolute -right-12 -top-12 w-36 h-36 bg-brand-500/10 rounded-full blur-2xl pointer-events-none"></div>
       <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-400 to-blue-500 flex items-center justify-center font-black text-slate-950 text-2xl shadow-lg shadow-brand-500/20 mx-auto mb-5">S</div>
-      <h2 class="text-xl font-bold text-center text-slate-100 mb-1">Welcome to SetupScore v4.5</h2>
-      <p class="text-xs text-center text-slate-400 mb-6">Create or select your creator profile to enter the arena.</p>
+      <h2 class="text-xl font-bold text-center text-slate-100 mb-1">Creator Profile Login</h2>
+      <p class="text-xs text-center text-slate-400 mb-6">Select or create your creator identity to enter the arena.</p>
       
       <div id="existingProfilesContainer" class="space-y-2 mb-6 max-h-36 overflow-y-auto"></div>
 
@@ -63,13 +79,14 @@
         <div>
           <h1 class="text-base font-bold text-slate-100 flex items-center gap-2">
             SetupScore
-            <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/30 px-1.5 py-0.5 rounded font-bold">v4.5 PRO</span>
+            <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/30 px-1.5 py-0.5 rounded font-bold">v4.75 ULTIMATE</span>
           </h1>
           <p id="headerUsername" class="text-[10px] text-slate-400 font-mono">@guest</p>
         </div>
       </div>
 
       <div class="flex items-center gap-3">
+        <button onclick="openTutorial()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-xl text-xs font-bold transition">Tutorial</button>
         <button onclick="openAuthModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-xl text-xs font-bold transition">Profiles</button>
         <div class="flex items-center gap-3 bg-slate-950/80 px-3.5 py-1.5 rounded-2xl border border-slate-800">
           <button onclick="toggleAudioMute()" id="audioToggleBtn" class="text-xs p-1 hover:scale-110 transition" title="Toggle Sound">🔊</button>
@@ -91,6 +108,7 @@
     <div class="max-w-6xl mx-auto px-4 flex gap-2 border-t border-slate-800/60 pt-2 overflow-x-auto">
       <button id="tabBtnFeed" onclick="switchTab('feed')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-brand-400 text-brand-400 whitespace-nowrap transition">Arena Feed</button>
       <button id="tabBtnAudit" onclick="switchTab('audit')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Vision Audit</button>
+      <button id="tabBtnSoundboard" onclick="switchTab('soundboard')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Soundboard 🔊</button>
       <button id="tabBtnLeaderboard" onclick="switchTab('leaderboard')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Leaderboard</button>
       <button id="tabBtnProfile" onclick="switchTab('profile')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">My Profile</button>
       <button id="tabBtnLogs" onclick="switchTab('logs')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Release Notes & Admin ⚡</button>
@@ -193,6 +211,34 @@
       </div>
     </div>
 
+    <!-- SOUNDBOARD TAB -->
+    <div id="tabSoundboard" class="hidden space-y-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4">
+        <div>
+          <h2 class="text-base font-bold text-slate-100 mb-1">Setup Soundboard</h2>
+          <p class="text-xs text-slate-400">Trigger custom audio feedback tones and sound FX for your stream or workstation.</p>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <button onclick="playSound('click')" class="bg-slate-950 hover:bg-slate-800 border border-slate-800 p-6 rounded-2xl text-center transition group shadow-sm">
+            <span class="text-2xl block mb-2 group-hover:scale-110 transition">🖱️</span>
+            <span class="text-xs font-bold text-slate-200 block">Click Pop</span>
+          </button>
+          <button onclick="playSound('levelup')" class="bg-slate-950 hover:bg-slate-800 border border-slate-800 p-6 rounded-2xl text-center transition group shadow-sm">
+            <span class="text-2xl block mb-2 group-hover:scale-110 transition">⚡</span>
+            <span class="text-xs font-bold text-slate-200 block">Level Up</span>
+          </button>
+          <button onclick="playSound('laser')" class="bg-slate-950 hover:bg-slate-800 border border-slate-800 p-6 rounded-2xl text-center transition group shadow-sm">
+            <span class="text-2xl block mb-2 group-hover:scale-110 transition">🚀</span>
+            <span class="text-xs font-bold text-slate-200 block">Cyber Laser</span>
+          </button>
+          <button onclick="playSound('bell')" class="bg-slate-950 hover:bg-slate-800 border border-slate-800 p-6 rounded-2xl text-center transition group shadow-sm">
+            <span class="text-2xl block mb-2 group-hover:scale-110 transition">🔔</span>
+            <span class="text-xs font-bold text-slate-200 block">Success Chime</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- LEADERBOARD TAB -->
     <div id="tabLeaderboard" class="hidden space-y-6">
       <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
@@ -249,10 +295,10 @@
         <div class="flex justify-between items-center relative z-10">
           <div>
             <h2 class="text-base font-bold text-slate-100 flex items-center gap-2">
-              Super Admin Publisher Suite
+              Super Admin Command Center
               <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/30 px-2 py-0.5 rounded font-mono">SECURE ADMIN</span>
             </h2>
-            <p class="text-xs text-slate-400 mt-0.5">Control live release logs, broadcast banner notifications, and manage platform data.</p>
+            <p class="text-xs text-slate-400 mt-0.5">Control live release logs, broadcast banner notifications, user bans, and audit activity.</p>
           </div>
           <div id="publisherAuthSection">
             <button onclick="promptPublisherLogin()" id="publisherLoginBtn" class="bg-brand-400 text-slate-950 font-bold text-xs px-4 py-2.5 rounded-xl transition shadow-lg shadow-brand-500/20 hover:bg-brand-300">🔐 Admin Unlock</button>
@@ -264,16 +310,31 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Version Title / Tag</label>
-              <input type="text" id="pubVersionTitle" placeholder="e.g. v4.5 Super Admin Release" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
+              <input type="text" id="pubVersionTitle" placeholder="e.g. v4.75 Ultimate Edition" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
             </div>
             <div>
               <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Global Top Banner Broadcast Text</label>
-              <input type="text" id="pubBannerText" placeholder="⚡ v4.5 Live: Super Admin suite online!" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
+              <input type="text" id="pubBannerText" placeholder="⚡ v4.75 Live: Ultimate features online!" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
             </div>
           </div>
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Update Log Description (HTML & Bullets Supported)</label>
-            <textarea id="pubVersionDesc" rows="3" placeholder="• Restored Super Admin Panel...&#10;• Enhanced Web Audio feedback..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400"></textarea>
+            <textarea id="pubVersionDesc" rows="3" placeholder="• Restored tutorial & login systems...&#10;• Added ban hammer & live activity logs..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400"></textarea>
+          </div>
+
+          <!-- Ban Hammer & User Management Section -->
+          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+            <span class="text-xs font-bold text-amber-400 block">🔨 Ban Hammer & User Moderation</span>
+            <div class="flex gap-2">
+              <input type="text" id="banUsernameInput" placeholder="Enter handle to ban (e.g. @spammer)" class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
+              <button onclick="executeBanUser()" class="bg-red-500 hover:bg-red-600 text-slate-950 text-xs font-bold px-4 py-2 rounded-xl transition">Ban User</button>
+            </div>
+          </div>
+
+          <!-- Live Server Activity Logs -->
+          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
+            <span class="text-xs font-bold text-brand-400 block">📡 Live Server Activity Stream</span>
+            <div id="adminActivityLogs" class="space-y-1 font-mono text-[11px] text-slate-400 max-h-32 overflow-y-auto"></div>
           </div>
           
           <div class="flex flex-wrap gap-3 pt-2">
@@ -288,7 +349,7 @@
       <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4 shadow-2xl">
         <div>
           <h2 class="text-base font-bold text-slate-100 mb-1">Release History</h2>
-          <p class="text-xs text-slate-400">Official update changelog for SetupScore v4.5.</p>
+          <p class="text-xs text-slate-400">Official update changelog for SetupScore v4.75.</p>
         </div>
         <div id="releaseLogsContainer" class="space-y-3 font-mono text-xs"></div>
       </div>
@@ -300,7 +361,46 @@
     // System State
     let currentUser = null, userXp = 0, userLevel = 1, audioMuted = false;
     let myPortfolio = [], communityFeed = [], uploadedImages = [null, null, null], activeRadarChart = null;
+    let tutorialStep = 1;
     const ranks = ["Bronze Rig", "Silver Studio", "Gold Station", "Diamond Battlestation", "Master Sanctuary"];
+
+    // Tutorial Steps
+    const tutorialSteps = [
+      { title: "1. Welcome to SetupScore v4.75", desc: "Evaluate your gaming or developer workstation using advanced Vision AI, explore community rigs, and climb global leaderboards." },
+      { title: "2. Vision AI Audits & XP", desc: "Upload photos of your main setup and cables to generate instant custom radar charts and earn XP to level up your ranking tier." },
+      { title: "3. Super Admin & Soundboard", desc: "Access the soundboard for audio FX, or use the secure Super Admin command center to moderate users, broadcast announcements, and publish update logs." }
+    ];
+
+    function openTutorial() {
+      tutorialStep = 1;
+      renderTutorialStep();
+      document.getElementById('tutorialModal').classList.remove('hidden');
+      playSound('click');
+    }
+
+    function nextTutorialStep() {
+      tutorialStep++;
+      if (tutorialStep > tutorialSteps.length) {
+        closeTutorial();
+      } else {
+        renderTutorialStep();
+      }
+      playSound('click');
+    }
+
+    function renderTutorialStep() {
+      const step = tutorialSteps[tutorialStep - 1];
+      document.getElementById('tutTitle').textContent = step.title;
+      document.getElementById('tutDesc').textContent = step.desc;
+      document.getElementById('tutStepIndicator').textContent = `Step ${tutorialStep} of ${tutorialSteps.length}`;
+      document.getElementById('tutNextBtn').textContent = tutorialStep === tutorialSteps.length ? "Finish 🎉" : "Next ➔";
+    }
+
+    function closeTutorial() {
+      document.getElementById('tutorialModal').classList.add('hidden');
+      localStorage.setItem('ss_tutorial_seen', 'true');
+      playSound('click');
+    }
 
     // Robust Web Audio System
     let audioCtx = null;
@@ -334,6 +434,16 @@
           osc.frequency.setValueAtTime(392.00, now + 0.16); osc.frequency.setValueAtTime(523.25, now + 0.24);
           gain.gain.setValueAtTime(0.09, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
           osc.start(now); osc.stop(now + 0.4);
+        } else if (type === 'laser') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(880, now); osc.frequency.exponentialRampToValueAtTime(110, now + 0.3);
+          gain.gain.setValueAtTime(0.08, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+          osc.start(now); osc.stop(now + 0.3);
+        } else if (type === 'bell') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(587.33, now); osc.frequency.setValueAtTime(880, now + 0.1);
+          gain.gain.setValueAtTime(0.08, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+          osc.start(now); osc.stop(now + 0.5);
         }
       } catch (e) {}
     }
@@ -347,10 +457,14 @@
       } else {
         openAuthModal();
       }
+      if (!localStorage.getItem('ss_tutorial_seen')) {
+        setTimeout(openTutorial, 500);
+      }
       loadGlobalFeed();
       renderReleaseLogs();
       renderGlobalAnnouncement();
       checkPublisherSession();
+      logAdminActivity("System initialized successfully.");
     }
 
     function openAuthModal() {
@@ -381,6 +495,7 @@
       localStorage.setItem('ss_current_user', currentUser);
       document.getElementById('authScreen').classList.add('hidden');
       loadUserData();
+      logAdminActivity(`User switched active profile to ${currentUser}`);
       playSound('click');
     }
 
@@ -390,6 +505,15 @@
       const bio = document.getElementById('authBio').value.trim() || "Minimalist workstation creator.";
       if (!rawName) return;
       currentUser = rawName.startsWith('@') ? rawName : `@${rawName}`;
+
+      // Check if banned
+      let bannedList = [];
+      try { bannedList = JSON.parse(localStorage.getItem('ss_banned_users') || '[]'); } catch(e){}
+      if (bannedList.includes(currentUser)) {
+        alert("This creator handle is banned from the platform.");
+        return;
+      }
+
       localStorage.setItem('ss_current_user', currentUser);
       
       if (!localStorage.getItem(`ss_meta_${currentUser}`)) {
@@ -398,6 +522,7 @@
 
       document.getElementById('authScreen').classList.add('hidden');
       loadUserData();
+      logAdminActivity(`New profile authenticated: ${currentUser}`);
       playSound('levelup');
     }
 
@@ -454,7 +579,8 @@
       if (pass === "admin123") {
         localStorage.setItem('ss_publisher_auth', 'true');
         checkPublisherSession();
-        alert("Super Admin Publisher Suite unlocked successfully.");
+        logAdminActivity("Super Admin session unlocked.");
+        alert("Super Admin Command Center unlocked successfully.");
         playSound('levelup');
       } else if (pass !== null) {
         alert("Incorrect passkey.");
@@ -477,6 +603,45 @@
       playSound('click');
     }
 
+    function executeBanUser() {
+      const handle = document.getElementById('banUsernameInput').value.trim();
+      if (!handle) return alert("Enter a valid username handle.");
+      let bannedList = [];
+      try { bannedList = JSON.parse(localStorage.getItem('ss_banned_users') || '[]'); } catch(e){}
+      if (!bannedList.includes(handle)) {
+        bannedList.push(handle);
+        localStorage.setItem('ss_banned_users', JSON.stringify(bannedList));
+        logAdminActivity(`Banned user handle: ${handle}`);
+        alert(`User ${handle} has been banned.`);
+        document.getElementById('banUsernameInput').value = '';
+        playSound('levelup');
+      } else {
+        alert("User is already banned.");
+      }
+    }
+
+    function logAdminActivity(msg) {
+      let logs = [];
+      try { logs = JSON.parse(localStorage.getItem('ss_admin_stream') || '[]'); } catch(e){}
+      const timeStr = new Date().toLocaleTimeString();
+      logs.unshift(`[${timeStr}] ${msg}`);
+      if (logs.length > 30) logs.pop();
+      localStorage.setItem('ss_admin_stream', JSON.stringify(logs));
+      renderActivityStream();
+    }
+
+    function renderActivityStream() {
+      let logs = [];
+      try { logs = JSON.parse(localStorage.getItem('ss_admin_stream') || '[]'); } catch(e){}
+      const container = document.getElementById('adminActivityLogs');
+      if (!container) return;
+      if (logs.length === 0) {
+        container.innerHTML = `<span class="text-slate-600">No recent server events.</span>`;
+        return;
+      }
+      container.innerHTML = logs.map(l => `<div>${l}</div>`).join('');
+    }
+
     function publishNewUpdate() {
       const versionTitle = document.getElementById('pubVersionTitle').value.trim();
       const versionDesc = document.getElementById('pubVersionDesc').value.trim();
@@ -493,7 +658,7 @@
       try {
         const rawLogs = localStorage.getItem('ss_release_logs');
         logs = rawLogs ? JSON.parse(rawLogs) : [
-          { title: "v4.5 Super Admin Edition", date: "2026-09-23", desc: "• Restored the Super Admin & Publisher Suite.<br>• Added robust site control utilities including feed clearing and live banner broadcasting.<br>• Upgraded Web Audio feedback reliability." }
+          { title: "v4.75 Ultimate Edition", date: "2026-09-23", desc: "• Restored tutorial, login system, and soundboard.<br>• Added Super Admin ban hammer and live activity log stream.<br>• Enhanced overall performance and audio routing." }
         ];
       } catch(e) { logs = []; }
 
@@ -511,6 +676,7 @@
 
       renderReleaseLogs();
       renderGlobalAnnouncement();
+      logAdminActivity(`Published update log: ${versionTitle}`);
       alert("Update published and broadcasted successfully!");
       playSound('levelup');
     }
@@ -521,6 +687,7 @@
         localStorage.removeItem('ss_global_feed');
         renderFeed();
         renderLeaderboard();
+        logAdminActivity("Cleared community arena feed.");
         alert("Community arena feed cleared.");
         playSound('click');
       }
@@ -531,7 +698,7 @@
       try {
         const rawLogs = localStorage.getItem('ss_release_logs');
         logs = rawLogs ? JSON.parse(rawLogs) : [
-          { title: "v4.5 Super Admin Edition", date: "2026-09-23", desc: "• Restored the Super Admin & Publisher Suite.<br>• Added robust site control utilities including feed clearing and live banner broadcasting.<br>• Upgraded Web Audio feedback reliability." }
+          { title: "v4.75 Ultimate Edition", date: "2026-09-23", desc: "• Restored tutorial, login system, and soundboard.<br>• Added Super Admin ban hammer and live activity log stream.<br>• Enhanced overall performance and audio routing." }
         ];
       } catch(e) { logs = []; }
 
@@ -564,6 +731,7 @@
       localStorage.setItem(`ss_meta_${currentUser}`, JSON.stringify(meta));
       document.getElementById('profileBio').textContent = meta.bio;
       document.getElementById('editProfileSection').classList.add('hidden');
+      logAdminActivity(`Updated creator bio for ${currentUser}`);
       playSound('levelup');
     }
 
@@ -599,6 +767,7 @@
       if (userXp >= 100 && userLevel < ranks.length) { userLevel++; userXp = 0; playSound('levelup'); }
       else { playSound('click'); }
       saveUserData(); renderPortfolio(); renderFeed(); renderLeaderboard();
+      logAdminActivity(`Vision audit completed by ${currentUser} (Score: ${score})`);
       switchTab('audit');
     }
 
@@ -682,12 +851,13 @@
 
     // Tabs Navigation
     function switchTab(t) {
-      ['feed', 'audit', 'leaderboard', 'profile', 'logs'].forEach(tab => {
+      ['feed', 'audit', 'soundboard', 'leaderboard', 'profile', 'logs'].forEach(tab => {
         const el = document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
         const btn = document.getElementById(`tabBtn${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
         if (el) el.classList.toggle('hidden', tab !== t);
         if (btn) btn.className = tab === t ? "py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-brand-400 text-brand-400 whitespace-nowrap transition" : "py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition";
       });
+      if (t === 'logs') renderActivityStream();
       playSound('click');
     }
 
