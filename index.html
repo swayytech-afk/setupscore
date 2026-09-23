@@ -13,7 +13,7 @@
     <div class="max-w-5xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-4">
       
       <!-- Logo & Reset -->
-      <div class="flex items-center gap-3 cursor-pointer group" onclick="resetApp()" title="Click to Reset Session">
+      <div class="flex items-center gap-3 cursor-pointer group" onclick="playSound('click'); resetApp()" title="Click to Reset Session">
         <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-400 via-blue-500 to-purple-600 flex items-center justify-center font-black text-slate-950 text-xl shadow-lg shadow-teal-500/20 group-hover:scale-105 transition-transform">
           S
         </div>
@@ -22,14 +22,17 @@
             <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-slate-100 via-teal-200 to-teal-400 bg-clip-text text-transparent">
               SetupScore AI
             </h1>
-            <span class="text-[10px] bg-teal-500/10 text-teal-400 font-mono border border-teal-500/30 px-1.5 py-0.5 rounded font-bold">v0.85 POLISHED</span>
+            <button onclick="event.stopPropagation(); playSound('click'); openChangelogModal()" class="text-[10px] bg-teal-500/10 text-teal-400 hover:bg-teal-500/20 font-mono border border-teal-500/30 px-1.5 py-0.5 rounded font-bold transition flex items-center gap-1">
+              <span>v0.85</span>
+              <span class="text-[8px] opacity-75">📋 Log</span>
+            </button>
           </div>
           <p class="text-[11px] text-slate-400 font-mono">Gamified Workspace Audit & Leaderboard</p>
         </div>
       </div>
 
       <!-- User Game Stats Header Bar -->
-      <div class="flex items-center gap-4 bg-slate-950/80 px-4 py-2 rounded-xl border border-slate-800">
+      <div class="flex items-center gap-4 bg-slate-950/80 px-4 py-2 rounded-xl border border-slate-800 shadow-inner">
         <!-- Daily Streak -->
         <div class="flex items-center gap-1.5" title="Daily Rating Streak">
           <span class="text-lg animate-pulse">🔥</span>
@@ -57,7 +60,7 @@
         <div class="h-6 w-px bg-slate-800"></div>
 
         <!-- Pro Status Teaser -->
-        <button onclick="openProModal()" class="text-[10px] font-bold bg-amber-400/10 border border-amber-400/30 text-amber-300 hover:bg-amber-400/20 px-2.5 py-1 rounded-lg transition flex items-center gap-1">
+        <button onclick="playSound('click'); openProModal()" class="text-[10px] font-bold bg-amber-400/10 border border-amber-400/30 text-amber-300 hover:bg-amber-400/20 px-2.5 py-1 rounded-lg transition flex items-center gap-1">
           <span>👑</span> PRO
         </button>
       </div>
@@ -66,16 +69,16 @@
 
     <!-- Navigation Tabs -->
     <div class="max-w-5xl mx-auto px-4 flex gap-2 border-t border-slate-800/60 pt-2 overflow-x-auto">
-      <button id="tabBtnAudit" onclick="switchTab('audit')" class="py-2 px-5 text-xs font-semibold rounded-t-lg transition border-b-2 border-teal-400 text-teal-400 bg-slate-900/60 whitespace-nowrap">
+      <button id="tabBtnAudit" onclick="playSound('tab'); switchTab('audit')" class="py-2 px-5 text-xs font-semibold rounded-t-lg transition border-b-2 border-teal-400 text-teal-400 bg-slate-900/60 whitespace-nowrap">
         📸 Setup Audit
       </button>
-      <button id="tabBtnFeed" onclick="switchTab('feed')" class="py-2 px-5 text-xs font-semibold rounded-t-lg transition border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap">
+      <button id="tabBtnFeed" onclick="playSound('tab'); switchTab('feed')" class="py-2 px-5 text-xs font-semibold rounded-t-lg transition border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap">
         🗳️ Arena & Rating Feed
       </button>
-      <button id="tabBtnLeaderboard" onclick="switchTab('leaderboard')" class="py-2 px-5 text-xs font-semibold rounded-t-lg transition border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap">
+      <button id="tabBtnLeaderboard" onclick="playSound('tab'); switchTab('leaderboard')" class="py-2 px-5 text-xs font-semibold rounded-t-lg transition border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap">
         🏆 Leaderboard
       </button>
-      <button id="tabBtnVault" onclick="switchTab('vault')" class="py-2 px-5 text-xs font-semibold rounded-t-lg transition border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap">
+      <button id="tabBtnVault" onclick="playSound('tab'); switchTab('vault')" class="py-2 px-5 text-xs font-semibold rounded-t-lg transition border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap">
         💾 Saved Setup Vault
       </button>
     </div>
@@ -96,7 +99,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           
           <!-- Slot 1: Main View -->
-          <div class="border-2 border-dashed border-slate-700/80 hover:border-teal-400/60 rounded-xl p-4 text-center cursor-pointer bg-slate-950/40 relative overflow-hidden min-h-[160px] flex items-center justify-center transition" onclick="document.getElementById('img1').click()">
+          <div class="border-2 border-dashed border-slate-700/80 hover:border-teal-400/60 rounded-xl p-4 text-center cursor-pointer bg-slate-950/40 relative overflow-hidden min-h-[160px] flex items-center justify-center transition hover:bg-slate-900/40" onclick="playSound('click'); document.getElementById('img1').click()">
             <input type="file" id="img1" accept="image/*" class="hidden" onchange="handleAngleUpload(event, 0)">
             <img id="prev0" class="hidden absolute inset-0 w-full h-full object-cover">
             <div id="holder0" class="space-y-1.5 py-4">
@@ -107,7 +110,7 @@
           </div>
 
           <!-- Slot 2: Cable Management -->
-          <div class="border-2 border-dashed border-slate-700/80 hover:border-teal-400/60 rounded-xl p-4 text-center cursor-pointer bg-slate-950/40 relative overflow-hidden min-h-[160px] flex items-center justify-center transition" onclick="document.getElementById('img2').click()">
+          <div class="border-2 border-dashed border-slate-700/80 hover:border-teal-400/60 rounded-xl p-4 text-center cursor-pointer bg-slate-950/40 relative overflow-hidden min-h-[160px] flex items-center justify-center transition hover:bg-slate-900/40" onclick="playSound('click'); document.getElementById('img2').click()">
             <input type="file" id="img2" accept="image/*" class="hidden" onchange="handleAngleUpload(event, 1)">
             <img id="prev1" class="hidden absolute inset-0 w-full h-full object-cover">
             <div id="holder1" class="space-y-1.5 py-4">
@@ -118,7 +121,7 @@
           </div>
 
           <!-- Slot 3: Lighting / Side View -->
-          <div class="border-2 border-dashed border-slate-700/80 hover:border-teal-400/60 rounded-xl p-4 text-center cursor-pointer bg-slate-950/40 relative overflow-hidden min-h-[160px] flex items-center justify-center transition" onclick="document.getElementById('img3').click()">
+          <div class="border-2 border-dashed border-slate-700/80 hover:border-teal-400/60 rounded-xl p-4 text-center cursor-pointer bg-slate-950/40 relative overflow-hidden min-h-[160px] flex items-center justify-center transition hover:bg-slate-900/40" onclick="playSound('click'); document.getElementById('img3').click()">
             <input type="file" id="img3" accept="image/*" class="hidden" onchange="handleAngleUpload(event, 2)">
             <img id="prev2" class="hidden absolute inset-0 w-full h-full object-cover">
             <div id="holder2" class="space-y-1.5 py-4">
@@ -134,10 +137,10 @@
         <div class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-800/80 pt-4">
           <span id="angleCountText" class="text-xs font-mono text-slate-400">0 / 3 photos selected</span>
           <div class="flex items-center gap-3 w-full sm:w-auto">
-            <button onclick="runMultiAngleAnalysis()" id="analyzeBtn" class="flex-1 sm:flex-none bg-teal-400 hover:bg-teal-300 text-slate-950 font-bold text-xs uppercase tracking-wider px-8 py-3 rounded-xl transition shadow-lg shadow-teal-500/20">
+            <button onclick="playSound('click'); runMultiAngleAnalysis()" id="analyzeBtn" class="flex-1 sm:flex-none bg-teal-400 hover:bg-teal-300 text-slate-950 font-bold text-xs uppercase tracking-wider px-8 py-3 rounded-xl transition shadow-lg shadow-teal-500/20 active:scale-95">
               ⚡ Run Multi-Angle Audit (+50 XP)
             </button>
-            <button onclick="resetApp()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs px-4 py-3 rounded-xl transition">
+            <button onclick="playSound('click'); resetApp()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs px-4 py-3 rounded-xl transition">
               Clear
             </button>
           </div>
@@ -202,10 +205,10 @@
 
             <!-- Vote Action Buttons -->
             <div class="grid grid-cols-2 gap-3 pt-2">
-              <button onclick="voteSetup(true)" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
+              <button onclick="voteSetup(true)" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 active:scale-95">
                 <span>🔥</span> Upvote (+10 XP)
               </button>
-              <button onclick="voteSetup(false)" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
+              <button onclick="voteSetup(false)" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 active:scale-95">
                 <span>⚠️</span> Downgrade (-5 pts)
               </button>
             </div>
@@ -241,7 +244,7 @@
             </h2>
             <p class="text-xs text-slate-400">Your audit history saved locally in browser memory</p>
           </div>
-          <button onclick="clearVault()" class="text-xs font-mono text-rose-400 hover:underline">Clear Vault</button>
+          <button onclick="playSound('click'); clearVault()" class="text-xs font-mono text-rose-400 hover:underline">Clear Vault</button>
         </div>
 
         <div id="vaultList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -251,6 +254,38 @@
     </div>
 
   </main>
+
+  <!-- Patch Notes / Changelog Modal -->
+  <div id="changelogModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-slate-900 border border-teal-500/30 rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">📋</span>
+          <h3 class="text-sm font-bold text-slate-100 uppercase tracking-wider">Patch Notes • v0.85</h3>
+        </div>
+        <button onclick="playSound('click'); closeChangelogModal()" class="text-xs text-slate-400 hover:text-slate-100 font-mono">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs text-slate-300 max-h-60 overflow-y-auto pr-1">
+        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+          <span class="font-bold text-teal-400 block mb-1">🔊 Synthesized UI Audio</span>
+          <p class="text-slate-400">Added interactive Web Audio sound effects for clicks, tab changes, XP gains, upvotes, and level-ups.</p>
+        </div>
+        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+          <span class="font-bold text-teal-400 block mb-1">📸 Auto Compression Safeguard</span>
+          <p class="text-slate-400">Resizes high-resolution camera photos client-side to prevent server request size limits.</p>
+        </div>
+        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+          <span class="font-bold text-teal-400 block mb-1">💾 Saved Vault & Local State</span>
+          <p class="text-slate-400">Streaks, XP, player levels, and past setup audits persist automatically across sessions.</p>
+        </div>
+      </div>
+
+      <button onclick="playSound('click'); closeChangelogModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold py-2.5 rounded-xl transition">
+        Close Patch Notes
+      </button>
+    </div>
+  </div>
 
   <!-- Pro Status Modal -->
   <div id="proModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
@@ -275,7 +310,7 @@
         </div>
       </div>
 
-      <button onclick="closeProModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold py-2.5 rounded-xl transition">
+      <button onclick="playSound('click'); closeProModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold py-2.5 rounded-xl transition">
         Close Teaser
       </button>
     </div>
@@ -297,6 +332,54 @@
       { title: "Neon Vaporwave Cave", author: "@AestheticGamer", rating: 8.4, img: "https://images.unsplash.com/photo-1616588589676-62b3bd4ff6d2?auto=format&fit=crop&w=1000&q=80" }
     ];
     let currentFeedIndex = 0;
+
+    // Web Audio Synthesizer Engine for UI Audio Effects
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playSound(type) {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      const now = audioCtx.currentTime;
+
+      if (type === 'click') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, now);
+        osc.frequency.exponentialRampToValueAtTime(200, now + 0.05);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.linearRampToValueAtTime(0, now + 0.05);
+        osc.start(now);
+        osc.stop(now + 0.05);
+      } else if (type === 'tab') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(300, now);
+        osc.frequency.exponentialRampToValueAtTime(450, now + 0.08);
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.linearRampToValueAtTime(0, now + 0.08);
+        osc.start(now);
+        osc.stop(now + 0.08);
+      } else if (type === 'upvote') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(400, now);
+        osc.frequency.exponentialRampToValueAtTime(800, now + 0.12);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.linearRampToValueAtTime(0, now + 0.12);
+        osc.start(now);
+        osc.stop(now + 0.12);
+      } else if (type === 'levelup') {
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(300, now);
+        osc.frequency.setValueAtTime(500, now + 0.1);
+        osc.frequency.setValueAtTime(800, now + 0.2);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.linearRampToValueAtTime(0, now + 0.35);
+        osc.start(now);
+        osc.stop(now + 0.35);
+      }
+    }
 
     // Load LocalStorage Progress
     function initData() {
@@ -358,13 +441,13 @@
       if (userXp >= 100) {
         userXp -= 100;
         userLevel = Math.min(userLevel + 1, ranks.length);
+        playSound('levelup');
         alert(`🎉 LEVEL UP! You reached ${ranks[userLevel - 1]}!`);
       }
       updateUserStatsUI();
       saveData();
     }
 
-    // Client-side image compression helper
     function compressImage(base64Str, maxWidth = 1000, quality = 0.7) {
       return new Promise((resolve) => {
         const img = new Image();
@@ -421,7 +504,6 @@
         renderAuditResults(data);
         addXp(50);
 
-        // Save to Vault
         savedVault.unshift({
           date: new Date().toLocaleDateString(),
           score: data.overallScore ? data.overallScore.toFixed(1) : "8.5",
@@ -462,6 +544,7 @@
     }
 
     function voteSetup(isUpvote) {
+      playSound(isUpvote ? 'upvote' : 'click');
       addXp(10);
       
       const today = new Date().toDateString();
@@ -554,6 +637,8 @@
 
     function openProModal() { document.getElementById('proModal').classList.remove('hidden'); }
     function closeProModal() { document.getElementById('proModal').classList.add('hidden'); }
+    function openChangelogModal() { document.getElementById('changelogModal').classList.remove('hidden'); }
+    function closeChangelogModal() { document.getElementById('changelogModal').classList.add('hidden'); }
 
     function resetApp() {
       uploadedImages = [null, null, null];
