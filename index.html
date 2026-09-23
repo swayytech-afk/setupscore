@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SetupScore • Ultimate Edition v4.75 (Final Update)</title>
+  <title>SetupScore • Ultimate Edition v4.75 (Final Secured)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -22,6 +22,68 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans pb-24 selection:bg-brand-500 selection:text-slate-950 antialiased overflow-x-hidden">
+
+  <!-- ==================== SECRET ADMIN COMMAND CENTER MODAL ==================== -->
+  <div id="secretAdminModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[150] flex items-center justify-center p-4 hidden">
+    <div class="max-w-2xl w-full bg-slate-900 border border-brand-500/50 rounded-3xl p-6 shadow-2xl relative space-y-5 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <div>
+          <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
+            ⚡ Super Admin Command Center
+            <span class="text-[9px] bg-red-500/10 text-red-400 border border-red-500/30 px-2 py-0.5 rounded font-mono">RESTRICTED OWNER ACCESS</span>
+          </h3>
+          <p class="text-xs text-slate-400">Triggered via secret shortcut. Manage release logs, banners, and bans.</p>
+        </div>
+        <button onclick="closeSecretAdminModal()" class="text-slate-400 hover:text-slate-100 font-bold px-3 py-1 bg-slate-800 rounded-xl text-xs transition">✕ Close</button>
+      </div>
+
+      <!-- Password Lock Screen inside Modal -->
+      <div id="adminLockScreen" class="space-y-4 py-4">
+        <p class="text-xs text-slate-300">Enter your owner passkey to decrypt admin tools:</p>
+        <div class="flex gap-2">
+          <input type="password" id="adminPassInput" placeholder="Passkey (admin123)" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
+          <button onclick="verifyAdminPasskey()" class="bg-brand-400 hover:bg-brand-300 text-slate-950 font-bold text-xs px-5 py-3 rounded-xl transition shadow-lg shadow-brand-500/20">Authenticate</button>
+        </div>
+      </div>
+
+      <!-- Unlocked Admin Interface -->
+      <div id="adminPanelContent" class="space-y-4 hidden">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Version Title / Tag</label>
+            <input type="text" id="pubVersionTitle" placeholder="e.g. v4.75 Final Update" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
+          </div>
+          <div>
+            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Global Top Banner Broadcast Text</label>
+            <input type="text" id="pubBannerText" placeholder="⚡ v4.75 Final Update live!" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
+          </div>
+        </div>
+        <div>
+          <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Update Log Description (HTML & Bullets Supported)</label>
+          <textarea id="pubVersionDesc" rows="3" placeholder="• Published final v4.75 update...&#10;• Added secret admin modal shortcut..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400"></textarea>
+        </div>
+
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+          <span class="text-xs font-bold text-amber-400 block">🔨 Ban Hammer & User Moderation</span>
+          <div class="flex gap-2">
+            <input type="text" id="banUsernameInput" placeholder="Enter handle to ban (e.g. @spammer)" class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
+            <button onclick="executeBanUser()" class="bg-red-500 hover:bg-red-600 text-slate-950 text-xs font-bold px-4 py-2 rounded-xl transition">Ban User</button>
+          </div>
+        </div>
+
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
+          <span class="text-xs font-bold text-brand-400 block">📡 Live Server Activity Stream</span>
+          <div id="adminActivityLogs" class="space-y-1 font-mono text-[11px] text-slate-400 max-h-28 overflow-y-auto"></div>
+        </div>
+        
+        <div class="flex flex-wrap gap-3 pt-2">
+          <button onclick="publishNewUpdate()" class="flex-1 bg-gradient-to-r from-brand-400 to-teal-500 hover:from-brand-300 hover:to-teal-400 text-slate-950 font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition shadow-lg shadow-brand-500/20">Publish Update & Broadcast</button>
+          <button onclick="clearGlobalFeed()" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-bold px-4 py-3 rounded-xl transition">🧹 Clear Feed</button>
+          <button onclick="lockAdminSession()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold px-4 py-3 rounded-xl transition">🔒 Lock</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ==================== TUTORIAL MODAL ==================== -->
   <div id="tutorialModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[120] flex items-center justify-center p-4 hidden">
@@ -104,14 +166,14 @@
       </div>
     </div>
 
-    <!-- Navigation Tabs -->
+    <!-- Navigation Tabs (No Admin Tab visible publicly) -->
     <div class="max-w-6xl mx-auto px-4 flex gap-2 border-t border-slate-800/60 pt-2 overflow-x-auto">
       <button id="tabBtnFeed" onclick="switchTab('feed')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-brand-400 text-brand-400 whitespace-nowrap transition">Arena Feed</button>
       <button id="tabBtnAudit" onclick="switchTab('audit')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Vision Audit</button>
       <button id="tabBtnSoundboard" onclick="switchTab('soundboard')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Soundboard 🔊</button>
       <button id="tabBtnLeaderboard" onclick="switchTab('leaderboard')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Leaderboard</button>
       <button id="tabBtnProfile" onclick="switchTab('profile')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">My Profile</button>
-      <button id="tabBtnLogs" onclick="switchTab('logs')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Admin & Roadmap ⚡</button>
+      <button id="tabBtnRoadmap" onclick="switchTab('roadmap')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Roadmap & Changelog 🗺️</button>
     </div>
   </header>
 
@@ -286,19 +348,17 @@
       </div>
     </div>
 
-    <!-- ADMIN & FUTURE ROADMAP TAB -->
-    <div id="tabLogs" class="space-y-6">
+    <!-- ROADMAP & CHANGELOG TAB (Public viewable) -->
+    <div id="tabRoadmap" class="hidden space-y-6">
       
       <!-- Studio Future Roadmap (Trello-style Board) -->
       <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4 shadow-2xl">
-        <div class="flex justify-between items-center">
-          <div>
-            <h2 class="text-base font-bold text-slate-100 flex items-center gap-2">
-              🗺️ Studio Future Roadmap
-              <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/30 px-2 py-0.5 rounded font-mono">COMING SOON</span>
-            </h2>
-            <p class="text-xs text-slate-400 mt-0.5">Here is a sneak peek at what features the studio is working hard on for upcoming releases.</p>
-          </div>
+        <div>
+          <h2 class="text-base font-bold text-slate-100 flex items-center gap-2">
+            🗺️ Studio Future Roadmap
+            <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/30 px-2 py-0.5 rounded font-mono">COMING SOON</span>
+          </h2>
+          <p class="text-xs text-slate-400 mt-0.5">Here is a sneak peek at what features the studio is working hard on for upcoming releases.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
@@ -317,7 +377,7 @@
               <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
                 <span class="text-[9px] bg-purple-500/10 text-purple-400 border border-purple-500/20 px-2 py-0.5 rounded font-bold inline-block">Customization</span>
                 <p class="font-bold text-slate-200">Custom RGB Themes</p>
-                <p class="text-[11px] text-slate-400">Personalize the dashboard colorway to match your own setup.</p>
+                <p class="text-[11px] text-slate-400">Personalize the dashboard colorway to match your setup.</p>
               </div>
             </div>
           </div>
@@ -361,66 +421,10 @@
               </div>
               <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1 opacity-75">
                 <span class="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-bold inline-block">Security</span>
-                <p class="font-bold text-slate-200">Super Admin Command Center</p>
-                <p class="text-[11px] text-slate-400">Ban hammer, live activity stream & broadcast banners.</p>
+                <p class="font-bold text-slate-200">Secret Admin Shortcut</p>
+                <p class="text-[11px] text-slate-400">Ctrl+Shift+O secure owner command center.</p>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Super Admin Command Center (Protected by admin123) -->
-      <div class="bg-slate-900 border border-brand-400/50 rounded-3xl p-6 space-y-5 shadow-2xl relative overflow-hidden">
-        <div class="absolute right-0 top-0 w-80 h-full bg-gradient-to-l from-brand-500/10 to-transparent pointer-events-none"></div>
-        <div class="flex justify-between items-center relative z-10">
-          <div>
-            <h2 class="text-base font-bold text-slate-100 flex items-center gap-2">
-              Super Admin Command Center
-              <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/30 px-2 py-0.5 rounded font-mono">SECURE ADMIN</span>
-            </h2>
-            <p class="text-xs text-slate-400 mt-0.5">Control live release logs, broadcast banner notifications, user bans, and audit activity.</p>
-          </div>
-          <div id="publisherAuthSection">
-            <button onclick="promptPublisherLogin()" id="publisherLoginBtn" class="bg-brand-400 text-slate-950 font-bold text-xs px-4 py-2.5 rounded-xl transition shadow-lg shadow-brand-500/20 hover:bg-brand-300">🔐 Admin Unlock</button>
-          </div>
-        </div>
-
-        <!-- Hidden Admin Interface -->
-        <div id="publisherPanel" class="space-y-4 hidden border-t border-slate-800 pt-5 relative z-10">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Version Title / Tag</label>
-              <input type="text" id="pubVersionTitle" placeholder="e.g. v4.75 Final Update" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
-            </div>
-            <div>
-              <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Global Top Banner Broadcast Text</label>
-              <input type="text" id="pubBannerText" placeholder="⚡ v4.75 Final Update live!" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
-            </div>
-          </div>
-          <div>
-            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Update Log Description (HTML & Bullets Supported)</label>
-            <textarea id="pubVersionDesc" rows="3" placeholder="• Published final v4.75 update...&#10;• Added Trello-style studio roadmap..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400"></textarea>
-          </div>
-
-          <!-- Ban Hammer & User Management Section -->
-          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
-            <span class="text-xs font-bold text-amber-400 block">🔨 Ban Hammer & User Moderation</span>
-            <div class="flex gap-2">
-              <input type="text" id="banUsernameInput" placeholder="Enter handle to ban (e.g. @spammer)" class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
-              <button onclick="executeBanUser()" class="bg-red-500 hover:bg-red-600 text-slate-950 text-xs font-bold px-4 py-2 rounded-xl transition">Ban User</button>
-            </div>
-          </div>
-
-          <!-- Live Server Activity Logs -->
-          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
-            <span class="text-xs font-bold text-brand-400 block">📡 Live Server Activity Stream</span>
-            <div id="adminActivityLogs" class="space-y-1 font-mono text-[11px] text-slate-400 max-h-32 overflow-y-auto"></div>
-          </div>
-          
-          <div class="flex flex-wrap gap-3 pt-2">
-            <button onclick="publishNewUpdate()" class="flex-1 bg-gradient-to-r from-brand-400 to-teal-500 hover:from-brand-300 hover:to-teal-400 text-slate-950 font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition shadow-lg shadow-brand-500/20">Publish Update & Broadcast</button>
-            <button onclick="clearGlobalFeed()" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-bold px-4 py-3 rounded-xl transition">🧹 Clear Arena Feed</button>
-            <button onclick="lockAdminSession()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold px-4 py-3 rounded-xl transition">🔒 Lock Admin</button>
           </div>
         </div>
       </div>
@@ -444,11 +448,62 @@
     let tutorialStep = 1;
     const ranks = ["Bronze Rig", "Silver Studio", "Gold Station", "Diamond Battlestation", "Master Sanctuary"];
 
+    // Secret Admin Keyboard Listener (Ctrl + Shift + O)
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'o' || e.key === 'O')) {
+        e.preventDefault();
+        openSecretAdminModal();
+      }
+    });
+
+    function openSecretAdminModal() {
+      document.getElementById('secretAdminModal').classList.remove('hidden');
+      checkAdminSession();
+      playSound('click');
+    }
+
+    function closeSecretAdminModal() {
+      document.getElementById('secretAdminModal').classList.add('hidden');
+      playSound('click');
+    }
+
+    function verifyAdminPasskey() {
+      const pass = document.getElementById('adminPassInput').value.trim();
+      if (pass === "admin123") {
+        localStorage.setItem('ss_publisher_auth', 'true');
+        checkAdminSession();
+        logAdminActivity("Super Admin unlocked via secret shortcut.");
+        alert("Admin command center decrypted successfully.");
+        playSound('levelup');
+      } else {
+        alert("Incorrect passkey.");
+        playSound('click');
+      }
+    }
+
+    function checkAdminSession() {
+      if (localStorage.getItem('ss_publisher_auth') === 'true') {
+        document.getElementById('adminLockScreen').classList.add('hidden');
+        document.getElementById('adminPanelContent').classList.remove('hidden');
+      } else {
+        document.getElementById('adminLockScreen').classList.remove('hidden');
+        document.getElementById('adminPanelContent').classList.add('hidden');
+        document.getElementById('adminPassInput').value = '';
+      }
+    }
+
+    function lockAdminSession() {
+      localStorage.removeItem('ss_publisher_auth');
+      checkAdminSession();
+      alert("Admin session locked.");
+      playSound('click');
+    }
+
     // Tutorial Steps
     const tutorialSteps = [
       { title: "1. Welcome to SetupScore v4.75", desc: "Evaluate your gaming or developer workstation using advanced Vision AI, explore community rigs, and climb global leaderboards." },
       { title: "2. Vision AI Audits & XP", desc: "Upload photos of your main setup and cables to generate instant custom radar charts and earn XP to level up your ranking tier." },
-      { title: "3. Super Admin & Roadmap", desc: "Access the soundboard, explore the studio future roadmap, or use the secure Super Admin command center to moderate users and publish updates." }
+      { title: "3. Soundboard & Roadmap", desc: "Access the soundboard, explore the studio future roadmap, or press Ctrl+Shift+O anytime to open the hidden owner admin command center." }
     ];
 
     function openTutorial() {
@@ -543,7 +598,6 @@
       loadGlobalFeed();
       renderReleaseLogs();
       renderGlobalAnnouncement();
-      checkPublisherSession();
       logAdminActivity("System initialized successfully.");
     }
 
@@ -652,36 +706,7 @@
       document.getElementById('profileRankBadge').textContent = rank;
     }
 
-    // Super Admin & Publisher System
-    function promptPublisherLogin() {
-      const pass = prompt("Enter Super Admin Passkey (try admin123):");
-      if (pass === "admin123") {
-        localStorage.setItem('ss_publisher_auth', 'true');
-        checkPublisherSession();
-        logAdminActivity("Super Admin session unlocked.");
-        alert("Super Admin Command Center unlocked successfully.");
-        playSound('levelup');
-      } else if (pass !== null) {
-        alert("Incorrect passkey.");
-        playSound('click');
-      }
-    }
-
-    function checkPublisherSession() {
-      if (localStorage.getItem('ss_publisher_auth') === 'true') {
-        document.getElementById('publisherPanel').classList.remove('hidden');
-        document.getElementById('publisherAuthSection').innerHTML = `<span class="text-xs text-brand-400 font-bold bg-brand-500/10 border border-brand-500/30 px-3.5 py-2 rounded-xl">🟢 Super Admin Active</span>`;
-      }
-    }
-
-    function lockAdminSession() {
-      localStorage.removeItem('ss_publisher_auth');
-      document.getElementById('publisherPanel').classList.add('hidden');
-      document.getElementById('publisherAuthSection').innerHTML = `<button onclick="promptPublisherLogin()" class="bg-brand-400 text-slate-950 font-bold text-xs px-4 py-2.5 rounded-xl transition shadow-lg shadow-brand-500/20 hover:bg-brand-300">🔐 Admin Unlock</button>`;
-      alert("Super Admin session locked.");
-      playSound('click');
-    }
-
+    // Admin Actions
     function executeBanUser() {
       const handle = document.getElementById('banUsernameInput').value.trim();
       if (!handle) return alert("Enter a valid username handle.");
@@ -737,7 +762,7 @@
       try {
         const rawLogs = localStorage.getItem('ss_release_logs');
         logs = rawLogs ? JSON.parse(rawLogs) : [
-          { title: "v4.75 Final Update", date: "2026-09-23", desc: "• Published final v4.75 feature update.<br>• Added studio Trello roadmap for upcoming months.<br>• Verified system stability across all clients." }
+          { title: "v4.75 Final Update", date: "2026-09-23", desc: "• Published final v4.75 feature update.<br>• Added secret admin modal shortcut (Ctrl+Shift+O).<br>• Verified system stability across all clients." }
         ];
       } catch(e) { logs = []; }
 
@@ -777,7 +802,7 @@
       try {
         const rawLogs = localStorage.getItem('ss_release_logs');
         logs = rawLogs ? JSON.parse(rawLogs) : [
-          { title: "v4.75 Final Update", date: "2026-09-23", desc: "• Published final v4.75 feature update.<br>• Added studio Trello roadmap for upcoming months.<br>• Verified system stability across all clients." }
+          { title: "v4.75 Final Update", date: "2026-09-23", desc: "• Published final v4.75 feature update.<br>• Added secret admin modal shortcut (Ctrl+Shift+O).<br>• Verified system stability across all clients." }
         ];
       } catch(e) { logs = []; }
 
@@ -928,13 +953,12 @@
     }
 
     function switchTab(t) {
-      ['feed', 'audit', 'soundboard', 'leaderboard', 'profile', 'logs'].forEach(tab => {
+      ['feed', 'audit', 'soundboard', 'leaderboard', 'profile', 'roadmap'].forEach(tab => {
         const el = document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
         const btn = document.getElementById(`tabBtn${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
         if (el) el.classList.toggle('hidden', tab !== t);
         if (btn) btn.className = tab === t ? "py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-brand-400 text-brand-400 whitespace-nowrap transition" : "py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition";
       });
-      if (t === 'logs') renderActivityStream();
       playSound('click');
     }
 
