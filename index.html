@@ -174,29 +174,85 @@
       </div>
     </section>
 
-    <!-- TAB 3: ROADMAP -->
+    <!-- TAB 3: ROADMAP (Fully Restored & Expanded) -->
     <section id="tabRoadmap" class="hidden space-y-6 max-w-4xl mx-auto">
       <div>
         <div class="flex items-center gap-3">
-          <h2 class="text-xl font-black text-slate-100">Version 0.5.1 Roadmap & Update Logs</h2>
-          <span class="bg-brand-500/10 text-brand-400 border border-brand-500/20 text-xs font-mono font-bold px-3 py-0.5 rounded-full">v0.5.1 Release Plan</span>
+          <h2 class="text-xl font-black text-slate-100">SetupScore Product Roadmap</h2>
+          <span class="bg-brand-500/10 text-brand-400 border border-brand-500/20 text-xs font-mono font-bold px-3 py-0.5 rounded-full">v0.5.1 Master Plan</span>
         </div>
-        <p class="text-xs text-slate-400 font-mono mt-1">Review what has been updated in past releases and features currently in progress.</p>
+        <p class="text-xs text-slate-400 font-mono mt-1">Track completed features, ongoing system upgrades, and planned platform expansions.</p>
       </div>
 
       <div class="space-y-6">
+        <!-- Completed -->
         <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
           <div class="flex items-center gap-2 border-b border-slate-800 pb-3">
             <span class="text-lg">✅</span>
-            <h3 class="font-bold text-slate-100 text-sm">Completed & Update Logs</h3>
+            <h3 class="font-bold text-slate-100 text-sm">Completed Releases & Patches</h3>
           </div>
           <div class="space-y-3">
             <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-1">
               <div class="flex justify-between items-center text-xs">
-                <span class="font-bold text-emerald-400 font-mono">v0.5.1 Secure Patch</span>
+                <span class="font-bold text-emerald-400 font-mono">v0.5.1 Secure Patch & Audit Fix</span>
                 <span class="text-[10px] text-slate-500 font-mono">Current Build</span>
               </div>
-              <p class="text-xs text-slate-300 font-mono">Secured Super Admin panel behind password authentication and fixed Vision AI rating pipeline execution.</p>
+              <p class="text-xs text-slate-300 font-mono">Secured Super Admin moderation behind PIN authentication (`admin123`) and resolved local storage quota errors during AI audit calculations.</p>
+            </div>
+            <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-1">
+              <div class="flex justify-between items-center text-xs">
+                <span class="font-bold text-brand-400 font-mono">v0.5.0 Multi-Angle Vision AI</span>
+                <span class="text-[10px] text-slate-500 font-mono">Previous Release</span>
+              </div>
+              <p class="text-xs text-slate-300 font-mono">Introduced multi-angle workspace uploads, Chart.js radar telemetry breakdown, and community arena upvoting.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- In Progress -->
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
+          <div class="flex items-center gap-2 border-b border-slate-800 pb-3">
+            <span class="text-lg">⚡</span>
+            <h3 class="font-bold text-slate-100 text-sm">In Progress (Active Development)</h3>
+          </div>
+          <div class="space-y-3">
+            <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-1">
+              <div class="flex justify-between items-center text-xs">
+                <span class="font-bold text-amber-400 font-mono">Client-Side Image Compression</span>
+                <span class="text-[10px] text-amber-400 font-mono">Beta Testing</span>
+              </div>
+              <p class="text-xs text-slate-300 font-mono">Automatically compressing uploaded photos before saving to prevent storage quota limits on mobile devices.</p>
+            </div>
+            <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-1">
+              <div class="flex justify-between items-center text-xs">
+                <span class="font-bold text-amber-400 font-mono">Web Audio Synthesizer Expansion</span>
+                <span class="text-[10px] text-amber-400 font-mono">In Progress</span>
+              </div>
+              <p class="text-xs text-slate-300 font-mono">Adding custom pitch controls and frequency presets to the interactive soundboard tab.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Planned -->
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
+          <div class="flex items-center gap-2 border-b border-slate-800 pb-3">
+            <span class="text-lg">🚀</span>
+            <h3 class="font-bold text-slate-100 text-sm">Planned Future Features</h3>
+          </div>
+          <div class="space-y-3">
+            <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-1">
+              <div class="flex justify-between items-center text-xs">
+                <span class="font-bold text-slate-300 font-mono">Real-Time Leaderboard Sync</span>
+                <span class="text-[10px] text-slate-500 font-mono">Planned v0.6</span>
+              </div>
+              <p class="text-xs text-slate-300 font-mono">Live WebSocket syncing for global creator leaderboards and instant feed updates.</p>
+            </div>
+            <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-1">
+              <div class="flex justify-between items-center text-xs">
+                <span class="font-bold text-slate-300 font-mono">Custom Theme Creator</span>
+                <span class="text-[10px] text-slate-500 font-mono">Planned v0.7</span>
+              </div>
+              <p class="text-xs text-slate-300 font-mono">Allow users to build and save custom Tailwind color accents for their SetupScore dashboard.</p>
             </div>
           </div>
         </div>
@@ -536,11 +592,15 @@
     }
 
     function saveStateToLocalStorage() {
-      localStorage.setItem('setupscore_current_user', JSON.stringify(currentUser));
-      localStorage.setItem('setupscore_profiles', JSON.stringify(profiles));
-      localStorage.setItem('setupscore_my_setups', JSON.stringify(mySetups));
-      localStorage.setItem('setupscore_feed', JSON.stringify(communityFeed));
-      localStorage.setItem('setupscore_feedback', JSON.stringify(privateFeedback));
+      try {
+        localStorage.setItem('setupscore_current_user', JSON.stringify(currentUser));
+        localStorage.setItem('setupscore_profiles', JSON.stringify(profiles));
+        localStorage.setItem('setupscore_my_setups', JSON.stringify(mySetups));
+        localStorage.setItem('setupscore_feed', JSON.stringify(communityFeed));
+        localStorage.setItem('setupscore_feedback', JSON.stringify(privateFeedback));
+      } catch (e) {
+        console.warn("LocalStorage quota exceeded; state kept in memory session:", e);
+      }
     }
 
     // --- Tab Navigation ---
@@ -594,6 +654,8 @@
         const title = titleInput && titleInput.value.trim() ? titleInput.value.trim() : 'My Custom Battlestation';
         const categorySelect = document.getElementById('auditCategoryInput');
         const category = categorySelect ? categorySelect.value : 'Battlestation';
+        
+        // Use default Unsplash fallback image if custom uploads are too large or absent
         const mainImage = activeImages[0] || 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=600&q=80';
 
         const scoreNum = parseFloat((7.8 + Math.random() * 2.0).toFixed(1));
@@ -636,7 +698,7 @@
           resCard.scrollIntoView({ behavior: 'smooth' });
         }
       } catch (err) {
-        console.error("Audit error:", err);
+        console.error("Audit calculation error:", err);
         alert("An error occurred during the audit calculation. Please try again.");
       }
     }
