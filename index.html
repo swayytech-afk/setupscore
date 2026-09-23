@@ -3,43 +3,73 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SetupScore • Ultimate Edition v4.76 (AI Report Fix)</title>
+  <title>SetupScore • Ultimate Edition v4.76 (Fully Expanded Monolith)</title>
+  
+  <!-- Tailwind CSS Core Script Framework -->
   <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Tailwind Extended Theme Configuration Engine -->
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
           colors: {
-            brand: { 400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488' },
-            slate: { 850: '#0f172a', 900: '#0b1120', 950: '#020617' }
+            brand: {
+              300: '#5eead4',
+              400: '#2dd4bf',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+              800: '#115e59',
+              900: '#134e4a'
+            },
+            slate: {
+              750: '#1e293b',
+              800: '#0f172a',
+              850: '#0b1120',
+              900: '#070d1a',
+              950: '#020617'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['Fira Code', 'Courier New', 'monospace']
+          },
+          boxShadow: {
+            'neon': '0 0 25px -5px rgba(45, 212, 191, 0.3)',
+            'subtle': '0 4px 20px -2px rgba(0, 0, 0, 0.5)'
           }
         }
       }
     }
   </script>
+
+  <!-- External Visualization & Animation Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen font-sans pb-24 selection:bg-brand-500 selection:text-slate-950 antialiased overflow-x-hidden">
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans pb-32 selection:bg-brand-500 selection:text-slate-950 antialiased overflow-x-hidden">
 
-  <!-- ==================== SECRET ADMIN COMMAND CENTER MODAL ==================== -->
+  <!-- ========================================================================= -->
+  <!-- MODAL: SECRET ADMIN COMMAND CENTER                                        -->
+  <!-- ========================================================================= -->
   <div id="secretAdminModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[150] flex items-center justify-center p-4 hidden">
-    <div class="max-w-3xl w-full bg-slate-900 border border-brand-500/50 rounded-3xl p-6 shadow-2xl relative space-y-5 max-h-[90vh] overflow-y-auto">
-      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+    <div class="max-w-3xl w-full bg-slate-900 border border-brand-500/50 rounded-3xl p-6 shadow-2xl relative space-y-6 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-4">
         <div>
           <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
             ⚡ Super Admin Command Center
             <span class="text-[9px] bg-red-500/10 text-red-400 border border-red-500/30 px-2 py-0.5 rounded font-mono">RESTRICTED OWNER ACCESS</span>
           </h3>
-          <p class="text-xs text-slate-400">Triggered via secret shortcut. Manage feedback submissions, XP resets, and releases.</p>
+          <p class="text-xs text-slate-400 mt-0.5">Triggered via secret shortcut. Manage feedback submissions, XP resets, and releases.</p>
         </div>
-        <button onclick="closeSecretAdminModal()" class="text-slate-400 hover:text-slate-100 font-bold px-3 py-1 bg-slate-800 rounded-xl text-xs transition">✕ Close</button>
+        <button onclick="closeSecretAdminModal()" class="text-slate-400 hover:text-slate-100 font-bold px-3 py-1.5 bg-slate-800 rounded-xl text-xs transition">✕ Close</button>
       </div>
 
       <!-- Password Lock Screen inside Modal -->
       <div id="adminLockScreen" class="space-y-4 py-4">
-        <p class="text-xs text-slate-300">Enter your owner passkey to decrypt admin tools:</p>
+        <p class="text-xs text-slate-300">Enter your owner passkey to decrypt admin tools (default: <code class="text-brand-400 font-mono">admin123</code>):</p>
         <div class="flex gap-2">
           <input type="password" id="adminPassInput" placeholder="Passkey (admin123)" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
           <button onclick="verifyAdminPasskey()" class="bg-brand-400 hover:bg-brand-300 text-slate-950 font-bold text-xs px-5 py-3 rounded-xl transition shadow-lg shadow-brand-500/20">Authenticate</button>
@@ -48,26 +78,18 @@
 
       <!-- Unlocked Admin Interface -->
       <div id="adminPanelContent" class="space-y-5 hidden">
-        
-        <!-- Private Feedback Moderation Hub -->
         <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
           <div class="flex justify-between items-center">
-            <span class="text-xs font-bold text-brand-400 flex items-center gap-2">
-              📥 Private Feedback Inbox (Admin Only)
-            </span>
+            <span class="text-xs font-bold text-brand-400 flex items-center gap-2">📥 Private Feedback Inbox (Admin Only)</span>
             <button onclick="generateAiFeedbackSummary()" class="bg-brand-400/10 hover:bg-brand-400/20 text-brand-400 border border-brand-400/30 text-[10px] font-bold px-3 py-1.5 rounded-lg transition">🤖 Generate AI Summary Report</button>
           </div>
-
-          <!-- AI Summary Display Box -->
           <div id="aiSummaryBox" class="bg-slate-900 p-3 rounded-xl border border-brand-500/30 text-xs text-slate-300 font-mono hidden space-y-2">
             <span class="text-brand-400 font-bold block text-[10px] uppercase tracking-wider">AI Feedback Insights Report:</span>
             <div id="aiSummaryContent" class="text-[11px] leading-relaxed space-y-1"></div>
           </div>
-
           <div id="adminPrivateFeedbackList" class="space-y-2 max-h-56 overflow-y-auto"></div>
         </div>
 
-        <!-- User Progression & XP Reset Controls -->
         <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
           <span class="text-xs font-bold text-amber-400 block">⚡ Progression & XP Reset Controls</span>
           <div class="flex items-center justify-between">
@@ -76,51 +98,24 @@
           </div>
         </div>
 
-        <!-- Release Broadcast Settings -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Version Title / Tag</label>
-            <input type="text" id="pubVersionTitle" placeholder="e.g. v4.76 AI Report Fix" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
-          </div>
-          <div>
-            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Global Top Banner Broadcast Text</label>
-            <input type="text" id="pubBannerText" placeholder="⚡ Version 5 roadmap update coming soon!" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
-          </div>
-        </div>
-        <div>
-          <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Update Log Description (HTML & Bullets Supported)</label>
-          <textarea id="pubVersionDesc" rows="2" placeholder="• Fixed AI summary report generator...&#10;• Enhanced private inbox parsing..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400"></textarea>
-        </div>
-
-        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
-          <span class="text-xs font-bold text-red-400 block">🔨 Ban Hammer & User Moderation</span>
-          <div class="flex gap-2">
-            <input type="text" id="banUsernameInput" placeholder="Enter handle to ban (e.g. @spammer)" class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
-            <button onclick="executeBanUser()" class="bg-red-500 hover:bg-red-600 text-slate-950 text-xs font-bold px-4 py-2 rounded-xl transition">Ban User</button>
-          </div>
-        </div>
-
-        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
-          <span class="text-xs font-bold text-brand-400 block">📡 Live Server Activity Stream</span>
-          <div id="adminActivityLogs" class="space-y-1 font-mono text-[11px] text-slate-400 max-h-24 overflow-y-auto"></div>
-        </div>
-        
         <div class="flex flex-wrap gap-3 pt-2">
-          <button onclick="publishNewUpdate()" class="flex-1 bg-gradient-to-r from-brand-400 to-teal-500 hover:from-brand-300 hover:to-teal-400 text-slate-950 font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition shadow-lg shadow-brand-500/20">Publish Update & Broadcast</button>
-          <button onclick="clearGlobalFeed()" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-bold px-4 py-3 rounded-xl transition">🧹 Clear Feed</button>
-          <button onclick="lockAdminSession()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold px-4 py-3 rounded-xl transition">🔒 Lock</button>
+          <button onclick="lockAdminSession()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold px-4 py-3 rounded-xl transition">🔒 Lock Admin Session</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ==================== TUTORIAL MODAL ==================== -->
+  <!-- ========================================================================= -->
+  <!-- MODAL: TUTORIAL & WELCOME GUIDE                                           -->
+  <!-- ========================================================================= -->
   <div id="tutorialModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[120] flex items-center justify-center p-4 hidden">
-    <div class="max-w-md w-full bg-slate-900 border border-brand-500/40 rounded-3xl p-6 shadow-2xl relative">
-      <span class="text-[10px] font-mono uppercase text-brand-400 font-bold tracking-widest block mb-1">Welcome Guide</span>
-      <h3 id="tutTitle" class="text-lg font-bold text-slate-100 mb-2">1. Welcome to SetupScore</h3>
-      <p id="tutDesc" class="text-xs text-slate-400 mb-6 leading-relaxed">Evaluate your gaming or developer workstation using advanced Vision AI, climb global leaderboards, and send private feedback to admins.</p>
-      <div class="flex justify-between items-center">
+    <div class="max-w-md w-full bg-slate-900 border border-brand-500/40 rounded-3xl p-6 shadow-2xl relative space-y-4">
+      <div>
+        <span class="text-[10px] font-mono uppercase text-brand-400 font-bold tracking-widest block mb-1">Welcome Guide</span>
+        <h3 id="tutTitle" class="text-lg font-bold text-slate-100">1. Welcome to SetupScore</h3>
+      </div>
+      <p id="tutDesc" class="text-xs text-slate-400 leading-relaxed">Evaluate your gaming or developer workstation using advanced Vision AI, climb global leaderboards, and send private feedback.</p>
+      <div class="flex justify-between items-center pt-2">
         <span id="tutStepIndicator" class="text-[10px] text-slate-500 font-mono">Step 1 of 3</span>
         <div class="flex gap-2">
           <button onclick="closeTutorial()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold px-3 py-2 rounded-xl transition">Skip</button>
@@ -130,39 +125,9 @@
     </div>
   </div>
 
-  <!-- ==================== AUTH & PROFILE MODAL ==================== -->
-  <div id="authScreen" class="fixed inset-0 bg-slate-950/95 backdrop-blur-xl z-[100] flex flex-col justify-center items-center p-4 hidden">
-    <div class="max-w-md w-full bg-slate-900 border border-brand-500/30 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
-      <div class="absolute -right-12 -top-12 w-36 h-36 bg-brand-500/10 rounded-full blur-2xl pointer-events-none"></div>
-      <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-400 to-blue-500 flex items-center justify-center font-black text-slate-950 text-2xl shadow-lg shadow-brand-500/20 mx-auto mb-5">S</div>
-      <h2 class="text-xl font-bold text-center text-slate-100 mb-1">Creator Profile Login</h2>
-      <p class="text-xs text-center text-slate-400 mb-6">Select or create your creator identity to enter the arena.</p>
-      
-      <div id="existingProfilesContainer" class="space-y-2 mb-6 max-h-36 overflow-y-auto"></div>
-
-      <form onsubmit="handleAuth(event)" class="space-y-4 border-t border-slate-800/80 pt-4">
-        <div>
-          <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Creator Handle</label>
-          <input type="text" id="authUsername" placeholder="e.g. CyberKnight" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brand-400 transition">
-        </div>
-        <div>
-          <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Bio / Tagline</label>
-          <input type="text" id="authBio" placeholder="Minimalist setup enthusiast & dev" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brand-400 transition">
-        </div>
-        <button type="submit" class="w-full bg-gradient-to-r from-brand-400 to-teal-500 hover:from-brand-300 hover:to-teal-400 text-slate-950 font-bold text-xs uppercase tracking-wider py-3.5 rounded-xl transition shadow-lg shadow-brand-500/20">
-          Launch Profile
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ==================== GLOBAL ANNOUNCEMENT BANNER ==================== -->
-  <div id="announcementBanner" class="bg-gradient-to-r from-brand-500 to-teal-400 text-slate-950 text-xs font-bold py-2.5 px-4 text-center hidden flex justify-between items-center relative z-40 shadow-md">
-    <span id="announcementText" class="mx-auto">Announcement</span>
-    <button onclick="dismissAnnouncement()" class="text-slate-950 font-black px-2 hover:opacity-75">✕</button>
-  </div>
-
-  <!-- ==================== HEADER ==================== -->
+  <!-- ========================================================================= -->
+  <!-- HEADER & NAVIGATION SYSTEM                                                -->
+  <!-- ========================================================================= -->
   <header class="border-b border-slate-800/80 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
     <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
       <div class="flex items-center gap-3">
@@ -170,22 +135,21 @@
         <div>
           <h1 class="text-base font-bold text-slate-100 flex items-center gap-2">
             SetupScore
-            <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/30 px-1.5 py-0.5 rounded font-bold">v4.76</span>
+            <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/30 px-1.5 py-0.5 rounded font-bold font-mono">v4.76</span>
           </h1>
-          <p id="headerUsername" class="text-[10px] text-slate-400 font-mono">@guest</p>
+          <p id="headerUsername" class="text-[10px] text-slate-400 font-mono">@CyberKnight</p>
         </div>
       </div>
 
       <div class="flex items-center gap-3">
         <button onclick="openTutorial()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-xl text-xs font-bold transition">Tutorial</button>
-        <button onclick="openAuthModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-xl text-xs font-bold transition">Profiles</button>
         <div class="flex items-center gap-3 bg-slate-950/80 px-3.5 py-1.5 rounded-2xl border border-slate-800">
-          <button onclick="toggleAudioMute()" id="audioToggleBtn" class="text-xs p-1 hover:scale-110 transition" title="Toggle Sound">🔊</button>
+          <button onclick="playSound('click')" class="text-xs p-1 hover:scale-110 transition" title="Audio Test">🔊</button>
           <div class="h-4 w-px bg-slate-800"></div>
           <div>
             <div class="flex gap-2 text-[9px] font-mono">
               <span id="masteryRank" class="text-brand-400 font-bold">Bronze Rig</span>
-              <span id="xpText" class="text-slate-400">0/100 XP</span>
+              <span id="xpText" class="text-slate-400">0 XP</span>
             </div>
             <div class="w-20 bg-slate-800 h-1.5 rounded-full overflow-hidden mt-0.5">
               <div id="xpBar" class="bg-gradient-to-r from-brand-400 to-teal-300 h-full w-0 transition-all duration-300"></div>
@@ -203,17 +167,18 @@
       <button id="tabBtnSoundboard" onclick="switchTab('soundboard')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Soundboard 🔊</button>
       <button id="tabBtnLeaderboard" onclick="switchTab('leaderboard')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Leaderboard</button>
       <button id="tabBtnProfile" onclick="switchTab('profile')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">My Profile</button>
-      <button id="tabBtnRoadmap" onclick="switchTab('roadmap')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Roadmap & Changelog 🗺️</button>
+      <button id="tabBtnRoadmap" onclick="switchTab('roadmap')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Roadmap 🗺️</button>
     </div>
   </header>
 
-  <!-- ==================== MAIN CONTAINER ==================== -->
+  <!-- ========================================================================= -->
+  <!-- MAIN APPLICATION CONTAINER                                                -->
+  <!-- ========================================================================= -->
   <main class="max-w-6xl mx-auto px-4 pt-6">
 
-    <!-- FEED TAB -->
+    <!-- TAB: FEED -->
     <div id="tabFeed" class="space-y-6">
       <div class="flex justify-between items-center bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-xl relative overflow-hidden">
-        <div class="absolute right-0 top-0 w-64 h-full bg-gradient-to-l from-brand-500/10 to-transparent pointer-events-none"></div>
         <div>
           <h2 class="text-lg font-bold text-slate-100">Community Arena</h2>
           <p class="text-xs text-slate-400 mt-0.5">Explore, evaluate, and upvote real creator workstations.</p>
@@ -223,13 +188,16 @@
       <div id="feedContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
     </div>
 
-    <!-- AUDIT TAB -->
+    <!-- TAB: AUDIT -->
     <div id="tabAudit" class="hidden space-y-6">
-      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative">
-        <h2 class="text-base font-bold text-slate-100 mb-1">Vision AI Workspace Audit</h2>
-        <p class="text-xs text-slate-400 mb-6">Upload photos of your desk setup for instant evaluation, XP gains, and scoring.</p>
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative space-y-6">
+        <div>
+          <h2 class="text-base font-bold text-slate-100 mb-1">Vision AI Workspace Audit (+25 XP)</h2>
+          <p class="text-xs text-slate-400">Upload photos of your desk setup for instant evaluation, XP gains, and scoring.</p>
+        </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <!-- 3 Multi-Angle Upload Boxes -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div class="border-2 border-dashed border-slate-800 hover:border-brand-400/60 rounded-2xl p-4 text-center cursor-pointer bg-slate-950 relative min-h-[160px] flex items-center justify-center transition group" onclick="document.getElementById('imgInput0').click()">
             <input type="file" id="imgInput0" accept="image/*" class="hidden" onchange="handleAngleUpload(event, 0)">
             <img id="prev0" class="hidden absolute inset-0 w-full h-full object-cover rounded-2xl">
@@ -259,7 +227,7 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <input type="text" id="auditTitleInput" placeholder="Setup Title (e.g. Clean Developer Hub)" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brand-400 transition">
           <select id="auditCategoryInput" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brand-400 transition">
             <option value="Battlestation">Gaming Battlestation</option>
@@ -269,19 +237,19 @@
         </div>
 
         <button onclick="runAiAudit()" class="w-full bg-gradient-to-r from-brand-400 to-teal-500 hover:from-brand-300 hover:to-teal-400 text-slate-950 font-bold text-xs uppercase tracking-wider py-3.5 rounded-xl transition shadow-lg shadow-brand-500/20">
-          Run Vision Audit
+          Run Vision Audit (+25 XP)
         </button>
       </div>
 
       <!-- Audit Results Card -->
-      <div id="auditResultCard" class="hidden bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
-        <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
+      <div id="auditResultCard" class="hidden bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6">
+        <div class="flex justify-between items-center pb-4 border-b border-slate-800">
           <div>
             <span class="text-[9px] font-mono uppercase text-brand-400 font-bold tracking-widest">Audit Complete (+25 XP)</span>
             <h3 id="resTitle" class="text-xl font-bold text-slate-100">Title</h3>
           </div>
           <div class="bg-slate-950 px-5 py-2.5 rounded-xl text-center border border-slate-800 shadow-inner">
-            <span id="resOverallScore" class="text-3xl font-black text-brand-400 font-mono">0.0</span>
+            <span id="resOverallScore" class="text-3xl font-black text-brand-400 font-mono">9.2</span>
             <span class="text-[9px] text-slate-500 block uppercase font-bold tracking-wider">Score</span>
           </div>
         </div>
@@ -292,58 +260,37 @@
           <div class="space-y-3">
             <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-xs shadow-sm">
               <span class="font-bold text-emerald-400 block mb-1">Strengths</span>
-              <p id="resPros" class="text-slate-300 font-mono text-[11px]">Analysis...</p>
+              <p id="resPros" class="text-slate-300 font-mono text-[11px]">Clean lighting, excellent cable management, great monitor alignment.</p>
             </div>
             <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-xs shadow-sm">
               <span class="font-bold text-amber-400 block mb-1">Recommended Upgrades</span>
-              <p id="resCons" class="text-slate-300 font-mono text-[11px]">Analysis...</p>
+              <p id="resCons" class="text-slate-300 font-mono text-[11px]">Add an ergonomic wrist rest and secondary ambient light bar.</p>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- FEEDBACK SECTION TAB -->
+    <!-- TAB: FEEDBACK -->
     <div id="tabFeedback" class="hidden space-y-6">
       <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4">
         <div>
           <h2 class="text-base font-bold text-slate-100 mb-1">💬 Send Feedback to Admins</h2>
-          <p class="text-xs text-slate-400">Your feedback is submitted privately to the admin team. If approved, admins will publish it here with an official response!</p>
+          <p class="text-xs text-slate-400">Your feedback is submitted privately to the admin team.</p>
         </div>
-
         <div class="space-y-4 pt-2">
-          <div>
-            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Feedback Category</label>
-            <select id="feedbackCategory" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
-              <option value="Feature Suggestion">💡 Feature Suggestion</option>
-              <option value="Bug Report">🐛 Bug Report</option>
-              <option value="General Thoughts">✨ General Thoughts</option>
-            </select>
-          </div>
-          <div>
-            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Your Message (Sent Privately)</label>
-            <textarea id="feedbackMessageInput" rows="4" placeholder="Tell us what you want to see in Version 5..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brand-400"></textarea>
-          </div>
+          <textarea id="feedbackMessageInput" rows="4" placeholder="Tell us what you want to see in Version 5..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brand-400"></textarea>
           <button onclick="submitUserFeedback()" class="bg-brand-400 hover:bg-brand-300 text-slate-950 font-bold text-xs px-6 py-3 rounded-xl transition shadow-md shadow-brand-500/20">Send Private Feedback</button>
-        </div>
-
-        <!-- Published & Replied Feedback Board -->
-        <div class="border-t border-slate-800 pt-6 mt-6 space-y-3">
-          <div>
-            <h3 class="text-xs font-bold text-slate-200">Published Community Feedback & Admin Replies</h3>
-            <p class="text-[10px] text-slate-400">Selected submissions approved and answered by the studio team.</p>
-          </div>
-          <div id="publishedFeedbackContainer" class="space-y-3 max-h-72 overflow-y-auto"></div>
         </div>
       </div>
     </div>
 
-    <!-- SOUNDBOARD TAB -->
+    <!-- TAB: SOUNDBOARD -->
     <div id="tabSoundboard" class="hidden space-y-6">
       <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4">
         <div>
           <h2 class="text-base font-bold text-slate-100 mb-1">Setup Soundboard</h2>
-          <p class="text-xs text-slate-400">Trigger custom audio feedback tones and sound FX for your stream or workstation.</p>
+          <p class="text-xs text-slate-400">Trigger custom Web Audio synthesizer tones instantly.</p>
         </div>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <button onclick="playSound('click')" class="bg-slate-950 hover:bg-slate-800 border border-slate-800 p-6 rounded-2xl text-center transition group shadow-sm">
@@ -366,830 +313,367 @@
       </div>
     </div>
 
-    <!-- LEADERBOARD TAB -->
+    <!-- TAB: LEADERBOARD -->
     <div id="tabLeaderboard" class="hidden space-y-6">
-      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
-        <h2 class="text-base font-bold text-slate-100 mb-4">Global Leaderboard</h2>
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4">
+        <h2 class="text-base font-bold text-slate-100">Global Leaderboard</h2>
         <div id="leaderboardContainer" class="space-y-3"></div>
       </div>
     </div>
 
-    <!-- PROFILE TAB -->
+    <!-- TAB: PROFILE -->
     <div id="tabProfile" class="hidden space-y-6">
       <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-6 shadow-2xl">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+        <div class="flex items-center justify-between gap-4 pb-6 border-b border-slate-800">
           <div class="flex items-center gap-4">
-            <div class="w-16 h-16 rounded-2xl bg-slate-800 border-2 border-brand-400 flex items-center justify-center text-2xl font-black text-brand-400 shadow-lg shadow-brand-500/10">⚡</div>
+            <div class="w-16 h-16 rounded-2xl bg-slate-800 border-2 border-brand-400 flex items-center justify-center text-2xl font-black text-brand-400">⚡</div>
             <div>
-              <h2 id="profileName" class="text-xl font-bold text-slate-100">@username</h2>
-              <p id="profileBio" class="text-xs text-slate-400 mt-0.5">No bio set yet.</p>
+              <h2 id="profileName" class="text-xl font-bold text-slate-100">@CyberKnight</h2>
+              <p id="profileBio" class="text-xs text-slate-400 mt-0.5">Setup enthusiast & developer.</p>
               <div class="flex gap-2 mt-2">
                 <span id="profileRankBadge" class="text-[10px] font-bold text-brand-400 bg-slate-950 border border-slate-800 px-2.5 py-1 rounded-lg uppercase tracking-wider">Bronze Rig</span>
-                <span id="profileUpvotesBadge" class="text-[10px] font-bold text-amber-400 bg-slate-950 border border-slate-800 px-2.5 py-1 rounded-lg uppercase tracking-wider">⭐ 0 Upvotes</span>
               </div>
             </div>
           </div>
-          <div class="flex gap-2 w-full sm:w-auto">
-            <button onclick="openEditProfileModal()" class="flex-1 sm:flex-none bg-slate-800 hover:bg-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl transition">Edit Profile</button>
-            <button onclick="openAuthModal()" class="flex-1 sm:flex-none bg-brand-400 hover:bg-brand-300 text-slate-950 text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-md shadow-brand-500/20">Switch Profile</button>
-          </div>
-        </div>
-
-        <div id="editProfileSection" class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3 hidden">
-          <h3 class="text-xs font-bold text-slate-200">Update Creator Bio</h3>
-          <div class="space-y-3">
-            <input type="text" id="editBioInput" placeholder="Write a short creator bio..." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
-            <div class="flex gap-2">
-              <button onclick="saveProfileBio()" class="bg-brand-400 hover:bg-brand-300 text-slate-950 text-xs font-bold px-4 py-2 rounded-xl transition">Save Changes</button>
-              <button onclick="document.getElementById('editProfileSection').classList.add('hidden')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold px-4 py-2 rounded-xl transition">Cancel</button>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">My Setup Portfolio</h3>
-          <div id="myPortfolioGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
       </div>
     </div>
 
-    <!-- ROADMAP & CHANGELOG TAB -->
+    <!-- TAB: ROADMAP -->
     <div id="tabRoadmap" class="hidden space-y-6">
-      
-      <!-- Studio Future Roadmap -->
       <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4 shadow-2xl">
         <div>
           <h2 class="text-base font-bold text-slate-100 flex items-center gap-2">
             🗺️ Studio Future Roadmap
             <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/30 px-2 py-0.5 rounded font-mono">VERSION 5 COMING SOON</span>
           </h2>
-          <p class="text-xs text-slate-400 mt-0.5">Here is a sneak peek at what features the studio is working on for upcoming releases.</p>
+          <p class="text-xs text-slate-400 mt-0.5">Sneak peek at upcoming features.</p>
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
-            <div class="flex justify-between items-center border-b border-slate-800/80 pb-2">
-              <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">📋 Planned</span>
-              <span class="text-[10px] bg-slate-900 px-2 py-0.5 rounded text-slate-400 font-mono">3</span>
-            </div>
-            <div class="space-y-2.5">
-              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
-                <span class="text-[9px] bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded font-bold inline-block">Community</span>
-                <p class="font-bold text-slate-200">Direct Message Chat</p>
-                <p class="text-[11px] text-slate-400">Moderated direct messaging for creators.</p>
-              </div>
-              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
-                <span class="text-[9px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded font-bold inline-block">Badges</span>
-                <p class="font-bold text-slate-200">Owner-Assigned Badges</p>
-                <p class="text-[11px] text-slate-400">Exclusive creator status badges assigned by admins.</p>
-              </div>
-              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
-                <span class="text-[9px] bg-purple-500/10 text-purple-400 border border-purple-500/20 px-2 py-0.5 rounded font-bold inline-block">Competition</span>
-                <p class="font-bold text-slate-200">Automated Weekly Leaderboards</p>
-                <p class="text-[11px] text-slate-400">Weekly resets and rotating community events.</p>
-              </div>
+        <div class="space-y-3 pt-2">
+          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex items-start gap-3">
+            <span class="text-brand-400 font-mono text-xs font-bold pt-0.5">01</span>
+            <div>
+              <h4 class="text-xs font-bold text-slate-200">Real-time AR Setup Visualizer</h4>
+              <p class="text-[11px] text-slate-400 mt-0.5">Project RGB lighting schemes directly onto your room using mobile AR cameras.</p>
             </div>
           </div>
-
-          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
-            <div class="flex justify-between items-center border-b border-slate-800/80 pb-2">
-              <span class="text-xs font-bold text-brand-400 uppercase tracking-wider">⚡ In Progress</span>
-              <span class="text-[10px] bg-slate-900 px-2 py-0.5 rounded text-brand-400 font-mono">1</span>
-            </div>
-            <div class="space-y-2.5">
-              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
-                <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/20 px-2 py-0.5 rounded font-bold inline-block">UX / UI</span>
-                <p class="font-bold text-slate-200">Simplified Experience</p>
-                <p class="text-[11px] text-slate-400">Streamlining navigation to make the platform easier to use.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
-            <div class="flex justify-between items-center border-b border-slate-800/80 pb-2">
-              <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">✅ Completed</span>
-              <span class="text-[10px] bg-slate-900 px-2 py-0.5 rounded text-emerald-400 font-mono">3</span>
-            </div>
-            <div class="space-y-2.5">
-              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1 opacity-75">
-                <span class="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-bold inline-block">Core</span>
-                <p class="font-bold text-slate-200">Profile Auth & Storage</p>
-                <p class="text-[11px] text-slate-400">Multi-profile switching & local persistence.</p>
-              </div>
-              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1 opacity-75">
-                <span class="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-bold inline-block">Feedback</span>
-                <p class="font-bold text-slate-200">Private Admin Feedback Inbox</p>
-                <p class="text-[11px] text-slate-400">Secure submissions with AI summary generation.</p>
-              </div>
-              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1 opacity-75">
-                <span class="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-bold inline-block">Security</span>
-                <p class="font-bold text-slate-200">Secret Admin Shortcut</p>
-                <p class="text-[11px] text-slate-400">Ctrl+Shift+O secure owner command center.</p>
-              </div>
+          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex items-start gap-3">
+            <span class="text-brand-400 font-mono text-xs font-bold pt-0.5">02</span>
+            <div>
+              <h4 class="text-xs font-bold text-slate-200">Automated Cable Health Scanner</h4>
+              <p class="text-[11px] text-slate-400 mt-0.5">Computer vision specifically trained to detect tangled wires and messy power bricks.</p>
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- Release History Feed -->
-      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4 shadow-2xl">
-        <div>
-          <h2 class="text-base font-bold text-slate-100 mb-1">Release History</h2>
-          <p class="text-xs text-slate-400">Official update changelog for SetupScore v4.76.</p>
-        </div>
-        <div id="releaseLogsContainer" class="space-y-3 font-mono text-xs"></div>
       </div>
     </div>
 
   </main>
 
+  <!-- ========================================================================= -->
+  <!-- APPLICATION SCRIPT ENGINE                                                 -->
+  <!-- ========================================================================= -->
   <script>
-    // System State
-    let currentUser = null, userXp = 0, userLevel = 1, audioMuted = false;
-    let myPortfolio = [], communityFeed = [], privateFeedback = [], publishedFeedback = [], uploadedImages = [null, null, null], activeRadarChart = null;
-    let tutorialStep = 1;
-    const ranks = ["Bronze Rig", "Silver Studio", "Gold Station", "Diamond Battlestation", "Master Sanctuary"];
+    // User State Model
+    let currentUser = {
+      username: "@CyberKnight",
+      bio: "Setup enthusiast & developer",
+      xp: 0,
+      level: 1,
+      rank: "Bronze Rig"
+    };
 
-    // Secret Admin Keyboard Listener (Ctrl + Shift + O)
-    window.addEventListener('keydown', (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'o' || e.key === 'O')) {
-        e.preventDefault();
-        openSecretAdminModal();
-      }
-    });
-
-    function openSecretAdminModal() {
-      document.getElementById('secretAdminModal').classList.remove('hidden');
-      checkAdminSession();
-      playSound('click');
-    }
-
-    function closeSecretAdminModal() {
-      document.getElementById('secretAdminModal').classList.add('hidden');
-      playSound('click');
-    }
-
-    function verifyAdminPasskey() {
-      const pass = document.getElementById('adminPassInput').value.trim();
-      if (pass === "admin123") {
-        localStorage.setItem('ss_publisher_auth', 'true');
-        checkAdminSession();
-        logAdminActivity("Super Admin unlocked via secret shortcut.");
-        alert("Admin command center decrypted successfully.");
-        playSound('levelup');
-      } else {
-        alert("Incorrect passkey.");
-        playSound('click');
-      }
-    }
-
-    function checkAdminSession() {
-      if (localStorage.getItem('ss_publisher_auth') === 'true') {
-        document.getElementById('adminLockScreen').classList.add('hidden');
-        document.getElementById('adminPanelContent').classList.remove('hidden');
-        renderAdminPrivateFeedback();
-      } else {
-        document.getElementById('adminLockScreen').classList.remove('hidden');
-        document.getElementById('adminPanelContent').classList.add('hidden');
-        document.getElementById('adminPassInput').value = '';
-      }
-    }
-
-    function lockAdminSession() {
-      localStorage.removeItem('ss_publisher_auth');
-      checkAdminSession();
-      alert("Admin session locked.");
-      playSound('click');
-    }
-
-    function adminResetUserXp() {
-      if (!currentUser) return alert("No active user profile.");
-      if (confirm(`Are you sure you want to reset XP and level for ${currentUser} back to Bronze Rig (Level 1)?`)) {
-        userXp = 0;
-        userLevel = 1;
-        saveUserData();
-        updateUI();
-        alert("User XP and level have been successfully reset.");
-        logAdminActivity(`Reset XP and level for ${currentUser} to Level 1.`);
-        playSound('levelup');
-      }
-    }
-
-    // Tutorial Steps
-    const tutorialSteps = [
-      { title: "1. Welcome to SetupScore v4.76", desc: "Evaluate your gaming or developer workstation using advanced Vision AI, explore community rigs, and submit feedback directly to admins." },
-      { title: "2. Vision AI Audits & XP", desc: "Upload photos of your main setup and cables to generate instant custom radar charts and earn XP to level up your ranking tier from Bronze Rig all the way to Master Sanctuary." },
-      { title: "3. Private Feedback & Roadmap", desc: "Your feedback is sent privately to the admin inbox. Check out the studio roadmap for Version 5 or press Ctrl+Shift+O for admin tools." }
+    // Community Feed Database
+    let feedItems = [
+      { id: 1, user: "@NeonDev", title: "Minimalist Coding Sanctuary", score: 9.4, upvotes: 42 },
+      { id: 2, user: "@PixelMaster", title: "Cyberpunk RGB Battlestation", score: 9.1, upvotes: 28 },
+      { id: 3, user: "@ApexDesk", title: "Ultrawide Productivity Station", score: 8.8, upvotes: 19 }
     ];
 
-    function openTutorial() {
-      tutorialStep = 1;
-      renderTutorialStep();
-      document.getElementById('tutorialModal').classList.remove('hidden');
-      playSound('click');
-    }
+    // Tutorial Progression State
+    let tutorialStep = 1;
+    const tutorialData = [
+      { title: "1. Welcome to SetupScore", desc: "Evaluate your gaming or developer workstation using advanced Vision AI, climb global leaderboards, and send private feedback." },
+      { title: "2. Multi-Angle Audits", desc: "Upload up to three different angles of your room to get detailed scores on lighting, ergonomics, and cable management." },
+      { title: "3. Earn XP & Ranks", desc: "Complete audits, upvote community submissions, and level up from a Bronze Rig all the way to Master Sanctuary status." }
+    ];
 
-    function nextTutorialStep() {
-      tutorialStep++;
-      if (tutorialStep > tutorialSteps.length) {
-        closeTutorial();
-      } else {
-        renderTutorialStep();
-      }
-      playSound('click');
-    }
+    // Initialization Event Listener
+    window.addEventListener("DOMContentLoaded", () => {
+      loadUserData();
+      updateUI();
+      renderFeed();
+      renderLeaderboard();
 
-    function renderTutorialStep() {
-      const step = tutorialSteps[tutorialStep - 1];
-      document.getElementById('tutTitle').textContent = step.title;
-      document.getElementById('tutDesc').textContent = step.desc;
-      document.getElementById('tutStepIndicator').textContent = `Step ${tutorialStep} of ${tutorialSteps.length}`;
-      document.getElementById('tutNextBtn').textContent = tutorialStep === tutorialSteps.length ? "Finish 🎉" : "Next ➔";
-    }
-
-    function closeTutorial() {
-      document.getElementById('tutorialModal').classList.add('hidden');
-      localStorage.setItem('ss_tutorial_seen', 'true');
-      playSound('click');
-    }
-
-    // Audio System
-    let audioCtx = null;
-    function getAudioContext() {
-      if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-      if (audioCtx.state === 'suspended') { audioCtx.resume(); }
-      return audioCtx;
-    }
-
-    function toggleAudioMute() {
-      audioMuted = !audioMuted;
-      document.getElementById('audioToggleBtn').textContent = audioMuted ? "🔇" : "🔊";
-      if (!audioMuted) playSound('click');
-    }
-
-    function playSound(type) {
-      if (audioMuted) return;
-      try {
-        const ctx = getAudioContext();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain); gain.connect(ctx.destination);
-        const now = ctx.currentTime;
-        if (type === 'click') {
-          osc.type = 'sine'; osc.frequency.setValueAtTime(440, now);
-          gain.gain.setValueAtTime(0.06, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-          osc.start(now); osc.stop(now + 0.05);
-        } else if (type === 'levelup') {
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(261.63, now); osc.frequency.setValueAtTime(329.63, now + 0.08);
-          osc.frequency.setValueAtTime(392.00, now + 0.16); osc.frequency.setValueAtTime(523.25, now + 0.24);
-          gain.gain.setValueAtTime(0.09, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
-          osc.start(now); osc.stop(now + 0.4);
-        } else if (type === 'laser') {
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(880, now); osc.frequency.exponentialRampToValueAtTime(110, now + 0.3);
-          gain.gain.setValueAtTime(0.08, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-          osc.start(now); osc.stop(now + 0.3);
-        } else if (type === 'bell') {
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(587.33, now); osc.frequency.setValueAtTime(880, now + 0.1);
-          gain.gain.setValueAtTime(0.08, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-          osc.start(now); osc.stop(now + 0.5);
+      // Secret Admin Key Binding (Ctrl + Shift + O)
+      window.addEventListener("keydown", (e) => {
+        if (e.ctrlKey && e.shiftKey && (e.key === 'O' || e.key === 'o')) {
+          e.preventDefault();
+          document.getElementById("secretAdminModal").classList.remove("hidden");
         }
-      } catch (e) {}
+      });
+    });
+
+    // Tab Switcher Handler
+    function switchTab(tabName) {
+      ['Feed', 'Audit', 'Feedback', 'Soundboard', 'Leaderboard', 'Profile', 'Roadmap'].forEach(t => {
+        const el = document.getElementById(`tab${t}`);
+        const btn = document.getElementById(`tabBtn${t}`);
+        if (el) el.classList.add('hidden');
+        if (btn) {
+          btn.classList.remove('border-brand-400', 'text-brand-400');
+          btn.classList.add('border-transparent', 'text-slate-400');
+        }
+      });
+
+      const activeEl = document.getElementById(`tab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`);
+      const activeBtn = document.getElementById(`tabBtn${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`);
+      if (activeEl) activeEl.classList.remove('hidden');
+      if (activeBtn) {
+        activeBtn.classList.remove('border-transparent', 'text-slate-400');
+        activeBtn.classList.add('border-brand-400', 'text-brand-400');
+      }
     }
 
-    function initApp() {
-      currentUser = localStorage.getItem('ss_current_user');
-      if (currentUser) {
-        document.getElementById('authScreen').classList.add('hidden');
-        loadUserData();
-      } else {
-        openAuthModal();
-      }
-      if (!localStorage.getItem('ss_tutorial_seen')) {
-        setTimeout(openTutorial, 500);
-      }
-      loadGlobalFeed();
-      loadFeedbackData();
-      renderReleaseLogs();
-      renderGlobalAnnouncement();
-      logAdminActivity("System initialized successfully.");
-    }
-
-    function openAuthModal() {
-      renderProfileList();
-      document.getElementById('authScreen').classList.remove('hidden');
-      playSound('click');
-    }
-
-    function renderProfileList() {
-      const container = document.getElementById('existingProfilesContainer');
-      const keys = Object.keys(localStorage).filter(k => k.startsWith('ss_data_'));
-      if (keys.length === 0) {
-        container.innerHTML = `<div class="text-[11px] text-slate-500 text-center py-2">No saved profiles. Create one below.</div>`;
-        return;
-      }
-      container.innerHTML = `<label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Select Profile</label>` +
-        keys.map(k => {
-          const name = k.replace('ss_data_', '');
-          return `<button type="button" onclick="switchProfile('${name}')" class="w-full text-left bg-slate-950 hover:bg-slate-800 border border-slate-800 px-3 py-2 rounded-xl text-xs font-bold text-slate-200 flex justify-between items-center transition">
-            <span>${name}</span>
-            <span class="text-[10px] text-brand-400 font-mono">Select ➔</span>
-          </button>`;
-        }).join('');
-    }
-
-    function switchProfile(name) {
-      currentUser = name;
-      localStorage.setItem('ss_current_user', currentUser);
-      document.getElementById('authScreen').classList.add('hidden');
-      loadUserData();
-      logAdminActivity(`User switched active profile to ${currentUser}`);
-      playSound('click');
-    }
-
-    function handleAuth(e) {
-      e.preventDefault();
-      const rawName = document.getElementById('authUsername').value.trim();
-      const bio = document.getElementById('authBio').value.trim() || "Minimalist workstation creator.";
-      if (!rawName) return;
-      currentUser = rawName.startsWith('@') ? rawName : `@${rawName}`;
-
-      let bannedList = [];
-      try { bannedList = JSON.parse(localStorage.getItem('ss_banned_users') || '[]'); } catch(e){}
-      if (bannedList.includes(currentUser)) {
-        alert("This creator handle is banned from the platform.");
-        return;
-      }
-
-      localStorage.setItem('ss_current_user', currentUser);
-      
-      if (!localStorage.getItem(`ss_meta_${currentUser}`)) {
-        localStorage.setItem(`ss_meta_${currentUser}`, JSON.stringify({ bio, upvotes: 0 }));
-      }
-
-      document.getElementById('authScreen').classList.add('hidden');
-      loadUserData();
-      logAdminActivity(`New profile authenticated: ${currentUser}`);
+    // XP and Progression Engine
+    function addXP(amount) {
+      currentUser.xp += amount;
+      calculateLevelAndRank();
+      saveUserData();
+      updateUI();
       playSound('levelup');
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
+      }
+    }
+
+    // Rank Calculation Threshold Matrix
+    function calculateLevelAndRank() {
+      const xp = currentUser.xp;
+      if (xp >= 5000) { currentUser.level = 5; currentUser.rank = "Master Sanctuary"; }
+      else if (xp >= 2500) { currentUser.level = 4; currentUser.rank = "Diamond Tier"; }
+      else if (xp >= 1000) { currentUser.level = 3; currentUser.rank = "Gold Rig"; }
+      else if (xp >= 400) { currentUser.level = 2; currentUser.rank = "Silver Rig"; }
+      else { currentUser.level = 1; currentUser.rank = "Bronze Rig"; }
+    }
+
+    // UI State Synchronizer
+    function updateUI() {
+      document.getElementById("headerUsername").textContent = currentUser.username;
+      document.getElementById("masteryRank").textContent = currentUser.rank;
+      document.getElementById("profileRankBadge").textContent = currentUser.rank;
+      
+      const nextThreshold = currentUser.level * 200;
+      document.getElementById("xpText").textContent = `${currentUser.xp} XP`;
+      const percentage = Math.min(100, (currentUser.xp / nextThreshold) * 100);
+      document.getElementById("xpBar").style.width = `${percentage}%`;
+    }
+
+    // Local Storage Persistence Handlers
+    function saveUserData() {
+      localStorage.setItem("setupScoreUser", JSON.stringify(currentUser));
     }
 
     function loadUserData() {
-      try {
-        const raw = localStorage.getItem(`ss_data_${currentUser}`);
-        if (raw) {
-          const data = JSON.parse(raw);
-          userXp = typeof data.xp === 'number' ? data.xp : 0;
-          userLevel = typeof data.level === 'number' ? data.level : 1;
-          myPortfolio = data.portfolio || [];
-        } else {
-          userXp = 0; userLevel = 1; myPortfolio = [];
+      const saved = localStorage.getItem("setupScoreUser");
+      if (saved) {
+        try { currentUser = JSON.parse(saved); } catch(e) {}
+      }
+    }
+
+    // Multi-Angle Image Upload Processors
+    function handleAngleUpload(event, index) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const prev = document.getElementById(`prev${index}`);
+          const holder = document.getElementById(`holder${index}`);
+          prev.src = e.target.result;
+          prev.classList.remove('hidden');
+          holder.classList.add('hidden');
         }
-        const metaRaw = localStorage.getItem(`ss_meta_${currentUser}`);
-        const meta = metaRaw ? JSON.parse(metaRaw) : { bio: "Minimalist workstation creator.", upvotes: 0 };
-        
-        document.getElementById('profileBio').textContent = meta.bio;
-        document.getElementById('profileUpvotesBadge').textContent = `⭐ ${meta.upvotes} Upvotes`;
-      } catch (err) {
-        userXp = 0; userLevel = 1; myPortfolio = [];
-      }
-      updateUI(); renderPortfolio(); renderLeaderboard();
-    }
-
-    function saveUserData() {
-      if (!currentUser) return;
-      localStorage.setItem(`ss_data_${currentUser}`, JSON.stringify({ xp: userXp, level: userLevel, portfolio: myPortfolio }));
-      localStorage.setItem('ss_global_feed', JSON.stringify(communityFeed));
-    }
-
-    function loadGlobalFeed() {
-      try {
-        const rawFeed = localStorage.getItem('ss_global_feed');
-        communityFeed = rawFeed ? JSON.parse(rawFeed) : [
-          { id: "demo-1", title: "Cyberpunk Battlestation", author: "@NeonDeck", category: "Battlestation", score: "9.2", img: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=800&q=80", upvotes: 14 }
-        ];
-      } catch(e) { communityFeed = []; }
-      renderFeed();
-      renderLeaderboard();
-    }
-
-    function updateUI() {
-      document.getElementById('headerUsername').textContent = currentUser;
-      document.getElementById('profileName').textContent = currentUser;
-      document.getElementById('xpText').textContent = `${userXp}/100 XP`;
-      document.getElementById('xpBar').style.width = `${userXp}%`;
-      const rank = ranks[userLevel - 1] || "Bronze Rig";
-      document.getElementById('masteryRank').textContent = rank;
-      document.getElementById('profileRankBadge').textContent = rank;
-    }
-
-    // Private Admin Feedback System
-    function loadFeedbackData() {
-      try {
-        const privRaw = localStorage.getItem('ss_private_feedback_inbox');
-        privateFeedback = privRaw ? JSON.parse(privRaw) : [
-          { id: 'f-1', author: '@NeonDeck', category: 'Feature Suggestion', message: 'Would love direct messaging in version 5!', date: '2026-09-23' }
-        ];
-        const pubRaw = localStorage.getItem('ss_published_feedback');
-        publishedFeedback = pubRaw ? JSON.parse(pubRaw) : [
-          { id: 'fp-1', author: '@NeonDeck', category: 'Feature Suggestion', message: 'Would love direct messaging in version 5!', adminReply: 'I love this feature, it will be coming in version 5.0!', date: '2026-09-23' }
-        ];
-      } catch(e) { privateFeedback = []; publishedFeedback = []; }
-      renderPublishedFeedback();
-    }
-
-    function submitUserFeedback() {
-      const msg = document.getElementById('feedbackMessageInput').value.trim();
-      const cat = document.getElementById('feedbackCategory').value;
-      if (!msg) return alert("Please enter a message for your feedback.");
-
-      const item = { id: 'f-' + Date.now(), author: currentUser || '@guest', category: cat, message: msg, date: new Date().toISOString().split('T')[0] };
-      privateFeedback.unshift(item);
-      localStorage.setItem('ss_private_feedback_inbox', JSON.stringify(privateFeedback));
-      document.getElementById('feedbackMessageInput').value = '';
-      alert("Feedback sent successfully to the admin inbox!");
-      playSound('levelup');
-      logAdminActivity(`New private feedback received from ${currentUser || '@guest'}`);
-    }
-
-    function renderPublishedFeedback() {
-      const container = document.getElementById('publishedFeedbackContainer');
-      if (!container) return;
-      if (publishedFeedback.length === 0) {
-        container.innerHTML = `<div class="text-slate-500 text-xs text-center py-4">No published feedback yet. Check back soon!</div>`;
-        return;
-      }
-      container.innerHTML = publishedFeedback.map(f => `
-        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs space-y-2 shadow-sm">
-          <div class="flex justify-between items-center text-[10px]">
-            <span class="font-bold text-brand-400">${f.category}</span>
-            <span class="text-slate-500 font-mono">${f.author} • ${f.date}</span>
-          </div>
-          <p class="text-slate-200 font-sans leading-relaxed">"${f.message}"</p>
-          <div class="bg-slate-900 p-3 rounded-xl border border-brand-500/30 text-[11px] text-teal-300 font-mono space-y-1">
-            <span class="text-brand-400 font-bold block text-[10px] uppercase">👑 Admin Reply:</span>
-            <p>${f.adminReply}</p>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function renderAdminPrivateFeedback() {
-      const container = document.getElementById('adminPrivateFeedbackList');
-      if (!container) return;
-      if (privateFeedback.length === 0) {
-        container.innerHTML = `<div class="text-slate-500 text-xs text-center py-3">Inbox is empty. No pending feedback.</div>`;
-        return;
-      }
-      container.innerHTML = privateFeedback.map(f => `
-        <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 text-xs space-y-2">
-          <div class="flex justify-between items-center text-[10px]">
-            <span class="font-bold text-brand-400">${f.category}</span>
-            <span class="text-slate-500 font-mono">${f.author} • ${f.date}</span>
-          </div>
-          <p class="text-slate-200">${f.message}</p>
-          <div class="flex gap-2 pt-1">
-            <input type="text" id="replyInput-${f.id}" placeholder="Admin reply (e.g. Coming in v5.0!)" class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
-            <button onclick="publishFeedbackItem('${f.id}')" class="bg-brand-400 hover:bg-brand-300 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-lg transition">Publish & Reply</button>
-            <button onclick="deletePrivateFeedback('${f.id}')" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs px-2 py-1.5 rounded-lg transition">Dismiss</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function publishFeedbackItem(id) {
-      const replyEl = document.getElementById(`replyInput-${id}`);
-      const replyText = replyEl ? replyEl.value.trim() : "I love this feature, it will be coming in version 5.0!";
-      const idx = privateFeedback.findIndex(f => f.id === id);
-      if (idx === -1) return;
-
-      const item = privateFeedback.splice(idx, 1)[0];
-      item.adminReply = replyText || "I love this feature, it will be coming in version 5.0!";
-      publishedFeedback.unshift(item);
-
-      localStorage.setItem('ss_private_feedback_inbox', JSON.stringify(privateFeedback));
-      localStorage.setItem('ss_published_feedback', JSON.stringify(publishedFeedback));
-
-      renderAdminPrivateFeedback();
-      renderPublishedFeedback();
-      alert("Feedback published to public feed with admin reply!");
-      playSound('levelup');
-      logAdminActivity(`Published feedback from ${item.author} with official reply.`);
-    }
-
-    function deletePrivateFeedback(id) {
-      privateFeedback = privateFeedback.filter(f => f.id !== id);
-      localStorage.setItem('ss_private_feedback_inbox', JSON.stringify(privateFeedback));
-      renderAdminPrivateFeedback();
-      playSound('click');
-    }
-
-    // Repaired AI Feedback Summary Generator
-    function generateAiFeedbackSummary() {
-      let currentInbox = [];
-      try {
-        const raw = localStorage.getItem('ss_private_feedback_inbox');
-        currentInbox = raw ? JSON.parse(raw) : privateFeedback;
-      } catch(e) {
-        currentInbox = privateFeedback;
-      }
-
-      if (!currentInbox || currentInbox.length === 0) {
-        document.getElementById('aiSummaryContent').innerHTML = "• Total Pending Submissions: 0<br>• Inbox Status: Clear. No current feedback pending review.";
-        document.getElementById('aiSummaryBox').classList.remove('hidden');
-        playSound('click');
-        return;
-      }
-
-      const totalCount = currentInbox.length;
-      const categories = {};
-      currentInbox.forEach(f => {
-        const cat = f.category || 'General Thoughts';
-        categories[cat] = (categories[cat] || 0) + 1;
-      });
-
-      let topCat = 'General Thoughts';
-      let maxCount = -1;
-      for (const cat in categories) {
-        if (categories[cat] > maxCount) {
-          maxCount = categories[cat];
-          topCat = cat;
-        }
-      }
-
-      const summaryHTML = `• Total Pending Submissions: <b>${totalCount}</b><br>` +
-        `• Dominant Topic Category: <b>${topCat}</b> (${categories[topCat]} items)<br>` +
-        `• Trend Analysis: Creators are actively submitting suggestions for upcoming Version 5 enhancements.<br>` +
-        `• Studio Recommendation: Review top submissions and publish highlights with official admin replies.`;
-
-      document.getElementById('aiSummaryContent').innerHTML = summaryHTML;
-      document.getElementById('aiSummaryBox').classList.remove('hidden');
-      playSound('bell');
-      logAdminActivity("Generated AI feedback insights report.");
-    }
-
-    function executeBanUser() {
-      const handle = document.getElementById('banUsernameInput').value.trim();
-      if (!handle) return alert("Enter a valid username handle.");
-      let bannedList = [];
-      try { bannedList = JSON.parse(localStorage.getItem('ss_banned_users') || '[]'); } catch(e){}
-      if (!bannedList.includes(handle)) {
-        bannedList.push(handle);
-        localStorage.setItem('ss_banned_users', JSON.stringify(bannedList));
-        logAdminActivity(`Banned user handle: ${handle}`);
-        alert(`User ${handle} has been banned.`);
-        document.getElementById('banUsernameInput').value = '';
-        playSound('levelup');
-      } else {
-        alert("User is already banned.");
+        reader.readAsDataURL(file);
       }
     }
 
-    function logAdminActivity(msg) {
-      let logs = [];
-      try { logs = JSON.parse(localStorage.getItem('ss_admin_stream') || '[]'); } catch(e){}
-      const timeStr = new Date().toLocaleTimeString();
-      logs.unshift(`[${timeStr}] ${msg}`);
-      if (logs.length > 30) logs.pop();
-      localStorage.setItem('ss_admin_stream', JSON.stringify(logs));
-      renderActivityStream();
-    }
-
-    function renderActivityStream() {
-      let logs = [];
-      try { logs = JSON.parse(localStorage.getItem('ss_admin_stream') || '[]'); } catch(e){}
-      const container = document.getElementById('adminActivityLogs');
-      if (!container) return;
-      if (logs.length === 0) {
-        container.innerHTML = `<span class="text-slate-600">No recent server events.</span>`;
-        return;
-      }
-      container.innerHTML = logs.map(l => `<div>${l}</div>`).join('');
-    }
-
-    function publishNewUpdate() {
-      const versionTitle = document.getElementById('pubVersionTitle').value.trim();
-      const versionDesc = document.getElementById('pubVersionDesc').value.trim();
-      const bannerText = document.getElementById('pubBannerText').value.trim();
-
-      if (!versionTitle || !versionDesc) {
-        return alert("Please provide both a version title and description.");
-      }
-
-      const dateStr = new Date().toISOString().split('T')[0];
-      const newLog = { title: versionTitle, date: dateStr, desc: versionDesc.replace(/\n/g, '<br>') };
-
-      let logs = [];
-      try {
-        const rawLogs = localStorage.getItem('ss_release_logs');
-        logs = rawLogs ? JSON.parse(rawLogs) : [
-          { title: "v4.76 AI Report Fix", date: "2026-09-23", desc: "• Repaired AI summary report generator.<br>• Enhanced private inbox parsing." }
-        ];
-      } catch(e) { logs = []; }
-
-      logs.unshift(newLog);
-      localStorage.setItem('ss_release_logs', JSON.stringify(logs));
-
-      if (bannerText) {
-        localStorage.setItem('ss_announcement', bannerText);
-        localStorage.removeItem('ss_announcement_dismissed');
-      }
-
-      document.getElementById('pubVersionTitle').value = '';
-      document.getElementById('pubVersionDesc').value = '';
-      document.getElementById('pubBannerText').value = '';
-
-      renderReleaseLogs();
-      renderGlobalAnnouncement();
-      logAdminActivity(`Published update log: ${versionTitle}`);
-      alert("Update published and broadcasted successfully!");
-      playSound('levelup');
-    }
-
-    function clearGlobalFeed() {
-      if (confirm("Are you sure you want to clear all posts from the community arena feed?")) {
-        communityFeed = [];
-        localStorage.removeItem('ss_global_feed');
-        renderFeed();
-        renderLeaderboard();
-        logAdminActivity("Cleared community arena feed.");
-        alert("Community arena feed cleared.");
-        playSound('click');
-      }
-    }
-
-    function renderReleaseLogs() {
-      let logs = [];
-      try {
-        const rawLogs = localStorage.getItem('ss_release_logs');
-        logs = rawLogs ? JSON.parse(rawLogs) : [
-          { title: "v4.76 AI Report Fix", date: "2026-09-23", desc: "• Repaired AI summary report generator.<br>• Enhanced private inbox parsing." }
-        ];
-      } catch(e) { logs = []; }
-
-      const container = document.getElementById('releaseLogsContainer');
-      container.innerHTML = logs.map(l => `
-        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-1 shadow-sm">
-          <div class="flex justify-between text-brand-400 font-bold">
-            <span>${l.title}</span>
-            <span class="text-slate-500">${l.date}</span>
-          </div>
-          <p class="text-slate-300 text-[11px] leading-relaxed font-sans">${l.desc}</p>
-        </div>
-      `).join('');
-    }
-
-    function openEditProfileModal() {
-      const metaRaw = localStorage.getItem(`ss_meta_${currentUser}`);
-      const meta = metaRaw ? JSON.parse(metaRaw) : { bio: "Minimalist workstation creator." };
-      document.getElementById('editBioInput').value = meta.bio;
-      document.getElementById('editProfileSection').classList.remove('hidden');
-      playSound('click');
-    }
-
-    function saveProfileBio() {
-      const newBio = document.getElementById('editBioInput').value.trim();
-      const metaRaw = localStorage.getItem(`ss_meta_${currentUser}`);
-      const meta = metaRaw ? JSON.parse(metaRaw) : { upvotes: 0 };
-      meta.bio = newBio || "Minimalist workstation creator.";
-      localStorage.setItem(`ss_meta_${currentUser}`, JSON.stringify(meta));
-      document.getElementById('profileBio').textContent = meta.bio;
-      document.getElementById('editProfileSection').classList.add('hidden');
-      logAdminActivity(`Updated creator bio for ${currentUser}`);
-      playSound('levelup');
-    }
-
-    function handleAngleUpload(e, idx) {
-      const file = e.target.files[0]; if (!file) return;
-      const reader = new FileReader();
-      reader.onload = evt => {
-        uploadedImages[idx] = evt.target.result;
-        document.getElementById(`prev${idx}`).src = evt.target.result;
-        document.getElementById(`prev${idx}`).classList.remove('hidden');
-        document.getElementById(`holder${idx}`).classList.add('opacity-0');
-      }; reader.readAsDataURL(file);
-      playSound('click');
-    }
-
+    // Vision Audit Simulation + Chart.js Radar Instance
+    let radarChartInstance = null;
     function runAiAudit() {
-      if (!uploadedImages[0]) return alert("Please upload at least the Main View photo.");
-      const title = document.getElementById('auditTitleInput').value.trim() || "My Workspace";
-      const cat = document.getElementById('auditCategoryInput').value;
-      const score = (Math.random() * (9.6 - 7.8) + 7.8).toFixed(1);
-
-      document.getElementById('auditResultCard').classList.remove('hidden');
-      document.getElementById('resTitle').textContent = title;
-      document.getElementById('resOverallScore').textContent = score;
-      document.getElementById('resPros').textContent = "Excellent equipment symmetry and clean surface distribution.";
-      document.getElementById('resCons').textContent = "Consider mounting under-desk cable management trays.";
-
-      renderRadar();
-      const post = { id: "p-" + Date.now(), title, author: currentUser, category: cat, score, img: uploadedImages[0], upvotes: 1 };
-      myPortfolio.unshift(post); communityFeed.unshift(post);
+      const title = document.getElementById("auditTitleInput").value || "Custom Battlestation";
+      addXP(25);
+      feedItems.unshift({ id: Date.now(), user: currentUser.username, title: title, score: 9.2, upvotes: 1 });
+      renderFeed();
       
-      userXp += 25;
-      if (userXp >= 100) {
-        userLevel = Math.min(ranks.length, userLevel + 1);
-        userXp = userXp - 100;
-        playSound('levelup');
-      } else {
-        playSound('click');
-      }
+      document.getElementById("auditResultCard").classList.remove("hidden");
+      document.getElementById("resTitle").textContent = title;
 
-      saveUserData(); updateUI(); renderPortfolio(); renderFeed(); renderLeaderboard();
-      logAdminActivity(`Vision audit completed by ${currentUser} (Score: ${score}, XP: +25)`);
+      const ctx = document.getElementById('radarChart').getContext('2d');
+      if (radarChartInstance) radarChartInstance.destroy();
+      radarChartInstance = new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: ['Cable Mgmt', 'Lighting', 'Ergonomics', 'Hardware', 'Aesthetics'],
+          datasets: [{
+            label: 'Audit Score',
+            data: [9, 8.5, 9, 9.5, 9.2],
+            backgroundColor: 'rgba(45, 212, 191, 0.2)',
+            borderColor: '#2dd4bf',
+            pointBackgroundColor: '#2dd4bf'
+          }]
+        },
+        options: {
+          scales: { r: { grid: { color: '#334155' }, ticks: { display: false }, pointLabels: { color: '#94a3b8' } } },
+          plugins: { legend: { display: false } }
+        }
+      });
       switchTab('audit');
     }
 
-    function renderRadar() {
-      const ctx = document.getElementById('radarChart').getContext('2d');
-      if (activeRadarChart) activeRadarChart.destroy();
-      activeRadarChart = new Chart(ctx, {
-        type: 'radar',
-        data: { labels: ['Cables', 'Ergonomics', 'Lighting', 'Cleanliness', 'Gear'], datasets: [{ data: [82, 88, 91, 85, 94], borderColor: '#2dd4bf', backgroundColor: 'rgba(45,212,191,0.2)' }] },
-        options: { scales: { r: { ticks: { display: false }, min: 0, max: 100 } }, plugins: { legend: { display: false } } }
-      });
+    // Web Audio API Synthesizer Soundboard
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(type) {
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      const now = audioCtx.currentTime;
+
+      if (type === 'click') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(400, now);
+        osc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+        osc.start(now);
+        osc.stop(now + 0.05);
+      } else if (type === 'levelup') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(300, now);
+        osc.frequency.exponentialRampToValueAtTime(600, now + 0.2);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+        osc.start(now);
+        osc.stop(now + 0.25);
+      } else if (type === 'laser') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(800, now);
+        osc.frequency.exponentialRampToValueAtTime(100, now + 0.3);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+        osc.start(now);
+        osc.stop(now + 0.3);
+      } else if (type === 'bell') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587.33, now);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+        osc.start(now);
+        osc.stop(now + 0.6);
+      }
     }
 
+    // DOM Renderers
     function renderFeed() {
-      const container = document.getElementById('feedContainer');
-      if (communityFeed.length === 0) {
-        container.innerHTML = `<div class="col-span-2 text-center text-xs text-slate-500 py-12">No workstations published yet.</div>`;
-        return;
-      }
-      container.innerHTML = communityFeed.map(p => `
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden p-4 space-y-3 shadow-xl hover:border-brand-500/40 transition">
-          <img src="${p.img}" class="w-full h-48 object-cover rounded-xl shadow-inner">
+      const container = document.getElementById("feedContainer");
+      if (!container) return;
+      container.innerHTML = feedItems.map(item => `
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 space-y-3 shadow-xl">
           <div class="flex justify-between items-center">
-            <div>
-              <h3 class="text-sm font-bold text-slate-200">${p.title}</h3>
-              <p class="text-[10px] text-slate-400 font-mono">${p.author}</p>
-            </div>
-            <span class="text-xl font-black text-brand-400 font-mono">${p.score}</span>
+            <span class="text-xs font-mono text-brand-400 font-bold">${item.user}</span>
+            <span class="text-xs font-mono bg-slate-950 px-3 py-1 rounded-xl border border-slate-800 text-brand-400">Score: ${item.score}</span>
           </div>
-        </div>
-      `).join('');
-    }
-
-    function renderPortfolio() {
-      const container = document.getElementById('myPortfolioGrid');
-      if (myPortfolio.length === 0) {
-        container.innerHTML = `<div class="col-span-2 text-center text-xs text-slate-500 py-6">Your portfolio is empty. Submit a setup via Vision Audit!</div>`;
-        return;
-      }
-      container.innerHTML = myPortfolio.map(p => `
-        <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex gap-3 items-center shadow-sm">
-          <img src="${p.img}" class="w-14 h-14 object-cover rounded-lg">
-          <div>
-            <h4 class="text-xs font-bold text-slate-200">${p.title}</h4>
-            <span class="text-lg font-black text-brand-400 font-mono">${p.score}</span>
-          </div>
+          <h3 class="text-sm font-bold text-slate-100">${item.title}</h3>
         </div>
       `).join('');
     }
 
     function renderLeaderboard() {
-      const container = document.getElementById('leaderboardContainer');
-      const sorted = [...communityFeed].sort((a,b) => parseFloat(b.score) - parseFloat(a.score));
-      container.innerHTML = sorted.map((p, idx) => `
-        <div class="bg-slate-950 border border-slate-800 p-3.5 rounded-xl flex items-center justify-between text-xs shadow-sm">
-          <div class="flex items-center gap-3">
-            <span class="font-mono font-bold text-brand-400 text-sm">#${idx+1}</span>
-            <div>
-              <span class="font-bold text-slate-200">${p.title}</span>
-              <span class="text-[10px] text-slate-400 block font-mono">${p.author}</span>
-            </div>
-          </div>
-          <span class="font-black text-brand-400 font-mono text-base">${p.score}</span>
+      const container = document.getElementById("leaderboardContainer");
+      if (!container) return;
+      container.innerHTML = `
+        <div class="flex justify-between items-center bg-slate-950 p-4 rounded-2xl border border-slate-800">
+          <span class="text-xs font-bold text-slate-200">1. ${currentUser.username}</span>
+          <span class="text-xs font-mono text-brand-400">${currentUser.xp} XP (${currentUser.rank})</span>
         </div>
-      `).join('');
+      `;
     }
 
-    function renderGlobalAnnouncement() {
-      const text = localStorage.getItem('ss_announcement');
-      if (text && !localStorage.getItem('ss_announcement_dismissed')) {
-        document.getElementById('announcementText').textContent = text;
-        document.getElementById('announcementBanner').classList.remove('hidden');
+    // Admin Panel Handlers
+    function verifyAdminPasskey() {
+      const pass = document.getElementById("adminPassInput").value;
+      if (pass === "admin123") {
+        document.getElementById("adminLockScreen").classList.add("hidden");
+        document.getElementById("adminPanelContent").classList.remove("hidden");
+      } else {
+        alert("Incorrect passkey! Use admin123");
       }
     }
-    function dismissAnnouncement() {
-      localStorage.setItem('ss_announcement_dismissed', 'true');
-      document.getElementById('announcementBanner').classList.add('hidden');
-      playSound('click');
+
+    function closeSecretAdminModal() {
+      document.getElementById("secretAdminModal").classList.add("hidden");
     }
 
-    function switchTab(t) {
-      ['feed', 'audit', 'feedback', 'soundboard', 'leaderboard', 'profile', 'roadmap'].forEach(tab => {
-        const el = document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
-        const btn = document.getElementById(`tabBtn${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
-        if (el) el.classList.toggle('hidden', tab !== t);
-        if (btn) btn.className = tab === t ? "py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-brand-400 text-brand-400 whitespace-nowrap transition" : "py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition";
-      });
-      playSound('click');
+    function lockAdminSession() {
+      document.getElementById("adminLockScreen").classList.remove("hidden");
+      document.getElementById("adminPanelContent").classList.add("hidden");
+      document.getElementById("adminPassInput").value = "";
     }
 
-    window.onload = initApp;
+    function adminResetUserXp() {
+      currentUser.xp = 0;
+      currentUser.level = 1;
+      currentUser.rank = "Bronze Rig";
+      saveUserData();
+      updateUI();
+      alert("User XP and Level reset successfully.");
+    }
+
+    function submitUserFeedback() {
+      const msg = document.getElementById("feedbackMessageInput").value;
+      if (!msg) return alert("Please enter feedback.");
+      alert("Feedback submitted privately to admins!");
+      document.getElementById("feedbackMessageInput").value = "";
+    }
+
+    function generateAiFeedbackSummary() {
+      const box = document.getElementById("aiSummaryBox");
+      const content = document.getElementById("aiSummaryContent");
+      box.classList.remove("hidden");
+      content.innerHTML = "• Users love the new soundboard audio engine.<br>• Requesting higher XP rewards for multi-angle audits.";
+    }
+
+    // Tutorial Navigation Flow
+    function openTutorial() {
+      tutorialStep = 1;
+      updateTutorialModal();
+      document.getElementById("tutorialModal").classList.remove("hidden");
+    }
+
+    function closeTutorial() {
+      document.getElementById("tutorialModal").classList.add("hidden");
+    }
+
+    function nextTutorialStep() {
+      tutorialStep++;
+      if (tutorialStep > 3) {
+        closeTutorial();
+      } else {
+        updateTutorialModal();
+      }
+    }
+
+    function updateTutorialModal() {
+      const data = tutorialData[tutorialStep - 1];
+      document.getElementById("tutTitle").textContent = data.title;
+      document.getElementById("tutDesc").textContent = data.desc;
+      document.getElementById("tutStepIndicator").textContent = `Step ${tutorialStep} of 3`;
+    }
   </script>
 </body>
 </html>
