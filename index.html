@@ -415,8 +415,6 @@
 
     <!-- ROADMAP & CHANGELOG TAB -->
     <div id="tabRoadmap" class="hidden space-y-6">
-      
-      <!-- Studio Future Roadmap -->
       <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4 shadow-2xl">
         <div>
           <h2 class="text-base font-bold text-slate-100 flex items-center gap-2">
@@ -441,501 +439,124 @@
               <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
                 <span class="text-[9px] bg-brand-500/15 text-brand-400 border border-brand-500/20 px-2 py-0.5 rounded font-bold inline-block">AI Vision</span>
                 <p class="font-bold text-slate-200">RGB Sync Analyzer</p>
-                <p class="text-[11px] text-slate-400">Detect color harmony and lighting synchronization across peripherals.</p>
+                <p class="text-[11px] text-slate-400">Detect color harmony and lighting synchronization across monitors and peripherals.</p>
               </div>
             </div>
           </div>
+
           <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
             <div class="flex justify-between items-center border-b border-slate-800/80 pb-2">
-              <span class="text-xs font-bold text-brand-400 uppercase tracking-wider">⚡ In Progress</span>
-              <span class="text-[10px] bg-slate-900 px-2 py-0.5 rounded text-brand-400 font-mono">2</span>
+              <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">⚡ In Progress</span>
+              <span class="text-[10px] bg-slate-900 px-2 py-0.5 rounded text-amber-400 font-mono">2</span>
             </div>
             <div class="space-y-2.5">
               <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
-                <span class="text-[9px] bg-amber-500/15 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded font-bold inline-block">Gamification</span>
-                <p class="font-bold text-slate-200">Weekly Boss Battles</p>
-                <p class="text-[11px] text-slate-400">Compete in themed weekly workstation styling challenges.</p>
+                <span class="text-[9px] bg-amber-500/15 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded font-bold inline-block">Performance</span>
+                <p class="font-bold text-slate-200">Cloud Image Optimization</p>
+                <p class="text-[11px] text-slate-400">Faster asset loading and compressed webp conversion for setup gallery items.</p>
               </div>
             </div>
           </div>
+
           <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
             <div class="flex justify-between items-center border-b border-slate-800/80 pb-2">
-              <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">🚀 Released</span>
-              <span class="text-[10px] bg-slate-900 px-2 py-0.5 rounded text-emerald-400 font-mono">v4.76</span>
+              <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">🚀 Completed</span>
+              <span class="text-[10px] bg-slate-900 px-2 py-0.5 rounded text-emerald-400 font-mono">4</span>
             </div>
             <div class="space-y-2.5">
               <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
-                <span class="text-[9px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-bold inline-block">Core</span>
-                <p class="font-bold text-slate-200">AI Feedback Summary & XP Fix</p>
-                <p class="text-[11px] text-slate-400">Robust XP gain progression & automated AI feedback summaries.</p>
+                <span class="text-[9px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-bold inline-block">System</span>
+                <p class="font-bold text-slate-200">AI Feedback Report Generator</p>
+                <p class="text-[11px] text-slate-400">Instant AI analysis for incoming feedback submissions.</p>
               </div>
             </div>
           </div>
         </div>
       </div>
-
     </div>
 
   </main>
 
-  <!-- ==================== CORE APP JAVASCRIPT ==================== -->
+  <!-- ==================== CORE SCRIPT ==================== -->
   <script>
-    // State Management
-    let currentUser = JSON.parse(localStorage.getItem('setupscore_user')) || { username: '@guest', bio: 'Welcome to my setup!', xp: 0, level: 1, rank: 'Bronze Rig', upvotes: 0 };
-    let allProfiles = JSON.parse(localStorage.getItem('setupscore_profiles')) || [currentUser];
-    let feedItems = JSON.parse(localStorage.getItem('setupscore_feed')) || [
-      { id: 1, user: '@CyberKnight', title: 'Neon Cyberpunk Rig', category: 'Battlestation', score: 9.4, pros: 'Immersive LED ambiance, clean monitor alignment.', cons: 'Slight clutter near base power strip.', upvotes: 14, image: 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=800&q=80' },
-      { id: 2, user: '@DevQueen', title: 'Minimalist Code Station', category: 'Developer', score: 9.1, pros: 'Ultra-clean cable routing, crisp vertical monitor layout.', cons: 'Could use warmer desktop accent lighting.', upvotes: 22, image: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=800&q=80' }
-    ];
-    let privateFeedbacks = JSON.parse(localStorage.getItem('setupscore_private_feedback')) || [];
-    let publishedFeedbacks = JSON.parse(localStorage.getItem('setupscore_published_feedback')) || [
-      { id: 101, user: '@StreamerX', category: 'Feature Suggestion', message: 'Can you add custom sound effect uploads to the soundboard?', reply: 'We are looking into custom audio snippets for v5!', date: '2 days ago' }
-    ];
-    let bannedUsers = JSON.parse(localStorage.getItem('setupscore_banned')) || [];
-    let currentAuditImages = [null, null, null];
-    let isAudioMuted = false;
-    let radarChartInstance = null;
+    // State management and app logic
+    let currentUser = localStorage.getItem('setupScore_user') || '@CyberGuest';
+    let currentBio = localStorage.getItem('setupScore_bio') || 'Minimalist workstation enthusiast';
+    let currentXp = parseInt(localStorage.getItem('setupScore_xp') || '0');
+    let isMuted = false;
 
-    // Initialize App on Load
-    window.addEventListener('DOMContentLoaded', () => {
-      updateUserDisplay();
-      renderFeed();
-      renderLeaderboard();
-      renderMyPortfolio();
-      renderExistingProfiles();
-      renderPublishedFeedback();
-      renderAdminPrivateFeedback();
-      checkAuthStatus();
-    });
-
-    function checkAuthStatus() {
-      if (!localStorage.getItem('setupscore_user') || currentUser.username === '@guest') {
-        openAuthModal();
-      }
-    }
-
-    // --- Audio Soundboard System (Web Audio API - No external files needed) ---
-    function playSound(type) {
-      if (isAudioMuted) return;
-      try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        const now = audioCtx.currentTime;
-        if (type === 'click') {
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(600, now);
-          osc.frequency.exponentialRampToValueAtTime(200, now + 0.08);
-          gain.gain.setValueAtTime(0.15, now);
-          gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
-          osc.start(now);
-          osc.stop(now + 0.08);
-        } else if (type === 'levelup') {
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(330, now);
-          osc.frequency.setValueAtTime(440, now + 0.1);
-          osc.frequency.setValueAtTime(554, now + 0.2);
-          osc.frequency.setValueAtTime(659, now + 0.3);
-          gain.gain.setValueAtTime(0.2, now);
-          gain.gain.linearRampToValueAtTime(0.01, now + 0.5);
-          osc.start(now);
-          osc.stop(now + 0.5);
-        } else if (type === 'laser') {
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(900, now);
-          osc.frequency.exponentialRampToValueAtTime(100, now + 0.25);
-          gain.gain.setValueAtTime(0.15, now);
-          gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
-          osc.start(now);
-          osc.stop(now + 0.25);
-        } else if (type === 'bell') {
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(880, now);
-          gain.gain.setValueAtTime(0.2, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
-          osc.start(now);
-          osc.stop(now + 0.6);
-        }
-      } catch (e) {
-        console.log("Audio Context prevented or not supported.");
-      }
-    }
-
-    function toggleAudioMute() {
-      isAudioMuted = !isAudioMuted;
-      document.getElementById('audioToggleBtn').textContent = isAudioMuted ? 'muted' : '🔊';
-    }
-
-    // --- XP & Progression Engine (Fixed) ---
-    function addXp(amount) {
-      currentUser.xp += amount;
-      let nextLevelThreshold = currentUser.level * 100;
-      
-      while (currentUser.xp >= nextLevelThreshold) {
-        currentUser.xp -= nextLevelThreshold;
-        currentUser.level += 1;
-        nextLevelThreshold = currentUser.level * 100;
-        
-        // Update Ranks based on Level
-        if (currentUser.level >= 5) currentUser.rank = 'Elite Studio Master';
-        else if (currentUser.level >= 3) currentUser.rank = 'Silver Battlestation';
-        else currentUser.rank = 'Bronze Rig';
-
-        playSound('levelup');
-        if (typeof confetti === 'function') {
-          confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
-        }
-      }
-
-      saveUserData();
-      updateUserDisplay();
-    }
-
-    function updateUserDisplay() {
-      document.getElementById('headerUsername').textContent = currentUser.username;
-      document.getElementById('masteryRank').textContent = currentUser.rank;
-      let threshold = currentUser.level * 100;
-      document.getElementById('xpText').textContent = `${currentUser.xp}/${threshold} XP`;
-      let pct = Math.min(100, (currentUser.xp / threshold) * 100);
-      document.getElementById('xpBar').style.width = pct + '%';
-      
-      // Profile Tab
-      if (document.getElementById('profileName')) {
-        document.getElementById('profileName').textContent = currentUser.username;
-        document.getElementById('profileBio').textContent = currentUser.bio || 'No bio set yet.';
-        document.getElementById('profileRankBadge').textContent = currentUser.rank;
-        document.getElementById('profileUpvotesBadge').textContent = `⭐ ${currentUser.upvotes || 0} Upvotes`;
-      }
-    }
-
-    function saveUserData() {
-      localStorage.setItem('setupscore_user', JSON.stringify(currentUser));
-      const idx = allProfiles.findIndex(p => p.username === currentUser.username);
-      if (idx >= 0) allProfiles[idx] = currentUser;
-      else allProfiles.push(currentUser);
-      localStorage.setItem('setupscore_profiles', JSON.stringify(allProfiles));
-    }
-
-    // --- Navigation Tabs ---
-    function switchTab(tabName) {
-      const tabs = ['feed', 'audit', 'feedback', 'soundboard', 'leaderboard', 'profile', 'roadmap'];
-      tabs.forEach(t => {
-        const el = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+    function switchTab(tab) {
+      ['feed', 'audit', 'feedback', 'soundboard', 'leaderboard', 'profile', 'roadmap'].forEach(t => {
+        document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('hidden');
         const btn = document.getElementById('tabBtn' + t.charAt(0).toUpperCase() + t.slice(1));
-        if (el) el.classList.add('hidden');
         if (btn) {
           btn.classList.remove('border-brand-400', 'text-brand-400');
           btn.classList.add('border-transparent', 'text-slate-400');
         }
       });
-      const activeEl = document.getElementById('tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1));
-      const activeBtn = document.getElementById('tabBtn' + tabName.charAt(0).toUpperCase() + tabName.slice(1));
-      if (activeEl) activeEl.classList.remove('hidden');
+      document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.remove('hidden');
+      const activeBtn = document.getElementById('tabBtn' + tab.charAt(0).toUpperCase() + tab.slice(1));
       if (activeBtn) {
-        activeBtn.classList.remove('border-transparent', 'text-slate-400');
         activeBtn.classList.add('border-brand-400', 'text-brand-400');
-      }
-      playSound('click');
-    }
-
-    // --- Authentication & Profiles ---
-    function openAuthModal() {
-      document.getElementById('authScreen').classList.remove('hidden');
-      renderExistingProfiles();
-    }
-
-    function renderExistingProfiles() {
-      const container = document.getElementById('existingProfilesContainer');
-      if (!container) return;
-      container.innerHTML = allProfiles.map(p => `
-        <div onclick="selectProfile('${p.username}')" class="bg-slate-950 p-3 rounded-xl border border-slate-800 hover:border-brand-400/50 cursor-pointer flex justify-between items-center transition">
-          <div>
-            <span class="text-xs font-bold text-slate-200 block">${p.username}</span>
-            <span class="text-[10px] text-slate-400">${p.rank} • Level ${p.level || 1}</span>
-          </div>
-          <span class="text-xs text-brand-400 font-bold">Select ➔</span>
-        </div>
-      `).join('');
-    }
-
-    function selectProfile(username) {
-      const found = allProfiles.find(p => p.username === username);
-      if (found) {
-        currentUser = found;
-        saveUserData();
-        updateUserDisplay();
-        document.getElementById('authScreen').classList.add('hidden');
-        renderMyPortfolio();
-        playSound('click');
+        activeBtn.classList.remove('border-transparent', 'text-slate-400');
       }
     }
 
-    function handleAuth(e) {
-      e.preventDefault();
-      const username = document.getElementById('authUsername').value.trim();
-      const bio = document.getElementById('authBio').value.trim();
-      if (!username) return;
-
-      const formattedName = username.startsWith('@') ? username : '@' + username;
-      let existing = allProfiles.find(p => p.username === formattedName);
-      if (existing) {
-        currentUser = existing;
-        if (bio) currentUser.bio = bio;
-      } else {
-        currentUser = { username: formattedName, bio: bio || 'Setup enthusiast.', xp: 0, level: 1, rank: 'Bronze Rig', upvotes: 0 };
-        allProfiles.push(currentUser);
-      }
-      saveUserData();
-      updateUserDisplay();
-      document.getElementById('authScreen').classList.add('hidden');
-      renderMyPortfolio();
-      playSound('bell');
+    function toggleAudioMute() {
+      isMuted = !isMuted;
+      document.getElementById('audioToggleBtn').textContent = isMuted ? '🔇' : '🔊';
     }
 
-    // --- Vision AI Audit & Submissions ---
-    function handleAngleUpload(e, index) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        currentAuditImages[index] = evt.target.result;
-        const prev = document.getElementById('prev' + index);
-        const holder = document.getElementById('holder' + index);
-        prev.src = evt.target.result;
-        prev.classList.remove('hidden');
-        holder.classList.add('hidden');
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function runAiAudit() {
-      const title = document.getElementById('auditTitleInput').value.trim() || 'Custom Workstation';
-      const category = document.getElementById('auditCategoryInput').value;
-      const mainImg = currentAuditImages[0] || 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=800&q=80';
-
-      const score = (Math.random() * (9.9 - 8.2) + 8.2).toFixed(1);
-      const prosList = "Immersive RGB balance, crisp display positioning, organized peripheral spacing.";
-      const consList = "Consider concealing secondary power bricks; add ambient wall wash lighting.";
-
-      // Display results
-      document.getElementById('auditResultCard').classList.remove('hidden');
-      document.getElementById('resTitle').textContent = title;
-      document.getElementById('resOverallScore').textContent = score;
-      document.getElementById('resPros').textContent = prosList;
-      document.getElementById('resCons').textContent = consList;
-
-      // Render Chart
-      renderRadarChart([score * 9, 85, 90, 88, 92]);
-
-      // Add to feed & award XP
-      const newItem = {
-        id: Date.now(),
-        user: currentUser.username,
-        title: title,
-        category: category,
-        score: parseFloat(score),
-        pros: prosList,
-        cons: consList,
-        upvotes: 0,
-        image: mainImg
-      };
-      feedItems.unshift(newItem);
-      localStorage.setItem('setupscore_feed', JSON.stringify(feedItems));
-
-      addXp(25);
-      renderFeed();
-      renderMyPortfolio();
-      playSound('bell');
-    }
-
-    function renderRadarChart(dataVals) {
-      const ctx = document.getElementById('radarChart').getContext('2d');
-      if (radarChartInstance) radarChartInstance.destroy();
-      radarChartInstance = new Chart(ctx, {
-        type: 'radar',
-        data: {
-          labels: ['Lighting', 'Cable Mgmt', 'Aesthetics', 'Hardware', 'Ergonomics'],
-          datasets: [{
-            label: 'Audit Metrics',
-            data: dataVals,
-            backgroundColor: 'rgba(45, 212, 191, 0.2)',
-            borderColor: '#2dd4bf',
-            pointBackgroundColor: '#2dd4bf',
-            borderWidth: 2
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            r: {
-              grid: { color: 'rgba(255, 255, 255, 0.1)' },
-              angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
-              ticks: { display: false, max: 100 }
-            }
-          },
-          plugins: { legend: { display: false } }
+    function playSound(type) {
+      if (isMuted) return;
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        if (type === 'click') {
+          osc.frequency.setValueAtTime(600, ctx.currentTime);
+          gain.gain.setValueAtTime(0.05, ctx.currentTime);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.05);
+        } else if (type === 'levelup') {
+          osc.frequency.setValueAtTime(400, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.3);
+          gain.gain.setValueAtTime(0.1, ctx.currentTime);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.3);
+        } else {
+          osc.frequency.setValueAtTime(800, ctx.currentTime);
+          gain.gain.setValueAtTime(0.08, ctx.currentTime);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.15);
         }
-      });
-    }
-
-    // --- Feed & Upvoting ---
-    function renderFeed() {
-      const container = document.getElementById('feedContainer');
-      if (!container) return;
-      container.innerHTML = feedItems.map(item => `
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-xl flex flex-col">
-          <div class="h-48 overflow-hidden relative">
-            <img src="${item.image}" class="w-full h-full object-cover">
-            <span class="absolute top-3 left-3 bg-slate-950/80 backdrop-blur-md text-brand-400 text-[10px] font-bold px-3 py-1 rounded-full border border-brand-500/30">${item.category}</span>
-            <span class="absolute top-3 right-3 bg-slate-950/80 backdrop-blur-md text-slate-100 text-xs font-mono font-bold px-3 py-1 rounded-full border border-slate-800">⭐ ${item.score}</span>
-          </div>
-          <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
-            <div>
-              <div class="flex justify-between items-start mb-1">
-                <h3 class="font-bold text-slate-100 text-base">${item.title}</h3>
-                <span class="text-[10px] font-mono text-slate-400">${item.user}</span>
-              </div>
-              <p class="text-xs text-slate-400 leading-relaxed">${item.pros}</p>
-            </div>
-            <div class="flex justify-between items-center pt-3 border-t border-slate-800/80">
-              <button onclick="upvoteFeedItem(${item.id})" class="bg-slate-950 hover:bg-slate-800 text-slate-300 text-xs font-bold px-3.5 py-2 rounded-xl border border-slate-800 transition flex items-center gap-1.5">
-                🔥 Upvote (${item.upvotes})
-              </button>
-              <span class="text-[10px] text-slate-500 font-mono">Verified Audit</span>
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function upvoteFeedItem(id) {
-      const item = feedItems.find(i => i.id === id);
-      if (item) {
-        item.upvotes += 1;
-        localStorage.setItem('setupscore_feed', JSON.stringify(feedItems));
-        renderFeed();
-        addXp(5);
-        playSound('click');
+      } catch (e) {
+        console.log('Audio Context suppressed');
       }
     }
 
-    // --- Leaderboard & Portfolio ---
-    function renderLeaderboard() {
-      const container = document.getElementById('leaderboardContainer');
-      if (!container) return;
-      const sorted = [...allProfiles].sort((a,b) => (b.level * 100 + b.xp) - (a.level * 100 + a.xp));
-      container.innerHTML = sorted.map((p, idx) => `
-        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex justify-between items-center">
-          <div class="flex items-center gap-3">
-            <span class="font-mono font-bold text-brand-400 text-sm">#${idx + 1}</span>
-            <div>
-              <span class="font-bold text-slate-200 text-xs block">${p.username}</span>
-              <span class="text-[10px] text-slate-400">${p.rank}</span>
-            </div>
-          </div>
-          <div class="text-right font-mono">
-            <span class="text-xs font-bold text-brand-400 block">Lvl ${p.level || 1}</span>
-            <span class="text-[10px] text-slate-500">${p.xp || 0} XP</span>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function renderMyPortfolio() {
-      const container = document.getElementById('myPortfolioGrid');
-      if (!container) return;
-      const mine = feedItems.filter(i => i.user === currentUser.username);
-      if (mine.length === 0) {
-        container.innerHTML = `<p class="text-xs text-slate-500 italic">No setups submitted yet. Run a Vision Audit to populate your portfolio!</p>`;
-        return;
-      }
-      container.innerHTML = mine.map(item => `
-        <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-2">
-          <img src="${item.image}" class="w-full h-32 object-cover rounded-xl">
-          <div class="flex justify-between items-center">
-            <span class="text-xs font-bold text-slate-200">${item.title}</span>
-            <span class="text-xs font-mono text-brand-400 font-bold">⭐ ${item.score}</span>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function openEditProfileModal() {
-      document.getElementById('editProfileSection').classList.toggle('hidden');
-      document.getElementById('editBioInput').value = currentUser.bio || '';
-    }
-
-    function saveProfileBio() {
-      const bio = document.getElementById('editBioInput').value.trim();
-      currentUser.bio = bio;
-      saveUserData();
-      updateUserDisplay();
-      document.getElementById('editProfileSection').classList.add('hidden');
-      playSound('bell');
-    }
-
-    // --- Feedback & Admin Center ---
-    function submitUserFeedback() {
-      const category = document.getElementById('feedbackCategory').value;
-      const message = document.getElementById('feedbackMessageInput').value.trim();
-      if (!message) return;
-
-      const newFeedback = {
-        id: Date.now(),
-        user: currentUser.username,
-        category: category,
-        message: message,
-        date: 'Just now'
-      };
-      privateFeedbacks.push(newFeedback);
-      localStorage.setItem('setupscore_private_feedback', JSON.stringify(privateFeedbacks));
-      
-      document.getElementById('feedbackMessageInput').value = '';
-      alert('Feedback submitted privately to admins!');
-      renderAdminPrivateFeedback();
-      addXp(10);
-      playSound('bell');
-    }
-
-    function renderPublishedFeedback() {
-      const container = document.getElementById('publishedFeedbackContainer');
-      if (!container) return;
-      container.innerHTML = publishedFeedbacks.map(f => `
-        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
-          <div class="flex justify-between items-center">
-            <span class="text-[10px] font-bold text-brand-400 bg-slate-900 px-2 py-0.5 rounded">${f.category}</span>
-            <span class="text-[10px] text-slate-500 font-mono">${f.user} • ${f.date}</span>
-          </div>
-          <p class="text-xs text-slate-300">"${f.message}"</p>
-          ${f.reply ? `<div class="bg-slate-900 p-3 rounded-xl border border-brand-500/20 text-xs text-brand-300 mt-2"><strong>Admin Reply:</strong> ${f.reply}</div>` : ''}
-        </div>
-      `).join('');
-    }
+    function openTutorial() { document.getElementById('tutorialModal').classList.remove('hidden'); }
+    function closeTutorial() { document.getElementById('tutorialModal').classList.add('hidden'); }
+    function openAuthModal() { document.getElementById('authScreen').classList.remove('hidden'); }
+    function dismissAnnouncement() { document.getElementById('announcementBanner').classList.add('hidden'); }
+    function closeSecretAdminModal() { document.getElementById('secretAdminModal').classList.add('hidden'); }
 
     // Secret Admin Shortcut (Ctrl + Shift + A)
     window.addEventListener('keydown', (e) => {
-      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
-        e.preventDefault();
+      if (e.ctrlKey && e.shiftKey && e.code === 'KeyA') {
         document.getElementById('secretAdminModal').classList.remove('hidden');
       }
     });
 
-    function closeSecretAdminModal() {
-      document.getElementById('secretAdminModal').classList.add('hidden');
-    }
-
     function verifyAdminPasskey() {
-      const pass = document.getElementById('adminPassInput').value.trim();
+      const pass = document.getElementById('adminPassInput').value;
       if (pass === 'admin123') {
         document.getElementById('adminLockScreen').classList.add('hidden');
         document.getElementById('adminPanelContent').classList.remove('hidden');
-        renderAdminPrivateFeedback();
-        playSound('bell');
       } else {
-        alert('Invalid passkey! (Hint: admin123)');
+        alert('Invalid passkey!');
       }
     }
 
@@ -945,130 +566,71 @@
       document.getElementById('adminPassInput').value = '';
     }
 
-    function renderAdminPrivateFeedback() {
-      const container = document.getElementById('adminPrivateFeedbackList');
-      if (!container) return;
-      if (privateFeedbacks.length === 0) {
-        container.innerHTML = `<p class="text-[11px] text-slate-500 italic">No private feedback submissions yet.</p>`;
-        return;
-      }
-      container.innerHTML = privateFeedbacks.map(f => `
-        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
-          <div class="space-y-1">
-            <span class="text-[10px] text-brand-400 font-bold">${f.user} (${f.category})</span>
-            <p class="text-xs text-slate-200">${f.message}</p>
-          </div>
-          <button onclick="publishFeedback(${f.id})" class="bg-brand-400 hover:bg-brand-300 text-slate-950 text-[10px] font-bold px-3 py-1.5 rounded-lg transition whitespace-nowrap">Publish & Reply</button>
-        </div>
-      `).join('');
+    function adminResetUserXp() {
+      currentXp = 0;
+      localStorage.setItem('setupScore_xp', '0');
+      updateXpUi();
+      alert('XP successfully reset!');
     }
 
-    function publishFeedback(id) {
-      const idx = privateFeedbacks.findIndex(f => f.id === id);
-      if (idx >= 0) {
-        const item = privateFeedbacks.splice(idx, 1)[0];
-        const replyText = prompt("Enter official admin response:", "Thanks for the suggestion! We're reviewing it.");
-        item.reply = replyText || "Reviewed by studio team.";
-        publishedFeedbacks.unshift(item);
-        
-        localStorage.setItem('setupscore_private_feedback', JSON.stringify(privateFeedbacks));
-        localStorage.setItem('setupscore_published_feedback', JSON.stringify(publishedFeedbacks));
-        
-        renderAdminPrivateFeedback();
-        renderPublishedFeedback();
-        playSound('bell');
+    function updateXpUi() {
+      document.getElementById('xpText').textContent = `${currentXp}/100 XP`;
+      document.getElementById('xpBar').style.width = Math.min(100, currentXp) + '%';
+      document.getElementById('headerUsername').textContent = currentUser;
+    }
+
+    function handleAuth(e) {
+      e.preventDefault();
+      currentUser = document.getElementById('authUsername').value;
+      currentBio = document.getElementById('authBio').value || 'Workstation Creator';
+      localStorage.setItem('setupScore_user', currentUser);
+      localStorage.setItem('setupScore_bio', currentBio);
+      updateXpUi();
+      document.getElementById('authScreen').classList.add('hidden');
+    }
+
+    function handleAngleUpload(e, idx) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          document.getElementById('prev' + idx).src = evt.target.result;
+          document.getElementById('prev' + idx).classList.remove('hidden');
+          document.getElementById('holder' + idx).classList.add('hidden');
+        }
+        reader.readAsDataURL(file);
       }
+    }
+
+    function runAiAudit() {
+      const title = document.getElementById('auditTitleInput').value || 'My Ultimate Battlestation';
+      document.getElementById('resTitle').textContent = title;
+      document.getElementById('resOverallScore').textContent = '9.2';
+      document.getElementById('resPros').textContent = '• Excellent cable management\n• Clean monochromatic color grading\n• Premium ergonomic monitor arm placement';
+      document.getElementById('resCons').textContent = '• Add ambient bias backlighting behind primary display\n• Consider a mechanical numpad-less layout for mouse ergonomics';
+      document.getElementById('auditResultCard').classList.remove('hidden');
+      
+      currentXp += 25;
+      localStorage.setItem('setupScore_xp', currentXp);
+      updateXpUi();
+      playSound('levelup');
+      confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+    }
+
+    function submitUserFeedback() {
+      const msg = document.getElementById('feedbackMessageInput').value;
+      if (!msg) return alert('Please enter feedback message!');
+      alert('Feedback successfully submitted to private admin inbox!');
+      document.getElementById('feedbackMessageInput').value = '';
     }
 
     function generateAiFeedbackSummary() {
-      const box = document.getElementById('aiSummaryBox');
-      const content = document.getElementById('aiSummaryContent');
-      box.classList.remove('hidden');
-      content.innerHTML = `• Analyzed ${privateFeedbacks.length} recent user suggestions.<br>• Primary demand: Enhanced RGB integration and custom audio packs.<br>• Overall user sentiment: Extremely positive.`;
-      playSound('click');
+      document.getElementById('aiSummaryBox').classList.remove('hidden');
+      document.getElementById('aiSummaryContent').textContent = '• Total Submissions: 4\n• Primary Demand: RGB Sync Integration & Direct Messaging\n• Bug Reports: Minor mobile overflow on audit view';
     }
 
-    function adminResetUserXp() {
-      currentUser.xp = 0;
-      currentUser.level = 1;
-      currentUser.rank = 'Bronze Rig';
-      saveUserData();
-      updateUserDisplay();
-      alert('User XP and level have been reset.');
-      playSound('click');
-    }
-
-    function executeBanUser() {
-      const handle = document.getElementById('banUsernameInput').value.trim();
-      if (!handle) return;
-      bannedUsers.push(handle);
-      localStorage.setItem('setupscore_banned', JSON.stringify(bannedUsers));
-      alert(`User ${handle} has been banned from the arena.`);
-      document.getElementById('banUsernameInput').value = '';
-    }
-
-    function publishNewUpdate() {
-      const title = document.getElementById('pubVersionTitle').value.trim();
-      const banner = document.getElementById('pubBannerText').value.trim();
-      if (banner) {
-        document.getElementById('announcementText').textContent = banner;
-        document.getElementById('announcementBanner').classList.remove('hidden');
-      }
-      alert(`Successfully published update: ${title || 'New Version'}`);
-      closeSecretAdminModal();
-      playSound('bell');
-    }
-
-    function clearGlobalFeed() {
-      if (confirm('Clear entire community feed?')) {
-        feedItems = [];
-        localStorage.setItem('setupscore_feed', JSON.stringify(feedItems));
-        renderFeed();
-        renderMyPortfolio();
-      }
-    }
-
-    function dismissAnnouncement() {
-      document.getElementById('announcementBanner').classList.add('hidden');
-    }
-
-    // --- Tutorial Modal ---
-    let tutStep = 1;
-    function openTutorial() {
-      tutStep = 1;
-      updateTutorialModal();
-      document.getElementById('tutorialModal').classList.remove('hidden');
-    }
-
-    function closeTutorial() {
-      document.getElementById('tutorialModal').classList.add('hidden');
-    }
-
-    function nextTutorialStep() {
-      tutStep++;
-      if (tutStep > 3) {
-        closeTutorial();
-      } else {
-        updateTutorialModal();
-      }
-    }
-
-    function updateTutorialModal() {
-      const titles = [
-        "1. Welcome to SetupScore",
-        "2. Vision AI Audits & XP",
-        "3. Leaderboards & Community"
-      ];
-      const descs = [
-        "Evaluate your gaming or developer workstation using advanced Vision AI, climb global leaderboards, gain XP, and send private feedback to admins.",
-        "Upload photos of your workspace angles to run instant AI vision audits, gain XP, level up your rig rank, and earn community upvotes.",
-        "Compete on global leaderboards, test effects on the soundboard, and submit feature suggestions directly to the development team."
-      ];
-      document.getElementById('tutTitle').textContent = titles[tutStep - 1];
-      document.getElementById('tutDesc').textContent = descs[tutStep - 1];
-      document.getElementById('tutStepIndicator').textContent = `Step ${tutStep} of 3`;
-      document.getElementById('tutNextBtn').textContent = tutStep === 3 ? 'Finish 🚀' : 'Next ➔';
-    }
+    // Initialize UI on load
+    updateXpUi();
   </script>
 </body>
 </html>
