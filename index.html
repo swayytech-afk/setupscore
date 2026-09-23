@@ -46,12 +46,16 @@
       </div>
 
       <nav class="hidden md:flex gap-1 text-sm font-medium">
-        <button onclick="switchTab('feed')" id="tabBtnFeed" class="px-4 py-2 border-b-2 border-brand-400 text-brand-400 transition">Arena Feed</button>
-        <button onclick="switchTab('audit')" id="tabBtnAudit" class="px-4 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">Vision AI Audit</button>
-        <button onclick="switchTab('feedback')" id="tabBtnFeedback" class="px-4 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">Private Feedback</button>
-        <button onclick="switchTab('soundboard')" id="tabBtnSoundboard" class="px-4 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">Soundboard</button>
-        <button onclick="switchTab('leaderboard')" id="tabBtnLeaderboard" class="px-4 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">Leaderboard</button>
-        <button onclick="switchTab('profile')" id="tabBtnProfile" class="px-4 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">My Profile</button>
+        <button onclick="switchTab('feed')" id="tabBtnFeed" class="px-3 py-2 border-b-2 border-brand-400 text-brand-400 transition">Arena Feed</button>
+        <button onclick="switchTab('audit')" id="tabBtnAudit" class="px-3 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">Vision AI Audit</button>
+        <button onclick="switchTab('kanban')" id="tabBtnKanban" class="px-3 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5">
+          <span>Upgrades Kanban</span>
+          <span class="text-[9px] font-mono bg-brand-500/10 text-brand-400 border border-brand-500/20 px-1.5 py-0.2 rounded-full">v5.0 Preview</span>
+        </button>
+        <button onclick="switchTab('feedback')" id="tabBtnFeedback" class="px-3 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">Feedback</button>
+        <button onclick="switchTab('soundboard')" id="tabBtnSoundboard" class="px-3 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">Soundboard</button>
+        <button onclick="switchTab('leaderboard')" id="tabBtnLeaderboard" class="px-3 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">Leaderboard</button>
+        <button onclick="switchTab('profile')" id="tabBtnProfile" class="px-3 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">My Profile</button>
       </nav>
 
       <div class="flex items-center gap-3">
@@ -60,6 +64,10 @@
         <div class="hidden sm:flex flex-col text-right">
           <span id="headerUsername" class="text-xs font-bold text-slate-200">@CyberKnight</span>
           <span id="masteryRank" class="text-[10px] text-brand-400 font-mono">Silver Rig</span>
+          <!-- Header XP mini bar -->
+          <div class="w-24 bg-slate-800 h-1.5 rounded-full overflow-hidden mt-1">
+            <div id="headerXpBar" class="bg-brand-400 h-full transition-all duration-500" style="width: 15%;"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -173,7 +181,48 @@
       </div>
     </section>
 
-    <!-- TAB 3: PRIVATE FEEDBACK -->
+    <!-- TAB 3: UPGRADES KANBAN (TRELLO BOARD - v5.0 PREVIEW) -->
+    <section id="tabKanban" class="hidden space-y-6">
+      <div class="flex justify-between items-center">
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 class="text-xl font-black text-slate-100">Setup Upgrades Kanban</h2>
+            <span class="bg-brand-500/10 text-brand-400 border border-brand-500/20 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full">v5.0 Feature Preview</span>
+          </div>
+          <p class="text-xs text-slate-400 font-mono">Plan and track your battlestation hardware upgrades with our upcoming Trello-style workflow board.</p>
+        </div>
+        <button onclick="openNewTaskModal()" class="bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl transition">+ Add Upgrade Item</button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Backlog -->
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-4 space-y-4">
+          <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+            <span class="text-xs font-bold font-mono text-slate-300">📋 Backlog / Ideas</span>
+            <span id="countBacklog" class="text-[10px] font-mono bg-slate-800 text-brand-400 px-2 py-0.5 rounded-full">0</span>
+          </div>
+          <div id="kanbanBacklog" class="space-y-3 min-h-[300px]"></div>
+        </div>
+        <!-- In Progress -->
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-4 space-y-4">
+          <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+            <span class="text-xs font-bold font-mono text-amber-400">⚡ In Progress</span>
+            <span id="countProgress" class="text-[10px] font-mono bg-slate-800 text-amber-400 px-2 py-0.5 rounded-full">0</span>
+          </div>
+          <div id="kanbanProgress" class="space-y-3 min-h-[300px]"></div>
+        </div>
+        <!-- Completed -->
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-4 space-y-4">
+          <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+            <span class="text-xs font-bold font-mono text-emerald-400">✅ Completed</span>
+            <span id="countCompleted" class="text-[10px] font-mono bg-slate-800 text-emerald-400 px-2 py-0.5 rounded-full">0</span>
+          </div>
+          <div id="kanbanCompleted" class="space-y-3 min-h-[300px]"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: PRIVATE FEEDBACK -->
     <section id="tabFeedback" class="hidden space-y-6 max-w-2xl mx-auto">
       <div>
         <h2 class="text-xl font-black text-slate-100">Send Private Feedback</h2>
@@ -197,7 +246,7 @@
       </div>
     </section>
 
-    <!-- TAB 4: SOUNDBOARD -->
+    <!-- TAB 5: SOUNDBOARD -->
     <section id="tabSoundboard" class="hidden space-y-6 max-w-3xl mx-auto">
       <div>
         <h2 class="text-xl font-black text-slate-100">Web Audio API Soundboard</h2>
@@ -224,7 +273,7 @@
       </div>
     </section>
 
-    <!-- TAB 5: LEADERBOARD -->
+    <!-- TAB 6: LEADERBOARD -->
     <section id="tabLeaderboard" class="hidden space-y-6 max-w-2xl mx-auto">
       <div>
         <h2 class="text-xl font-black text-slate-100">Global Mastery Leaderboard</h2>
@@ -235,9 +284,9 @@
       </div>
     </section>
 
-    <!-- TAB 6: MY PROFILE & PORTFOLIO -->
+    <!-- TAB 7: MY PROFILE & PORTFOLIO -->
     <section id="tabProfile" class="hidden space-y-6 max-w-3xl mx-auto">
-      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-6 shadow-xl">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h2 id="profileName" class="text-xl font-black text-slate-100">@CyberKnight</h2>
@@ -280,6 +329,29 @@
     </section>
 
   </main>
+
+  <!-- KANBAN TASK MODAL -->
+  <div id="kanbanModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-6 space-y-4 shadow-2xl">
+      <div class="flex justify-between items-center">
+        <h3 class="font-bold text-slate-100 text-sm">Add New Upgrade Task (v5.0)</h3>
+        <button onclick="closeNewTaskModal()" class="text-slate-500 hover:text-slate-300 font-bold">✕</button>
+      </div>
+      <div>
+        <label class="block text-xs font-mono text-slate-400 mb-1">Upgrade Title</label>
+        <input type="text" id="kanbanTaskTitle" placeholder="e.g. Dual Monitor Arm" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-100 font-mono focus:outline-none focus:border-brand-400">
+      </div>
+      <div>
+        <label class="block text-xs font-mono text-slate-400 mb-1">Status Column</label>
+        <select id="kanbanTaskStatus" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-100 font-mono">
+          <option value="backlog">Backlog / Ideas</option>
+          <option value="progress">In Progress</option>
+          <option value="completed">Completed</option>
+        </select>
+      </div>
+      <button onclick="saveKanbanTask()" class="w-full bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-xs py-3 rounded-xl transition">Create Task</button>
+    </div>
+  </div>
 
   <!-- SECRET ADMIN MODAL (Ctrl + Shift + X) -->
   <div id="secretAdminModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
@@ -332,7 +404,7 @@
       </div>
       <div class="space-y-2 text-center">
         <h3 id="tutTitle" class="font-black text-slate-100 text-base">Welcome to SetupScore</h3>
-        <p id="tutDesc" class="text-xs text-slate-400 font-mono leading-relaxed">Evaluate your gaming or developer workstation using advanced Vision AI, climb global leaderboards, and earn XP.</p>
+        <p id="tutDesc" class="text-xs text-slate-400 font-mono leading-relaxed">Evaluate your gaming or developer workstation using advanced Vision AI, preview our upcoming v5.0 Trello Kanban boards, and earn XP.</p>
       </div>
       <div class="flex gap-2">
         <button onclick="nextTutorialStep()" class="w-full bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-xs py-2.5 rounded-xl transition">Next Step</button>
@@ -368,6 +440,12 @@
         pros: 'Stunning ambient lighting, exceptional cable routing, crisp dual monitors.',
         cons: 'Slightly cramped mouse pad space for low-DPI gaming.'
       }
+    ];
+
+    let kanbanTasks = JSON.parse(localStorage.getItem('setupscore_kanban')) || [
+      { id: 1, title: 'RGB Light Strip behind desk', status: 'backlog' },
+      { id: 2, title: 'Custom coiled keyboard cable', status: 'progress' },
+      { id: 3, title: 'Monitor arm installation', status: 'completed' }
     ];
 
     let privateFeedback = JSON.parse(localStorage.getItem('setupscore_feedback')) || [];
@@ -494,6 +572,7 @@
 
       document.getElementById('xpText').textContent = `${currentUser.xp} XP`;
       document.getElementById('xpBar').style.width = `${percent}%`;
+      document.getElementById('headerXpBar').style.width = `${percent}%`;
     }
 
     function saveStateToLocalStorage() {
@@ -501,12 +580,14 @@
       localStorage.setItem('setupscore_profiles', JSON.stringify(profiles));
       localStorage.setItem('setupscore_my_setups', JSON.stringify(mySetups));
       localStorage.setItem('setupscore_feed', JSON.stringify(communityFeed));
+      localStorage.setItem('setupscore_kanban', JSON.stringify(kanbanTasks));
+      localStorage.setItem('setupscore_feedback', JSON.stringify(privateFeedback));
     }
 
     // --- Tab Navigation ---
     function switchTab(tabName) {
       playSound('click');
-      const tabs = ['feed', 'audit', 'feedback', 'soundboard', 'leaderboard', 'profile'];
+      const tabs = ['feed', 'audit', 'kanban', 'feedback', 'soundboard', 'leaderboard', 'profile'];
       tabs.forEach(t => {
         const el = document.getElementById(`tab${t.charAt(0).toUpperCase() + t.slice(1)}`);
         const btn = document.getElementById(`tabBtn${t.charAt(0).toUpperCase() + t.slice(1)}`);
@@ -526,6 +607,7 @@
       }
 
       if (tabName === 'feed') renderFeed();
+      if (tabName === 'kanban') renderKanbanBoard();
       if (tabName === 'leaderboard') renderLeaderboard();
       if (tabName === 'profile') renderProfilePortfolio();
     }
@@ -615,6 +697,82 @@
           plugins: { legend: { display: false } }
         }
       });
+    }
+
+    // --- Trello Kanban Board (v5.0 Feature) ---
+    function renderKanbanBoard() {
+      const backlogEl = document.getElementById('kanbanBacklog');
+      const progressEl = document.getElementById('kanbanProgress');
+      const completedEl = document.getElementById('kanbanCompleted');
+
+      const backlog = kanbanTasks.filter(t => t.status === 'backlog');
+      const progress = kanbanTasks.filter(t => t.status === 'progress');
+      const completed = kanbanTasks.filter(t => t.status === 'completed');
+
+      document.getElementById('countBacklog').textContent = backlog.length;
+      document.getElementById('countProgress').textContent = progress.length;
+      document.getElementById('countCompleted').textContent = completed.length;
+
+      backlogEl.innerHTML = backlog.map(t => renderTaskCard(t)).join('');
+      progressEl.innerHTML = progress.map(t => renderTaskCard(t)).join('');
+      completedEl.innerHTML = completed.map(t => renderTaskCard(t)).join('');
+    }
+
+    function renderTaskCard(task) {
+      return `
+        <div class="bg-slate-950 border border-slate-800 p-3 rounded-2xl space-y-2 text-xs">
+          <p class="font-bold text-slate-200">${task.title}</p>
+          <div class="flex justify-between items-center pt-1 border-t border-slate-900">
+            <div class="flex gap-1">
+              ${task.status !== 'backlog' ? `<button onclick="moveTask(${task.id}, 'backlog')" class="text-[10px] text-slate-400 hover:text-white px-1.5 py-0.5 bg-slate-900 rounded">←</button>` : ''}
+              ${task.status !== 'progress' ? `<button onclick="moveTask(${task.id}, 'progress')" class="text-[10px] text-amber-400 hover:text-white px-1.5 py-0.5 bg-slate-900 rounded">⚡</button>` : ''}
+              ${task.status !== 'completed' ? `<button onclick="moveTask(${task.id}, 'completed')" class="text-[10px] text-emerald-400 hover:text-white px-1.5 py-0.5 bg-slate-900 rounded">→</button>` : ''}
+            </div>
+            <button onclick="deleteTask(${task.id})" class="text-[10px] text-red-400 hover:text-red-300">✕</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function openNewTaskModal() {
+      document.getElementById('kanbanTaskTitle').value = '';
+      document.getElementById('kanbanModal').classList.remove('hidden');
+    }
+
+    function closeNewTaskModal() {
+      document.getElementById('kanbanModal').classList.add('hidden');
+    }
+
+    function saveKanbanTask() {
+      const title = document.getElementById('kanbanTaskTitle').value.trim();
+      const status = document.getElementById('kanbanTaskStatus').value;
+      if (!title) return;
+
+      kanbanTasks.push({ id: Date.now(), title, status });
+      closeNewTaskModal();
+      renderKanbanBoard();
+      saveStateToLocalStorage();
+      playSound('bell');
+    }
+
+    function moveTask(id, newStatus) {
+      const task = kanbanTasks.find(t => t.id === id);
+      if (task) {
+        task.status = newStatus;
+        if (newStatus === 'completed') {
+          addXp(15);
+        }
+        renderKanbanBoard();
+        saveStateToLocalStorage();
+        playSound('click');
+      }
+    }
+
+    function deleteTask(id) {
+      kanbanTasks = kanbanTasks.filter(t => t.id !== id);
+      renderKanbanBoard();
+      saveStateToLocalStorage();
+      playSound('click');
     }
 
     // --- Community Arena Feed ---
@@ -725,12 +883,13 @@
       document.getElementById('feedbackMessageInput').value = '';
       playSound('bell');
       showAnnouncement('💬 Feedback submitted privately to admins!');
+      saveStateToLocalStorage();
     }
 
     // --- Tutorial ---
     let tutStep = 1;
     const tutorials = [
-      { title: '1. Welcome to SetupScore', desc: 'Evaluate your gaming or developer workstation using advanced Vision AI, climb global leaderboards, and earn XP.' },
+      { title: '1. Welcome to SetupScore', desc: 'Evaluate your gaming or developer workstation using advanced Vision AI, track upgrades, and earn XP.' },
       { title: '2. Vision AI Audits', desc: 'Upload desk photos to earn +25 XP instantly, view radar telemetry scores, and receive tailored upgrade tips.' },
       { title: '3. Secret Admin Command Center', desc: 'Press Ctrl+Shift+X anytime to access the restricted owner suite, moderate feedback, and manage releases.' }
     ];
