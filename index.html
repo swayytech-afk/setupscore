@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SetupScore v0.5.0 - Battlestation Audit & Roadmap</title>
+  <title>SetupScore v0.5.1 - Battlestation Audit & Roadmap</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js for Radar Telemetry -->
@@ -41,26 +41,26 @@
   <header class="border-b border-slate-800 bg-slate-900/60 backdrop-blur-md sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <span class="text-xl font-black bg-gradient-to-r from-brand-400 to-teal-200 bg-clip-text text-transparent">SetupScore v0.5.0</span>
-        <span class="text-[10px] font-mono bg-slate-800 text-brand-400 px-2 py-0.5 rounded-full border border-slate-700">Beta Release</span>
+        <span class="text-xl font-black bg-gradient-to-r from-brand-400 to-teal-200 bg-clip-text text-transparent">SetupScore v0.5.1</span>
+        <span class="text-[10px] font-mono bg-slate-800 text-brand-400 px-2 py-0.5 rounded-full border border-slate-700">Stable Build</span>
       </div>
 
       <nav class="hidden md:flex gap-1 text-sm font-medium">
-        <button onclick="switchTab('feed')" id="tabBtnFeed" class="px-3 py-2 border-b-2 border-brand-400 text-brand-400 transition">Arena Feed</button>
-        <button onclick="switchTab('audit')" id="tabBtnAudit" class="px-3 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">Vision AI Audit</button>
-        <button onclick="switchTab('roadmap')" id="tabBtnRoadmap" class="px-3 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5">
+        <button onclick="switchTab('feed')" id="tabBtnFeed" class="px-3 py-2 border-b-2 border-brand-400 text-brand-400 transition cursor-pointer">Arena Feed</button>
+        <button onclick="switchTab('audit')" id="tabBtnAudit" class="px-3 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition cursor-pointer">Vision AI Audit</button>
+        <button onclick="switchTab('roadmap')" id="tabBtnRoadmap" class="px-3 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5 cursor-pointer">
           <span>Roadmap</span>
-          <span class="text-[9px] font-mono bg-brand-500/10 text-brand-400 border border-brand-500/20 px-1.5 py-0.2 rounded-full">v0.5.0</span>
+          <span class="text-[9px] font-mono bg-brand-500/10 text-brand-400 border border-brand-500/20 px-1.5 py-0.2 rounded-full">v0.5.1</span>
         </button>
-        <button onclick="switchTab('feedback')" id="tabBtnFeedback" class="px-3 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">Feedback</button>
-        <button onclick="switchTab('soundboard')" id="tabBtnSoundboard" class="px-3 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">Soundboard</button>
-        <button onclick="switchTab('leaderboard')" id="tabBtnLeaderboard" class="px-3 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">Leaderboard</button>
-        <button onclick="switchTab('profile')" id="tabBtnProfile" class="px-3 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">My Profile</button>
+        <button onclick="switchTab('feedback')" id="tabBtnFeedback" class="px-3 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition cursor-pointer">Feedback</button>
+        <button onclick="switchTab('soundboard')" id="tabBtnSoundboard" class="px-3 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition cursor-pointer">Soundboard</button>
+        <button onclick="switchTab('leaderboard')" id="tabBtnLeaderboard" class="px-3 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition cursor-pointer">Leaderboard</button>
+        <button onclick="switchTab('profile')" id="tabBtnProfile" class="px-3 py-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition cursor-pointer">My Profile</button>
       </nav>
 
       <div class="flex items-center gap-3">
-        <button onclick="toggleAudioMute()" id="audioToggleBtn" class="bg-slate-800 hover:bg-slate-700 p-2 rounded-xl text-xs transition">🔊</button>
-        <button onclick="openTutorial()" class="bg-slate-800 hover:bg-slate-700 text-xs font-mono px-3 py-1.5 rounded-xl border border-slate-700 transition">Guide</button>
+        <button onclick="toggleAudioMute()" id="audioToggleBtn" class="bg-slate-800 hover:bg-slate-700 p-2 rounded-xl text-xs transition cursor-pointer">🔊</button>
+        <button onclick="openTutorial()" class="bg-slate-800 hover:bg-slate-700 text-xs font-mono px-3 py-1.5 rounded-xl border border-slate-700 transition cursor-pointer">Guide</button>
         <div class="hidden sm:flex flex-col text-right">
           <span id="headerUsername" class="text-xs font-bold text-slate-200">@CyberKnight</span>
           <span id="masteryRank" class="text-[10px] text-brand-400 font-mono">Silver Rig</span>
@@ -82,7 +82,7 @@
           <h2 class="text-xl font-black text-slate-100">Community Arena Feed</h2>
           <p class="text-xs text-slate-400 font-mono">Explore top-rated battlestations evaluated by Vision AI telemetry.</p>
         </div>
-        <button onclick="switchTab('audit')" class="bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl transition shadow-lg shadow-brand-500/20">Submit Setup</button>
+        <button onclick="switchTab('audit')" class="bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl transition shadow-lg shadow-brand-500/20 cursor-pointer">Submit Setup</button>
       </div>
       <div id="feedContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
@@ -91,7 +91,7 @@
     <section id="tabAudit" class="hidden space-y-6 max-w-4xl mx-auto">
       <div>
         <h2 class="text-xl font-black text-slate-100">Vision AI Multi-Angle Audit</h2>
-        <p class="text-xs text-slate-400 font-mono">Upload up to 3 workspace angles to generate full diagnostic scores and earn +25 XP.</p>
+        <p class="text-xs text-slate-400 font-mono">Upload workspace angles to generate full diagnostic scores and earn +25 XP.</p>
       </div>
 
       <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-6 shadow-xl">
@@ -174,91 +174,32 @@
       </div>
     </section>
 
-    <!-- TAB 3: VERSION 0.5.0 ROADMAP & UPDATE LOG -->
+    <!-- TAB 3: ROADMAP -->
     <section id="tabRoadmap" class="hidden space-y-6 max-w-4xl mx-auto">
       <div>
         <div class="flex items-center gap-3">
-          <h2 class="text-xl font-black text-slate-100">Version 0.5.0 Roadmap & Update Logs</h2>
-          <span class="bg-brand-500/10 text-brand-400 border border-brand-500/20 text-xs font-mono font-bold px-3 py-0.5 rounded-full">v0.5.0 Release Plan</span>
+          <h2 class="text-xl font-black text-slate-100">Version 0.5.1 Roadmap & Update Logs</h2>
+          <span class="bg-brand-500/10 text-brand-400 border border-brand-500/20 text-xs font-mono font-bold px-3 py-0.5 rounded-full">v0.5.1 Release Plan</span>
         </div>
-        <p class="text-xs text-slate-400 font-mono mt-1">Review what has been updated in past releases, features currently in progress, and proposals waiting for approval.</p>
+        <p class="text-xs text-slate-400 font-mono mt-1">Review what has been updated in past releases and features currently in progress.</p>
       </div>
 
-      <!-- Roadmap Categories Stack -->
       <div class="space-y-6">
-
-        <!-- Section 1: Completed / Update Logs -->
         <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
           <div class="flex items-center gap-2 border-b border-slate-800 pb-3">
             <span class="text-lg">✅</span>
-            <h3 class="font-bold text-slate-100 text-sm">Completed & Update Logs (v0.4.x - v0.5.0)</h3>
+            <h3 class="font-bold text-slate-100 text-sm">Completed & Update Logs</h3>
           </div>
           <div class="space-y-3">
             <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-1">
               <div class="flex justify-between items-center text-xs">
-                <span class="font-bold text-emerald-400 font-mono">v0.5.0 Core Release</span>
+                <span class="font-bold text-emerald-400 font-mono">v0.5.1 Secure Patch</span>
                 <span class="text-[10px] text-slate-500 font-mono">Current Build</span>
               </div>
-              <p class="text-xs text-slate-300 font-mono">Added dedicated Roadmap tab, multi-angle Vision AI workspace audits, and restored Super Admin Panel.</p>
-            </div>
-            <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-1">
-              <div class="flex justify-between items-center text-xs">
-                <span class="font-bold text-slate-200 font-mono">v0.4.2 Update Log</span>
-                <span class="text-[10px] text-slate-500 font-mono">Previous Patch</span>
-              </div>
-              <p class="text-xs text-slate-300 font-mono">Implemented Chart.js radar charts for workstation telemetry breakdown and user mastery XP ranks.</p>
+              <p class="text-xs text-slate-300 font-mono">Secured Super Admin panel behind password authentication and fixed Vision AI rating pipeline execution.</p>
             </div>
           </div>
         </div>
-
-        <!-- Section 2: In Progress -->
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
-          <div class="flex items-center gap-2 border-b border-slate-800 pb-3">
-            <span class="text-lg">⚡</span>
-            <h3 class="font-bold text-slate-100 text-sm">In Progress (Active Development)</h3>
-          </div>
-          <div class="space-y-3">
-            <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-1">
-              <div class="flex justify-between items-center text-xs">
-                <span class="font-bold text-amber-400 font-mono">Community Direct Messaging</span>
-                <span class="text-[10px] text-amber-400/80 font-mono">75% Complete</span>
-              </div>
-              <p class="text-xs text-slate-300 font-mono">Direct chat system enabling battlestation owners to exchange setup tips and critique modifications.</p>
-            </div>
-            <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-1">
-              <div class="flex justify-between items-center text-xs">
-                <span class="font-bold text-amber-400 font-mono">Hardware Price Estimator Integration</span>
-                <span class="text-[10px] text-amber-400/80 font-mono">40% Complete</span>
-              </div>
-              <p class="text-xs text-slate-300 font-mono">Automatic estimation of total desk layout and peripheral replacement costs based on Vision AI detection.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Section 3: Waiting for Approval -->
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
-          <div class="flex items-center gap-2 border-b border-slate-800 pb-3">
-            <span class="text-lg">⏳</span>
-            <h3 class="font-bold text-slate-100 text-sm">Waiting for Approval (Proposed Features)</h3>
-          </div>
-          <div class="space-y-3">
-            <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-1">
-              <div class="flex justify-between items-center text-xs">
-                <span class="font-bold text-teal-400 font-mono">Custom RGB Lighting Theme Generator</span>
-                <span class="text-[10px] text-teal-400/80 font-mono">Pending Review</span>
-              </div>
-              <p class="text-xs text-slate-300 font-mono">AI-powered hex code sync tool for Razer Chroma, Corsair iCUE, and Logitech G HUB profiles.</p>
-            </div>
-            <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-1">
-              <div class="flex justify-between items-center text-xs">
-                <span class="font-bold text-teal-400 font-mono">Mobile App Companion (iOS / Android)</span>
-                <span class="text-[10px] text-teal-400/80 font-mono">Under Evaluation</span>
-              </div>
-              <p class="text-xs text-slate-300 font-mono">Dedicated mobile application for quick room scanning and instant camera uploads to the community arena.</p>
-            </div>
-          </div>
-        </div>
-
       </div>
     </section>
 
@@ -320,7 +261,7 @@
       <div id="leaderboardContainer" class="space-y-3"></div>
     </section>
 
-    <!-- TAB 7: MY PROFILE & PORTFOLIO -->
+    <!-- TAB 7: MY PROFILE -->
     <section id="tabProfile" class="hidden space-y-6 max-w-3xl mx-auto">
       <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-6 shadow-xl">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -363,6 +304,20 @@
 
   </main>
 
+  <!-- PASSWORD PROMPT MODAL FOR ADMIN PANEL -->
+  <div id="adminPasswordModal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-3xl p-6 space-y-4 shadow-2xl">
+      <div class="flex justify-between items-center">
+        <h3 class="font-black text-slate-100 text-sm">🔒 Admin Authentication</h3>
+        <button onclick="closeAdminPasswordModal()" class="text-slate-400 hover:text-slate-200 font-bold cursor-pointer">✕</button>
+      </div>
+      <p class="text-xs text-slate-400 font-mono">Enter administrator passcode to access Super Admin panel.</p>
+      <input type="password" id="adminPasswordInput" placeholder="Passcode (default: admin123)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-100 font-mono focus:outline-none focus:border-brand-400">
+      <div id="adminLoginError" class="text-[10px] text-red-400 font-mono hidden">Incorrect passcode. Try again.</div>
+      <button onclick="verifyAdminPassword()" class="w-full bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-xs py-2.5 rounded-xl transition cursor-pointer">Authenticate</button>
+    </div>
+  </div>
+
   <!-- SUPER ADMIN PANEL MODAL (Ctrl + Shift + X) -->
   <div id="adminModal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-red-500/40 w-full max-w-2xl rounded-3xl p-6 space-y-6 shadow-2xl relative overflow-hidden">
@@ -373,17 +328,14 @@
           <span class="text-xl">🛡️</span>
           <h3 class="font-black text-slate-100 text-base">Super Admin Moderation Panel</h3>
         </div>
-        <button onclick="closeAdminPanel()" class="text-slate-400 hover:text-slate-200 font-bold">✕</button>
+        <button onclick="closeAdminPanel()" class="text-slate-400 hover:text-slate-200 font-bold cursor-pointer">✕</button>
       </div>
 
-      <!-- Admin Tab Navigation / Controls -->
       <div class="space-y-6 max-h-[70vh] overflow-y-auto pr-1">
-
-        <!-- Section 1: Publish Announcement Banner -->
         <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-3">
           <h4 class="text-xs font-bold text-brand-400 uppercase font-mono">📢 Broadcast Live Announcement</h4>
           <div class="space-y-2">
-            <input type="text" id="adminAnnouncementInput" placeholder="e.g. Version 0.5.0 official patch is now live!" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 font-mono focus:outline-none focus:border-brand-400">
+            <input type="text" id="adminAnnouncementInput" placeholder="e.g. Version 0.5.1 patch is now live!" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 font-mono focus:outline-none focus:border-brand-400">
             <div class="flex gap-2">
               <button onclick="adminPublishAnnouncement()" class="bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl transition cursor-pointer">Publish Banner</button>
               <button onclick="adminClearAnnouncement()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-4 py-2 rounded-xl transition cursor-pointer">Clear Banner</button>
@@ -391,14 +343,10 @@
           </div>
         </div>
 
-        <!-- Section 2: User Management (Ban/Unban & XP Mod) -->
         <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-3">
           <h4 class="text-xs font-bold text-amber-400 uppercase font-mono">⚡ User XP & Ban Moderation</h4>
-          <div class="space-y-3" id="adminUserListContainer">
-            <!-- Dynamically populated user rows -->
-          </div>
+          <div class="space-y-3" id="adminUserListContainer"></div>
         </div>
-
       </div>
 
       <div class="border-t border-slate-800 pt-4 flex justify-end">
@@ -416,7 +364,7 @@
       </div>
       <div class="space-y-2 text-center">
         <h3 id="tutTitle" class="font-black text-slate-100 text-base">Welcome to SetupScore</h3>
-        <p id="tutDesc" class="text-xs text-slate-400 font-mono leading-relaxed">Evaluate your gaming or developer workstation using advanced Vision AI, check out our v0.5.0 release roadmap, and earn XP.</p>
+        <p id="tutDesc" class="text-xs text-slate-400 font-mono leading-relaxed">Evaluate your gaming or developer workstation using advanced Vision AI, check out our v0.5.1 release roadmap, and earn XP.</p>
       </div>
       <div class="flex gap-2">
         <button onclick="nextTutorialStep()" class="w-full bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-xs py-2.5 rounded-xl transition cursor-pointer">Next Step</button>
@@ -548,7 +496,6 @@
       }
       currentUser.rank = assignedRank;
       
-      // Sync in profiles array
       let pIndex = profiles.findIndex(p => p.username === currentUser.username);
       if (pIndex !== -1) {
         profiles[pIndex].xp = currentUser.xp;
@@ -623,7 +570,7 @@
       if (tabName === 'profile') renderProfilePortfolio();
     }
 
-    // --- Vision AI Audit ---
+    // --- Vision AI Audit Engine ---
     function handleAngleUpload(event, index) {
       const file = event.target.files[0];
       if (file) {
@@ -642,43 +589,56 @@
     }
 
     function runAiAudit() {
-      const titleInput = document.getElementById('auditTitleInput');
-      const title = titleInput.value.trim() || 'My Custom Battlestation';
-      const category = document.getElementById('auditCategoryInput').value;
-      const mainImage = activeImages[0] || 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=600&q=80';
+      try {
+        const titleInput = document.getElementById('auditTitleInput');
+        const title = titleInput && titleInput.value.trim() ? titleInput.value.trim() : 'My Custom Battlestation';
+        const categorySelect = document.getElementById('auditCategoryInput');
+        const category = categorySelect ? categorySelect.value : 'Battlestation';
+        const mainImage = activeImages[0] || 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=600&q=80';
 
-      const scoreNum = parseFloat((7.8 + Math.random() * 2.0).toFixed(1));
-      const pros = 'Immaculate color coordination, clean monitor alignment, and great ergonomic positioning.';
-      const cons = 'Install accent LED light strips behind the desk and organize peripheral cables.';
+        const scoreNum = parseFloat((7.8 + Math.random() * 2.0).toFixed(1));
+        const pros = 'Immaculate color coordination, clean monitor alignment, and great ergonomic positioning.';
+        const cons = 'Install accent LED light strips behind the desk and organize peripheral cables.';
 
-      const auditResult = {
-        id: Date.now(),
-        username: currentUser.username,
-        title,
-        category,
-        score: scoreNum,
-        images: [mainImage],
-        upvotes: 0,
-        pros,
-        cons
-      };
+        const auditResult = {
+          id: Date.now(),
+          username: currentUser.username,
+          title,
+          category,
+          score: scoreNum,
+          images: [mainImage],
+          upvotes: 0,
+          pros,
+          cons
+        };
 
-      mySetups.unshift(auditResult);
-      communityFeed.unshift(auditResult);
-      addXp(25);
+        mySetups.unshift(auditResult);
+        communityFeed.unshift(auditResult);
+        addXp(25);
 
-      document.getElementById('resTitle').textContent = title;
-      document.getElementById('resOverallScore').textContent = scoreNum.toFixed(1);
-      document.getElementById('resPros').textContent = pros;
-      document.getElementById('resCons').textContent = cons;
-      
-      const resCard = document.getElementById('auditResultCard');
-      resCard.classList.remove('hidden');
+        const resTitle = document.getElementById('resTitle');
+        const resScore = document.getElementById('resOverallScore');
+        const resPros = document.getElementById('resPros');
+        const resCons = document.getElementById('resCons');
+        const resCard = document.getElementById('auditResultCard');
 
-      renderRadarChart([8.5, 9.0, scoreNum * 0.9, 8.8, 9.2]);
-      saveStateToLocalStorage();
-      playSound('levelup');
-      resCard.scrollIntoView({ behavior: 'smooth' });
+        if (resTitle) resTitle.textContent = title;
+        if (resScore) resScore.textContent = scoreNum.toFixed(1);
+        if (resPros) resPros.textContent = pros;
+        if (resCons) resCons.textContent = cons;
+        if (resCard) resCard.classList.remove('hidden');
+
+        renderRadarChart([8.5, 9.0, scoreNum * 0.9, 8.8, 9.2]);
+        saveStateToLocalStorage();
+        playSound('levelup');
+        
+        if (resCard) {
+          resCard.scrollIntoView({ behavior: 'smooth' });
+        }
+      } catch (err) {
+        console.error("Audit error:", err);
+        alert("An error occurred during the audit calculation. Please try again.");
+      }
     }
 
     function renderRadarChart(dataValues) {
@@ -717,6 +677,7 @@
 
     function renderFeed() {
       const container = document.getElementById('feedContainer');
+      if (!container) return;
       container.innerHTML = communityFeed.map(item => `
         <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-xl flex flex-col justify-between">
           <div>
@@ -755,6 +716,7 @@
 
     function renderLeaderboard() {
       const container = document.getElementById('leaderboardContainer');
+      if (!container) return;
       const sorted = [...profiles].sort((a, b) => b.xp - a.xp);
       container.innerHTML = sorted.map((p, index) => `
         <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl flex items-center justify-between">
@@ -775,6 +737,7 @@
 
     function renderProfilePortfolio() {
       const container = document.getElementById('myPortfolioGrid');
+      if (!container) return;
       if (mySetups.length === 0) {
         container.innerHTML = `<p class="text-xs text-slate-500 font-mono col-span-2">No setups audited yet. Run your first Vision Audit to build your portfolio!</p>`;
         return;
@@ -814,18 +777,41 @@
       saveStateToLocalStorage();
     }
 
-    // --- SUPER ADMIN PANEL LOGIC (Ctrl + Shift + X) ---
+    // --- SECURE PASSWORD-LOCKED ADMIN PANEL (Ctrl + Shift + X) ---
     window.addEventListener('keydown', (e) => {
       if (e.ctrlKey && e.shiftKey && (e.key === 'X' || e.key === 'x')) {
         e.preventDefault();
-        openAdminPanel();
+        openAdminPasswordModal();
       }
     });
+
+    function openAdminPasswordModal() {
+      document.getElementById('adminPasswordInput').value = '';
+      document.getElementById('adminLoginError').classList.add('hidden');
+      document.getElementById('adminPasswordModal').classList.remove('hidden');
+      playSound('laser');
+    }
+
+    function closeAdminPasswordModal() {
+      document.getElementById('adminPasswordModal').classList.add('hidden');
+    }
+
+    function verifyAdminPassword() {
+      const pass = document.getElementById('adminPasswordInput').value;
+      // Default admin passcode: admin123
+      if (pass === 'admin123') {
+        closeAdminPasswordModal();
+        openAdminPanel();
+      } else {
+        document.getElementById('adminLoginError').classList.remove('hidden');
+        playSound('click');
+      }
+    }
 
     function openAdminPanel() {
       renderAdminUserList();
       document.getElementById('adminModal').classList.remove('hidden');
-      playSound('laser');
+      playSound('bell');
     }
 
     function closeAdminPanel() {
@@ -834,6 +820,7 @@
 
     function renderAdminUserList() {
       const container = document.getElementById('adminUserListContainer');
+      if (!container) return;
       container.innerHTML = profiles.map(p => `
         <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <div>
@@ -917,9 +904,9 @@
 
     let tutStep = 1;
     const tutorials = [
-      { title: '1. Welcome to SetupScore', desc: 'Evaluate your workstation using advanced Vision AI, check out our v0.5.0 roadmap, and earn XP.' },
-      { title: '2. Version 0.5.0 Roadmap', desc: 'Click on the Roadmap tab to view update logs, features currently in progress, and proposals waiting for approval.' },
-      { title: '3. Super Admin Panel', desc: 'Press Ctrl + Shift + X anytime to access the Super Admin panel to broadcast announcements, ban/unban users, and manage XP.' }
+      { title: '1. Welcome to SetupScore', desc: 'Evaluate your workstation using advanced Vision AI, check out our v0.5.1 roadmap, and earn XP.' },
+      { title: '2. Version 0.5.1 Roadmap', desc: 'Click on the Roadmap tab to view update logs and features currently in progress.' },
+      { title: '3. Password-Protected Admin Panel', desc: 'Press Ctrl + Shift + X anytime, enter passcode (admin123), to access the Super Admin panel.' }
     ];
 
     function openTutorial() {
