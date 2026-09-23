@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SetupScore • Ultimate Edition v4.75</title>
+  <title>SetupScore • Ultimate Edition v4.75 (Final Update)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -79,7 +79,7 @@
         <div>
           <h1 class="text-base font-bold text-slate-100 flex items-center gap-2">
             SetupScore
-            <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/30 px-1.5 py-0.5 rounded font-bold">v4.75 ULTIMATE</span>
+            <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/30 px-1.5 py-0.5 rounded font-bold">v4.75 FINAL</span>
           </h1>
           <p id="headerUsername" class="text-[10px] text-slate-400 font-mono">@guest</p>
         </div>
@@ -111,7 +111,7 @@
       <button id="tabBtnSoundboard" onclick="switchTab('soundboard')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Soundboard 🔊</button>
       <button id="tabBtnLeaderboard" onclick="switchTab('leaderboard')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Leaderboard</button>
       <button id="tabBtnProfile" onclick="switchTab('profile')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">My Profile</button>
-      <button id="tabBtnLogs" onclick="switchTab('logs')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Release Notes & Admin ⚡</button>
+      <button id="tabBtnLogs" onclick="switchTab('logs')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Admin & Roadmap ⚡</button>
     </div>
   </header>
 
@@ -286,9 +286,89 @@
       </div>
     </div>
 
-    <!-- RELEASE NOTES & SUPER ADMIN PANEL -->
+    <!-- ADMIN & FUTURE ROADMAP TAB -->
     <div id="tabLogs" class="space-y-6">
       
+      <!-- Studio Future Roadmap (Trello-style Board) -->
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4 shadow-2xl">
+        <div class="flex justify-between items-center">
+          <div>
+            <h2 class="text-base font-bold text-slate-100 flex items-center gap-2">
+              🗺️ Studio Future Roadmap
+              <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/30 px-2 py-0.5 rounded font-mono">COMING SOON</span>
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">Here is a sneak peek at what features the studio is working hard on for upcoming releases.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+          <!-- Column 1: Planned -->
+          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+            <div class="flex justify-between items-center border-b border-slate-800/80 pb-2">
+              <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">📋 Planned</span>
+              <span class="text-[10px] bg-slate-900 px-2 py-0.5 rounded text-slate-400 font-mono">2</span>
+            </div>
+            <div class="space-y-2.5">
+              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
+                <span class="text-[9px] bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded font-bold inline-block">Community</span>
+                <p class="font-bold text-slate-200">Direct Message Chat</p>
+                <p class="text-[11px] text-slate-400">Chat live with other creators and discuss gear upgrades.</p>
+              </div>
+              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
+                <span class="text-[9px] bg-purple-500/10 text-purple-400 border border-purple-500/20 px-2 py-0.5 rounded font-bold inline-block">Customization</span>
+                <p class="font-bold text-slate-200">Custom RGB Themes</p>
+                <p class="text-[11px] text-slate-400">Personalize the dashboard colorway to match your own setup.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 2: In Progress -->
+          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+            <div class="flex justify-between items-center border-b border-slate-800/80 pb-2">
+              <span class="text-xs font-bold text-brand-400 uppercase tracking-wider">⚡ In Progress</span>
+              <span class="text-[10px] bg-slate-900 px-2 py-0.5 rounded text-brand-400 font-mono">2</span>
+            </div>
+            <div class="space-y-2.5">
+              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
+                <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/20 px-2 py-0.5 rounded font-bold inline-block">AI Engine</span>
+                <p class="font-bold text-slate-200">Advanced Vision AI v2</p>
+                <p class="text-[11px] text-slate-400">Deeper detection for cable clutter and monitor symmetry.</p>
+              </div>
+              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
+                <span class="text-[9px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded font-bold inline-block">Gamification</span>
+                <p class="font-bold text-slate-200">Achievement Badges</p>
+                <p class="text-[11px] text-slate-400">Unlock special badges for top-voted workstation submissions.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 3: Completed / Finalized -->
+          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+            <div class="flex justify-between items-center border-b border-slate-800/80 pb-2">
+              <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">✅ Completed</span>
+              <span class="text-[10px] bg-slate-900 px-2 py-0.5 rounded text-emerald-400 font-mono">3</span>
+            </div>
+            <div class="space-y-2.5">
+              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1 opacity-75">
+                <span class="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-bold inline-block">Core</span>
+                <p class="font-bold text-slate-200">Profile Auth & Storage</p>
+                <p class="text-[11px] text-slate-400">Multi-profile switching & local persistence.</p>
+              </div>
+              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1 opacity-75">
+                <span class="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-bold inline-block">Audio</span>
+                <p class="font-bold text-slate-200">Interactive Soundboard</p>
+                <p class="text-[11px] text-slate-400">Custom web audio frequency triggers.</p>
+              </div>
+              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1 opacity-75">
+                <span class="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-bold inline-block">Security</span>
+                <p class="font-bold text-slate-200">Super Admin Command Center</p>
+                <p class="text-[11px] text-slate-400">Ban hammer, live activity stream & broadcast banners.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Super Admin Command Center (Protected by admin123) -->
       <div class="bg-slate-900 border border-brand-400/50 rounded-3xl p-6 space-y-5 shadow-2xl relative overflow-hidden">
         <div class="absolute right-0 top-0 w-80 h-full bg-gradient-to-l from-brand-500/10 to-transparent pointer-events-none"></div>
@@ -310,16 +390,16 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Version Title / Tag</label>
-              <input type="text" id="pubVersionTitle" placeholder="e.g. v4.75 Ultimate Edition" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
+              <input type="text" id="pubVersionTitle" placeholder="e.g. v4.75 Final Update" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
             </div>
             <div>
               <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Global Top Banner Broadcast Text</label>
-              <input type="text" id="pubBannerText" placeholder="⚡ v4.75 Live: Ultimate features online!" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
+              <input type="text" id="pubBannerText" placeholder="⚡ v4.75 Final Update live!" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
             </div>
           </div>
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Update Log Description (HTML & Bullets Supported)</label>
-            <textarea id="pubVersionDesc" rows="3" placeholder="• Restored tutorial & login systems...&#10;• Added ban hammer & live activity logs..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400"></textarea>
+            <textarea id="pubVersionDesc" rows="3" placeholder="• Published final v4.75 update...&#10;• Added Trello-style studio roadmap..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400"></textarea>
           </div>
 
           <!-- Ban Hammer & User Management Section -->
@@ -368,7 +448,7 @@
     const tutorialSteps = [
       { title: "1. Welcome to SetupScore v4.75", desc: "Evaluate your gaming or developer workstation using advanced Vision AI, explore community rigs, and climb global leaderboards." },
       { title: "2. Vision AI Audits & XP", desc: "Upload photos of your main setup and cables to generate instant custom radar charts and earn XP to level up your ranking tier." },
-      { title: "3. Super Admin & Soundboard", desc: "Access the soundboard for audio FX, or use the secure Super Admin command center to moderate users, broadcast announcements, and publish update logs." }
+      { title: "3. Super Admin & Roadmap", desc: "Access the soundboard, explore the studio future roadmap, or use the secure Super Admin command center to moderate users and publish updates." }
     ];
 
     function openTutorial() {
@@ -506,7 +586,6 @@
       if (!rawName) return;
       currentUser = rawName.startsWith('@') ? rawName : `@${rawName}`;
 
-      // Check if banned
       let bannedList = [];
       try { bannedList = JSON.parse(localStorage.getItem('ss_banned_users') || '[]'); } catch(e){}
       if (bannedList.includes(currentUser)) {
@@ -658,7 +737,7 @@
       try {
         const rawLogs = localStorage.getItem('ss_release_logs');
         logs = rawLogs ? JSON.parse(rawLogs) : [
-          { title: "v4.75 Ultimate Edition", date: "2026-09-23", desc: "• Restored tutorial, login system, and soundboard.<br>• Added Super Admin ban hammer and live activity log stream.<br>• Enhanced overall performance and audio routing." }
+          { title: "v4.75 Final Update", date: "2026-09-23", desc: "• Published final v4.75 feature update.<br>• Added studio Trello roadmap for upcoming months.<br>• Verified system stability across all clients." }
         ];
       } catch(e) { logs = []; }
 
@@ -698,7 +777,7 @@
       try {
         const rawLogs = localStorage.getItem('ss_release_logs');
         logs = rawLogs ? JSON.parse(rawLogs) : [
-          { title: "v4.75 Ultimate Edition", date: "2026-09-23", desc: "• Restored tutorial, login system, and soundboard.<br>• Added Super Admin ban hammer and live activity log stream.<br>• Enhanced overall performance and audio routing." }
+          { title: "v4.75 Final Update", date: "2026-09-23", desc: "• Published final v4.75 feature update.<br>• Added studio Trello roadmap for upcoming months.<br>• Verified system stability across all clients." }
         ];
       } catch(e) { logs = []; }
 
@@ -781,7 +860,6 @@
       });
     }
 
-    // Feed & Portfolio Rendering
     function renderFeed() {
       const container = document.getElementById('feedContainer');
       if (communityFeed.length === 0) {
@@ -849,7 +927,6 @@
       playSound('click');
     }
 
-    // Tabs Navigation
     function switchTab(t) {
       ['feed', 'audit', 'soundboard', 'leaderboard', 'profile', 'logs'].forEach(tab => {
         const el = document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
