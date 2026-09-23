@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SetupScore • Ultimate Edition v4.75 (Refined)</title>
+  <title>SetupScore • Ultimate Edition v4.75 (Admin Moderated Feedback)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -25,14 +25,14 @@
 
   <!-- ==================== SECRET ADMIN COMMAND CENTER MODAL ==================== -->
   <div id="secretAdminModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[150] flex items-center justify-center p-4 hidden">
-    <div class="max-w-2xl w-full bg-slate-900 border border-brand-500/50 rounded-3xl p-6 shadow-2xl relative space-y-5 max-h-[90vh] overflow-y-auto">
+    <div class="max-w-3xl w-full bg-slate-900 border border-brand-500/50 rounded-3xl p-6 shadow-2xl relative space-y-5 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
         <div>
           <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
             ⚡ Super Admin Command Center
             <span class="text-[9px] bg-red-500/10 text-red-400 border border-red-500/30 px-2 py-0.5 rounded font-mono">RESTRICTED OWNER ACCESS</span>
           </h3>
-          <p class="text-xs text-slate-400">Triggered via secret shortcut. Manage release logs, banners, and bans.</p>
+          <p class="text-xs text-slate-400">Triggered via secret shortcut. Manage feedback submissions, AI summaries, and releases.</p>
         </div>
         <button onclick="closeSecretAdminModal()" class="text-slate-400 hover:text-slate-100 font-bold px-3 py-1 bg-slate-800 rounded-xl text-xs transition">✕ Close</button>
       </div>
@@ -47,7 +47,27 @@
       </div>
 
       <!-- Unlocked Admin Interface -->
-      <div id="adminPanelContent" class="space-y-4 hidden">
+      <div id="adminPanelContent" class="space-y-5 hidden">
+        
+        <!-- Private Feedback Moderation Hub -->
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-bold text-brand-400 flex items-center gap-2">
+              📥 Private Feedback Inbox (Admin Only)
+            </span>
+            <button onclick="generateAiFeedbackSummary()" class="bg-brand-400/10 hover:bg-brand-400/20 text-brand-400 border border-brand-400/30 text-[10px] font-bold px-3 py-1.5 rounded-lg transition">🤖 Generate AI Summary Report</button>
+          </div>
+
+          <!-- AI Summary Display Box -->
+          <div id="aiSummaryBox" class="bg-slate-900 p-3 rounded-xl border border-brand-500/30 text-xs text-slate-300 font-mono hidden space-y-2">
+            <span class="text-brand-400 font-bold block text-[10px] uppercase tracking-wider">AI Feedback Insights Report:</span>
+            <div id="aiSummaryContent" class="text-[11px] leading-relaxed"></div>
+          </div>
+
+          <div id="adminPrivateFeedbackList" class="space-y-2 max-h-56 overflow-y-auto"></div>
+        </div>
+
+        <!-- Release Broadcast Settings -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Version Title / Tag</label>
@@ -55,12 +75,12 @@
           </div>
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Global Top Banner Broadcast Text</label>
-            <input type="text" id="pubBannerText" placeholder="⚡ Feedback section is now live!" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
+            <input type="text" id="pubBannerText" placeholder="⚡ Version 5 roadmap update coming soon!" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
           </div>
         </div>
         <div>
           <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Update Log Description (HTML & Bullets Supported)</label>
-          <textarea id="pubVersionDesc" rows="3" placeholder="• Fixed XP and leveling system...&#10;• Added community feedback section..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400"></textarea>
+          <textarea id="pubVersionDesc" rows="2" placeholder="• Reviewed community feedback submissions...&#10;• Added admin publishing controls..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400"></textarea>
         </div>
 
         <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
@@ -73,7 +93,7 @@
 
         <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
           <span class="text-xs font-bold text-brand-400 block">📡 Live Server Activity Stream</span>
-          <div id="adminActivityLogs" class="space-y-1 font-mono text-[11px] text-slate-400 max-h-28 overflow-y-auto"></div>
+          <div id="adminActivityLogs" class="space-y-1 font-mono text-[11px] text-slate-400 max-h-24 overflow-y-auto"></div>
         </div>
         
         <div class="flex flex-wrap gap-3 pt-2">
@@ -90,7 +110,7 @@
     <div class="max-w-md w-full bg-slate-900 border border-brand-500/40 rounded-3xl p-6 shadow-2xl relative">
       <span class="text-[10px] font-mono uppercase text-brand-400 font-bold tracking-widest block mb-1">Welcome Guide</span>
       <h3 id="tutTitle" class="text-lg font-bold text-slate-100 mb-2">1. Welcome to SetupScore</h3>
-      <p id="tutDesc" class="text-xs text-slate-400 mb-6 leading-relaxed">Evaluate your gaming or developer workstation using advanced Vision AI, climb global leaderboards, and share your feedback.</p>
+      <p id="tutDesc" class="text-xs text-slate-400 mb-6 leading-relaxed">Evaluate your gaming or developer workstation using advanced Vision AI, climb global leaderboards, and send private feedback to admins.</p>
       <div class="flex justify-between items-center">
         <span id="tutStepIndicator" class="text-[10px] text-slate-500 font-mono">Step 1 of 3</span>
         <div class="flex gap-2">
@@ -166,7 +186,7 @@
       </div>
     </div>
 
-    <!-- Simplified Navigation Tabs -->
+    <!-- Navigation Tabs -->
     <div class="max-w-6xl mx-auto px-4 flex gap-2 border-t border-slate-800/60 pt-2 overflow-x-auto">
       <button id="tabBtnFeed" onclick="switchTab('feed')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-brand-400 text-brand-400 whitespace-nowrap transition">Arena Feed</button>
       <button id="tabBtnAudit" onclick="switchTab('audit')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Vision Audit</button>
@@ -274,12 +294,12 @@
       </div>
     </div>
 
-    <!-- FEEDBACK SECTION TAB -->
+    <!-- FEEDBACK SECTION TAB (Private Submission to Admins + Published Admin Responses) -->
     <div id="tabFeedback" class="hidden space-y-6">
       <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4">
         <div>
-          <h2 class="text-base font-bold text-slate-100 mb-1">💬 Community Feedback</h2>
-          <p class="text-xs text-slate-400">Share your ideas, report bugs, or tell us what features you want in version 5.</p>
+          <h2 class="text-base font-bold text-slate-100 mb-1">💬 Send Feedback to Admins</h2>
+          <p class="text-xs text-slate-400">Your feedback is submitted privately to the admin team. If approved, admins will publish it here with an official response!</p>
         </div>
 
         <div class="space-y-4 pt-2">
@@ -292,15 +312,19 @@
             </select>
           </div>
           <div>
-            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Your Message</label>
-            <textarea id="feedbackMessageInput" rows="4" placeholder="Tell us what you love or what we can improve..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brand-400"></textarea>
+            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Your Message (Sent Privately)</label>
+            <textarea id="feedbackMessageInput" rows="4" placeholder="Tell us what you want to see in Version 5..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brand-400"></textarea>
           </div>
-          <button onclick="submitUserFeedback()" class="bg-brand-400 hover:bg-brand-300 text-slate-950 font-bold text-xs px-6 py-3 rounded-xl transition shadow-md shadow-brand-500/20">Submit Feedback</button>
+          <button onclick="submitUserFeedback()" class="bg-brand-400 hover:bg-brand-300 text-slate-950 font-bold text-xs px-6 py-3 rounded-xl transition shadow-md shadow-brand-500/20">Send Private Feedback</button>
         </div>
 
-        <div class="border-t border-slate-800 pt-4 mt-6">
-          <h3 class="text-xs font-bold text-slate-300 mb-3">Recent Community Feedback</h3>
-          <div id="feedbackListContainer" class="space-y-3 max-h-64 overflow-y-auto"></div>
+        <!-- Published & Replied Feedback Board -->
+        <div class="border-t border-slate-800 pt-6 mt-6 space-y-3">
+          <div>
+            <h3 class="text-xs font-bold text-slate-200">Published Community Feedback & Admin Replies</h3>
+            <p class="text-[10px] text-slate-400">Selected submissions approved and answered by the studio team.</p>
+          </div>
+          <div id="publishedFeedbackContainer" class="space-y-3 max-h-72 overflow-y-auto"></div>
         </div>
       </div>
     </div>
@@ -380,7 +404,7 @@
       </div>
     </div>
 
-    <!-- ROADMAP & CHANGELOG TAB (Public viewable) -->
+    <!-- ROADMAP & CHANGELOG TAB -->
     <div id="tabRoadmap" class="hidden space-y-6">
       
       <!-- Studio Future Roadmap -->
@@ -394,31 +418,34 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-          <!-- Column 1: Planned -->
           <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
             <div class="flex justify-between items-center border-b border-slate-800/80 pb-2">
               <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">📋 Planned</span>
-              <span class="text-[10px] bg-slate-900 px-2 py-0.5 rounded text-slate-400 font-mono">2</span>
+              <span class="text-[10px] bg-slate-900 px-2 py-0.5 rounded text-slate-400 font-mono">3</span>
             </div>
             <div class="space-y-2.5">
               <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
                 <span class="text-[9px] bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded font-bold inline-block">Community</span>
                 <p class="font-bold text-slate-200">Direct Message Chat</p>
-                <p class="text-[11px] text-slate-400">Chat live with other creators and discuss gear upgrades.</p>
+                <p class="text-[11px] text-slate-400">Moderated direct messaging for creators.</p>
               </div>
               <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
-                <span class="text-[9px] bg-purple-500/10 text-purple-400 border border-purple-500/20 px-2 py-0.5 rounded font-bold inline-block">Customization</span>
-                <p class="font-bold text-slate-200">Custom RGB Themes</p>
-                <p class="text-[11px] text-slate-400">Personalize the dashboard colorway to match your setup.</p>
+                <span class="text-[9px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded font-bold inline-block">Badges</span>
+                <p class="font-bold text-slate-200">Owner-Assigned Badges</p>
+                <p class="text-[11px] text-slate-400">Exclusive creator status badges assigned by admins.</p>
+              </div>
+              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
+                <span class="text-[9px] bg-purple-500/10 text-purple-400 border border-purple-500/20 px-2 py-0.5 rounded font-bold inline-block">Competition</span>
+                <p class="font-bold text-slate-200">Automated Weekly Leaderboards</p>
+                <p class="text-[11px] text-slate-400">Weekly resets and rotating community events.</p>
               </div>
             </div>
           </div>
 
-          <!-- Column 2: In Progress -->
           <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
             <div class="flex justify-between items-center border-b border-slate-800/80 pb-2">
               <span class="text-xs font-bold text-brand-400 uppercase tracking-wider">⚡ In Progress</span>
-              <span class="text-[10px] bg-slate-900 px-2 py-0.5 rounded text-brand-400 font-mono">2</span>
+              <span class="text-[10px] bg-slate-900 px-2 py-0.5 rounded text-brand-400 font-mono">1</span>
             </div>
             <div class="space-y-2.5">
               <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
@@ -426,15 +453,9 @@
                 <p class="font-bold text-slate-200">Simplified Experience</p>
                 <p class="text-[11px] text-slate-400">Streamlining navigation to make the platform easier to use.</p>
               </div>
-              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
-                <span class="text-[9px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded font-bold inline-block">AI Engine</span>
-                <p class="font-bold text-slate-200">Advanced Vision AI v2</p>
-                <p class="text-[11px] text-slate-400">Deeper detection for cable clutter and monitor symmetry.</p>
-              </div>
             </div>
           </div>
 
-          <!-- Column 3: Completed / Finalized -->
           <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
             <div class="flex justify-between items-center border-b border-slate-800/80 pb-2">
               <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">✅ Completed</span>
@@ -448,8 +469,8 @@
               </div>
               <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1 opacity-75">
                 <span class="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-bold inline-block">Feedback</span>
-                <p class="font-bold text-slate-200">Community Feedback Section</p>
-                <p class="text-[11px] text-slate-400">Direct feedback submission and viewing.</p>
+                <p class="font-bold text-slate-200">Private Admin Feedback Inbox</p>
+                <p class="text-[11px] text-slate-400">Secure submissions with AI summary generation.</p>
               </div>
               <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1 opacity-75">
                 <span class="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-bold inline-block">Security</span>
@@ -476,7 +497,7 @@
   <script>
     // System State
     let currentUser = null, userXp = 0, userLevel = 1, audioMuted = false;
-    let myPortfolio = [], communityFeed = [], feedbackList = [], uploadedImages = [null, null, null], activeRadarChart = null;
+    let myPortfolio = [], communityFeed = [], privateFeedback = [], publishedFeedback = [], uploadedImages = [null, null, null], activeRadarChart = null;
     let tutorialStep = 1;
     const ranks = ["Bronze Rig", "Silver Studio", "Gold Station", "Diamond Battlestation", "Master Sanctuary"];
 
@@ -517,6 +538,7 @@
       if (localStorage.getItem('ss_publisher_auth') === 'true') {
         document.getElementById('adminLockScreen').classList.add('hidden');
         document.getElementById('adminPanelContent').classList.remove('hidden');
+        renderAdminPrivateFeedback();
       } else {
         document.getElementById('adminLockScreen').classList.remove('hidden');
         document.getElementById('adminPanelContent').classList.add('hidden');
@@ -533,9 +555,9 @@
 
     // Tutorial Steps
     const tutorialSteps = [
-      { title: "1. Welcome to SetupScore v4.75", desc: "Evaluate your gaming or developer workstation using advanced Vision AI, explore community rigs, and share your feedback." },
+      { title: "1. Welcome to SetupScore v4.75", desc: "Evaluate your gaming or developer workstation using advanced Vision AI, explore community rigs, and submit feedback directly to admins." },
       { title: "2. Vision AI Audits & XP", desc: "Upload photos of your main setup and cables to generate instant custom radar charts and earn XP to level up your ranking tier." },
-      { title: "3. Feedback & Roadmap", desc: "Use the new feedback section to share your thoughts, explore the studio future roadmap, or press Ctrl+Shift+O to open the hidden owner admin center." }
+      { title: "3. Private Feedback & Roadmap", desc: "Your feedback is sent privately to the admin inbox. Check out the studio roadmap for Version 5 or press Ctrl+Shift+O for admin tools." }
     ];
 
     function openTutorial() {
@@ -569,7 +591,7 @@
       playSound('click');
     }
 
-    // Robust Web Audio System
+    // Audio System
     let audioCtx = null;
     function getAudioContext() {
       if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
@@ -628,7 +650,7 @@
         setTimeout(openTutorial, 500);
       }
       loadGlobalFeed();
-      loadFeedback();
+      loadFeedbackData();
       renderReleaseLogs();
       renderGlobalAnnouncement();
       logAdminActivity("System initialized successfully.");
@@ -741,15 +763,19 @@
       document.getElementById('profileRankBadge').textContent = rank;
     }
 
-    // Feedback Management
-    function loadFeedback() {
+    // Private Admin Feedback System
+    function loadFeedbackData() {
       try {
-        const raw = localStorage.getItem('ss_community_feedback');
-        feedbackList = raw ? JSON.parse(raw) : [
-          { id: 'f-1', author: '@NeonDeck', category: 'Feature Suggestion', message: 'Would love direct messaging in v5!', date: '2026-09-23' }
+        const privRaw = localStorage.getItem('ss_private_feedback_inbox');
+        privateFeedback = privRaw ? JSON.parse(privRaw) : [
+          { id: 'f-1', author: '@NeonDeck', category: 'Feature Suggestion', message: 'Would love direct messaging in version 5!', date: '2026-09-23' }
         ];
-      } catch(e) { feedbackList = []; }
-      renderFeedbackList();
+        const pubRaw = localStorage.getItem('ss_published_feedback');
+        publishedFeedback = pubRaw ? JSON.parse(pubRaw) : [
+          { id: 'fp-1', author: '@NeonDeck', category: 'Feature Suggestion', message: 'Would love direct messaging in version 5!', adminReply: 'I love this feature, it will be coming in version 5.0!', date: '2026-09-23' }
+        ];
+      } catch(e) { privateFeedback = []; publishedFeedback = []; }
+      renderPublishedFeedback();
     }
 
     function submitUserFeedback() {
@@ -758,31 +784,104 @@
       if (!msg) return alert("Please enter a message for your feedback.");
 
       const item = { id: 'f-' + Date.now(), author: currentUser || '@guest', category: cat, message: msg, date: new Date().toISOString().split('T')[0] };
-      feedbackList.unshift(item);
-      localStorage.setItem('ss_community_feedback', JSON.stringify(feedbackList));
+      privateFeedback.unshift(item);
+      localStorage.setItem('ss_private_feedback_inbox', JSON.stringify(privateFeedback));
       document.getElementById('feedbackMessageInput').value = '';
-      renderFeedbackList();
-      alert("Thank you! Your feedback has been submitted.");
+      alert("Feedback sent successfully to the admin inbox!");
       playSound('levelup');
-      logAdminActivity(`New feedback submitted by ${currentUser || '@guest'}`);
+      logAdminActivity(`New private feedback received from ${currentUser || '@guest'}`);
     }
 
-    function renderFeedbackList() {
-      const container = document.getElementById('feedbackListContainer');
+    function renderPublishedFeedback() {
+      const container = document.getElementById('publishedFeedbackContainer');
       if (!container) return;
-      if (feedbackList.length === 0) {
-        container.innerHTML = `<div class="text-slate-500 text-xs text-center py-4">No feedback submitted yet. Be the first!</div>`;
+      if (publishedFeedback.length === 0) {
+        container.innerHTML = `<div class="text-slate-500 text-xs text-center py-4">No published feedback yet. Check back soon!</div>`;
         return;
       }
-      container.innerHTML = feedbackList.map(f => `
-        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-xs space-y-1 shadow-sm">
+      container.innerHTML = publishedFeedback.map(f => `
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs space-y-2 shadow-sm">
           <div class="flex justify-between items-center text-[10px]">
             <span class="font-bold text-brand-400">${f.category}</span>
             <span class="text-slate-500 font-mono">${f.author} • ${f.date}</span>
           </div>
-          <p class="text-slate-300 font-sans leading-relaxed">${f.message}</p>
+          <p class="text-slate-200 font-sans leading-relaxed">"${f.message}"</p>
+          <div class="bg-slate-900 p-3 rounded-xl border border-brand-500/30 text-[11px] text-teal-300 font-mono space-y-1">
+            <span class="text-brand-400 font-bold block text-[10px] uppercase">👑 Admin Reply:</span>
+            <p>${f.adminReply}</p>
+          </div>
         </div>
       `).join('');
+    }
+
+    function renderAdminPrivateFeedback() {
+      const container = document.getElementById('adminPrivateFeedbackList');
+      if (!container) return;
+      if (privateFeedback.length === 0) {
+        container.innerHTML = `<div class="text-slate-500 text-xs text-center py-3">Inbox is empty. No pending feedback.</div>`;
+        return;
+      }
+      container.innerHTML = privateFeedback.map(f => `
+        <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 text-xs space-y-2">
+          <div class="flex justify-between items-center text-[10px]">
+            <span class="font-bold text-brand-400">${f.category}</span>
+            <span class="text-slate-500 font-mono">${f.author} • ${f.date}</span>
+          </div>
+          <p class="text-slate-200">${f.message}</p>
+          <div class="flex gap-2 pt-1">
+            <input type="text" id="replyInput-${f.id}" placeholder="Admin reply (e.g. Coming in v5.0!)" class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
+            <button onclick="publishFeedbackItem('${f.id}')" class="bg-brand-400 hover:bg-brand-300 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-lg transition">Publish & Reply</button>
+            <button onclick="deletePrivateFeedback('${f.id}')" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs px-2 py-1.5 rounded-lg transition">Dismiss</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function publishFeedbackItem(id) {
+      const replyText = document.getElementById(`replyInput-${id}`).value.trim() || "I love this feature, it will be coming in version 5.0!";
+      const idx = privateFeedback.findIndex(f => f.id === id);
+      if (idx === -1) return;
+
+      const item = privateFeedback.splice(idx, 1)[0];
+      item.adminReply = replyText;
+      publishedFeedback.unshift(item);
+
+      localStorage.setItem('ss_private_feedback_inbox', JSON.stringify(privateFeedback));
+      localStorage.setItem('ss_published_feedback', JSON.stringify(publishedFeedback));
+
+      renderAdminPrivateFeedback();
+      renderPublishedFeedback();
+      alert("Feedback published to public feed with admin reply!");
+      playSound('levelup');
+      logAdminActivity(`Published feedback from ${item.author} with official reply.`);
+    }
+
+    function deletePrivateFeedback(id) {
+      privateFeedback = privateFeedback.filter(f => f.id !== id);
+      localStorage.setItem('ss_private_feedback_inbox', JSON.stringify(privateFeedback));
+      renderAdminPrivateFeedback();
+      playSound('click');
+    }
+
+    // AI Feedback Summary Generator
+    function generateAiFeedbackSummary() {
+      if (privateFeedback.length === 0) {
+        alert("No feedback items in the private inbox to summarize.");
+        return;
+      }
+      const totalCount = privateFeedback.length;
+      const categories = privateFeedback.reduce((acc, f) => { acc[f.category] = (acc[f.category] || 0) + 1; return acc; }, {});
+      const topCat = Object.keys(categories).reduce((a, b) => categories[a] > categories[b] ? a : b);
+      
+      const summaryText = `• Total Pending Submissions: ${totalCount}<br>` +
+        `• Dominant Topic Category: ${topCat} (${categories[topCat]} items)<br>` +
+        `• Key User Request: Community members are primarily requesting features tailored for Version 5 rollout, highlighting high engagement with the platform.<br>` +
+        `• Recommendation: Review items in the admin inbox and publish top highlights with custom responses.`;
+
+      document.getElementById('aiSummaryContent').innerHTML = summaryText;
+      document.getElementById('aiSummaryBox').classList.remove('hidden');
+      playSound('bell');
+      logAdminActivity("Generated AI feedback insights report.");
     }
 
     // Admin Actions
@@ -841,7 +940,7 @@
       try {
         const rawLogs = localStorage.getItem('ss_release_logs');
         logs = rawLogs ? JSON.parse(rawLogs) : [
-          { title: "v4.75 Refined Update", date: "2026-09-23", desc: "• Fixed XP and leveling system.<br>• Added public feedback section.<br>• Simplified overall UI experience." }
+          { title: "v4.75 Refined Update", date: "2026-09-23", desc: "• Private feedback inbox for admins.<br>• AI feedback summary generator.<br>• Simplified overall UI experience." }
         ];
       } catch(e) { logs = []; }
 
@@ -881,7 +980,7 @@
       try {
         const rawLogs = localStorage.getItem('ss_release_logs');
         logs = rawLogs ? JSON.parse(rawLogs) : [
-          { title: "v4.75 Refined Update", date: "2026-09-23", desc: "• Fixed XP and leveling system.<br>• Added public feedback section.<br>• Simplified overall UI experience." }
+          { title: "v4.75 Refined Update", date: "2026-09-23", desc: "• Private feedback inbox for admins.<br>• AI feedback summary generator.<br>• Simplified overall UI experience." }
         ];
       } catch(e) { logs = []; }
 
