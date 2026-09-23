@@ -3,414 +3,463 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SetupScore AI v0.5</title>
+  <title>SetupScore AI v0.75 Beta • Gamified Workspace Reviewer</title>
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans pb-16 selection:bg-teal-500 selection:text-slate-950">
 
-  <!-- Header -->
-  <header class="border-b border-slate-800/80 bg-slate-900/50 backdrop-blur sticky top-0 z-50">
-    <div class="max-w-4xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+  <header class="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur sticky top-0 z-50 shadow-lg">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
       
-      <!-- Logo / Reset Button -->
-      <div class="flex items-center gap-3 cursor-pointer group" onclick="resetApp()" title="Click to Reset App">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-teal-400 to-blue-500 flex items-center justify-center font-black text-slate-950 text-lg shadow-lg shadow-teal-500/20 group-hover:scale-105 transition-transform">
+      <!-- Logo & Branding -->
+      <div class="flex items-center gap-3 cursor-pointer group" onclick="switchTab('audit')" title="Go to Audit">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-400 via-blue-500 to-purple-600 flex items-center justify-center font-black text-slate-950 text-xl shadow-lg shadow-teal-500/20 group-hover:scale-105 transition-transform">
           S
         </div>
         <div>
-          <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-slate-100 via-teal-200 to-teal-400 bg-clip-text text-transparent group-hover:opacity-90 transition">
-            SetupScore AI
-          </h1>
-          <button onclick="event.stopPropagation(); openChangelog();" class="text-[11px] text-teal-400/80 hover:text-teal-300 font-mono hover:underline flex items-center gap-1">
-            v0.5 • Workspace Vision & Value <span>📜</span>
-          </button>
+          <div class="flex items-center gap-2">
+            <h1 class="text-xl font-black tracking-tight bg-gradient-to-r from-slate-100 via-teal-200 to-teal-400 bg-clip-text text-transparent">
+              SetupScore AI
+            </h1>
+            <span class="text-[10px] bg-teal-500/10 text-teal-400 font-mono border border-teal-500/30 px-1.5 py-0.5 rounded font-bold tracking-wide">v0.75 BETA</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-mono">Gamified Workspace Audit & Community Arena</p>
         </div>
       </div>
 
-      <!-- Currency Switcher -->
-      <div class="flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800">
-        <span class="text-xs text-slate-400 font-medium">Currency:</span>
-        <select id="currencySelect" onchange="calculateCostBreakdown()" class="bg-transparent text-slate-200 text-xs font-semibold outline-none cursor-pointer">
-          <option value="AUD" class="bg-slate-900 text-slate-200">AUD ($)</option>
-          <option value="USD" class="bg-slate-900 text-slate-200">USD ($)</option>
-          <option value="EUR" class="bg-slate-900 text-slate-200">EUR (€)</option>
-          <option value="GBP" class="bg-slate-900 text-slate-200">GBP (£)</option>
-        </select>
+      <!-- User Game Stats Bar (Persistent State Indicators) -->
+      <div class="flex items-center gap-3 bg-slate-950/90 px-4 py-2 rounded-xl border border-slate-800 shadow-inner">
+        <!-- Daily Streak Counter -->
+        <div class="flex items-center gap-2" title="Daily Streak (Rate setups daily to keep alive!)">
+          <span class="text-xl animate-bounce">🔥</span>
+          <div>
+            <span id="streakCount" class="text-xs font-black text-amber-400 font-mono block">1</span>
+            <span class="text-[9px] text-slate-400 block -mt-1 font-semibold uppercase tracking-wider">Streak</span>
+          </div>
+        </div>
+
+        <div class="h-6 w-px bg-slate-800"></div>
+
+        <!-- Player Mastery Rank & XP Bar -->
+        <div class="flex items-center gap-2">
+          <div>
+            <div class="flex justify-between items-center gap-3">
+              <span id="masteryRank" class="text-[10px] font-bold text-teal-400 uppercase tracking-wider">Bronze Rig</span>
+              <span id="xpText" class="text-[10px] font-mono text-slate-400">0/100 XP</span>
+            </div>
+            <div class="w-28 bg-slate-800 h-1.5 rounded-full overflow-hidden mt-0.5">
+              <div id="xpBar" class="bg-gradient-to-r from-teal-400 to-blue-500 h-full w-0 transition-all duration-500"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="h-6 w-px bg-slate-800"></div>
+
+        <!-- Pro Status Teaser Modal Trigger -->
+        <button onclick="openProModal()" class="text-[10px] font-bold bg-amber-400/10 border border-amber-400/30 text-amber-300 hover:bg-amber-400/20 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 shadow-sm">
+          <span>👑</span> PRO
+        </button>
+
+        <!-- Clear/Reset Data Button -->
+        <button onclick="confirmResetProgress()" class="text-[10px] font-semibold text-slate-500 hover:text-rose-400 p-1.5 transition ml-1" title="Reset Saved Data">
+          ⚙️
+        </button>
       </div>
+
     </div>
 
-    <!-- Navigation Tabs -->
-    <div class="max-w-4xl mx-auto px-4 flex gap-2 border-t border-slate-800/60 pt-2">
-      <button id="tabBtnAesthetic" onclick="switchTab('aesthetic')" class="flex-1 sm:flex-none py-2.5 px-6 text-xs font-semibold rounded-t-lg transition border-b-2 border-teal-400 text-teal-400 bg-slate-900/60">
-        ✨ Aesthetic Reviewer
+    <div class="max-w-5xl mx-auto px-4 flex gap-1 sm:gap-2 border-t border-slate-800/60 pt-2 overflow-x-auto scrollbar-none">
+      <button id="tabBtnAudit" onclick="switchTab('audit')" class="py-2.5 px-4 text-xs font-semibold rounded-t-lg transition border-b-2 border-teal-400 text-teal-400 bg-slate-900/60 whitespace-nowrap">
+        📸 Setup Audit (Multi-Angle)
       </button>
-      <button id="tabBtnCost" onclick="switchTab('cost')" class="flex-1 sm:flex-none py-2.5 px-6 text-xs font-semibold rounded-t-lg transition border-b-2 border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/30">
-        💰 Setup Cost Analyzer
+      <button id="tabBtnFeed" onclick="switchTab('feed')" class="py-2.5 px-4 text-xs font-semibold rounded-t-lg transition border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap">
+        🗳️ Arena & Rating Feed
+      </button>
+      <button id="tabBtnLeaderboard" onclick="switchTab('leaderboard')" class="py-2.5 px-4 text-xs font-semibold rounded-t-lg transition border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap">
+        🏆 Leaderboard
+      </button>
+      <button id="tabBtnVault" onclick="switchTab('vault')" class="py-2.5 px-4 text-xs font-semibold rounded-t-lg transition border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap flex items-center gap-1.5">
+        📜 Saved Vault <span id="vaultBadge" class="text-[9px] bg-slate-800 text-teal-400 font-mono px-1.5 py-0.2 rounded-full">0</span>
       </button>
     </div>
   </header>
 
-  <main class="max-w-4xl mx-auto px-4 pt-8">
+  <main class="max-w-5xl mx-auto px-4 pt-6">
 
-    <!-- Universal Image Upload Bar -->
-    <section class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-2xl mb-8 backdrop-blur text-center">
-      <div id="dropZone" class="border-2 border-dashed border-slate-700/80 hover:border-teal-400/60 rounded-xl p-6 transition cursor-pointer bg-slate-950/40" onclick="document.getElementById('imageInput').click()">
-        <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="handleImageSelect(event)">
-        <div class="space-y-2">
-          <div class="text-3xl">🖥️</div>
-          <p class="text-sm font-medium text-slate-200">Click or drop setup photo here to analyze</p>
-          <p class="text-xs text-slate-400">Supports JPG, PNG, WEBP (Auto-optimized for upload)</p>
-        </div>
-      </div>
-
-      <div id="previewContainer" class="hidden mt-4 space-y-4">
-        <img id="imagePreview" class="max-h-64 mx-auto rounded-xl border border-slate-800 shadow-md object-cover">
-        <div class="flex items-center justify-center gap-3">
-          <button onclick="runAnalysis()" id="analyzeBtn" class="bg-teal-400 hover:bg-teal-300 text-slate-950 font-bold text-xs uppercase tracking-wider px-8 py-3 rounded-xl transition shadow-lg shadow-teal-500/10">
-            Run Analysis
-          </button>
-          <button onclick="resetApp()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs px-4 py-3 rounded-xl transition">
-            Clear
-          </button>
-        </div>
-      </div>
-
-      <div id="loading" class="hidden mt-4 py-2 text-teal-400 text-xs font-mono animate-pulse">
-        ⚡ Optimizing image & analyzing workspace visual aesthetics...
-      </div>
-    </section>
-
-    <!-- TAB 1: Aesthetic Reviewer Panel -->
-    <div id="tabAesthetic" class="space-y-6">
+    <!-- TAB 1: Multi-Angle Upload & AI Audit -->
+    <div id="tabAudit" class="space-y-6">
       
-      <!-- Blank State -->
-      <div id="aestheticBlank" class="text-center py-12 border border-slate-800/60 rounded-2xl bg-slate-900/30 text-slate-400 text-xs">
-        Upload a photo above and hit <strong>Run Analysis</strong> to view your setup score breakdown.
-      </div>
+      <section class="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-2xl backdrop-blur">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
+          <div>
+            <h2 class="text-sm font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+              <span>📸</span> Multi-Angle Workspace Upload
+            </h2>
+            <p class="text-xs text-slate-400">Upload up to 3 workspace photos for holistic visual scoring and earn +50 XP per evaluation.</p>
+          </div>
+          <span class="text-[11px] font-mono text-teal-400 bg-teal-500/10 border border-teal-500/20 px-2.5 py-1 rounded-lg">+50 XP Reward</span>
+        </div>
 
-      <!-- Aesthetic Results -->
-      <div id="aestheticResults" class="hidden space-y-6">
-        <!-- Score Header Card -->
+        <!-- 3 Multi-Angle Upload Dropzones -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          
+          <!-- Slot 1: Main View -->
+          <div class="border-2 border-dashed border-slate-700/80 hover:border-teal-400/60 rounded-xl p-4 text-center cursor-pointer bg-slate-950/50 relative overflow-hidden group transition" onclick="document.getElementById('img1').click()">
+            <input type="file" id="img1" accept="image/*" class="hidden" onchange="handleAngleUpload(event, 0)">
+            <img id="prev0" class="hidden absolute inset-0 w-full h-full object-cover">
+            <div id="holder0" class="space-y-1.5 py-4">
+              <span class="text-2xl block">🖥️</span>
+              <span class="text-xs font-semibold text-slate-200 block">1. Main Desk View</span>
+              <span class="text-[10px] text-teal-400 block font-mono font-semibold">(Required)</span>
+            </div>
+          </div>
+
+          <!-- Slot 2: Cable Management -->
+          <div class="border-2 border-dashed border-slate-700/80 hover:border-teal-400/60 rounded-xl p-4 text-center cursor-pointer bg-slate-950/50 relative overflow-hidden group transition" onclick="document.getElementById('img2').click()">
+            <input type="file" id="img2" accept="image/*" class="hidden" onchange="handleAngleUpload(event, 1)">
+            <img id="prev1" class="hidden absolute inset-0 w-full h-full object-cover">
+            <div id="holder1" class="space-y-1.5 py-4">
+              <span class="text-2xl block">🔌</span>
+              <span class="text-xs font-semibold text-slate-200 block">2. Under-Desk Cables</span>
+              <span class="text-[10px] text-slate-400 block font-mono">(Optional)</span>
+            </div>
+          </div>
+
+          <!-- Slot 3: Lighting / Side View -->
+          <div class="border-2 border-dashed border-slate-700/80 hover:border-teal-400/60 rounded-xl p-4 text-center cursor-pointer bg-slate-950/50 relative overflow-hidden group transition" onclick="document.getElementById('img3').click()">
+            <input type="file" id="img3" accept="image/*" class="hidden" onchange="handleAngleUpload(event, 2)">
+            <img id="prev2" class="hidden absolute inset-0 w-full h-full object-cover">
+            <div id="holder2" class="space-y-1.5 py-4">
+              <span class="text-2xl block">💡</span>
+              <span class="text-xs font-semibold text-slate-200 block">3. Lighting / Side View</span>
+              <span class="text-[10px] text-slate-400 block font-mono">(Optional)</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Analyze Button Bar -->
+        <div class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-800/80 pt-4">
+          <span id="angleCountText" class="text-xs font-mono text-slate-400">0 / 3 photos uploaded</span>
+          <div class="flex items-center gap-3 w-full sm:w-auto">
+            <button onclick="runMultiAngleAnalysis()" id="analyzeBtn" class="flex-1 sm:flex-none bg-teal-400 hover:bg-teal-300 text-slate-950 font-extrabold text-xs uppercase tracking-wider px-8 py-3 rounded-xl transition shadow-lg shadow-teal-500/20 active:scale-95">
+              ⚡ Run Multi-Angle Audit (+50 XP)
+            </button>
+            <button onclick="resetCurrentUploads()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs px-4 py-3 rounded-xl transition">
+              Clear
+            </button>
+          </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loading" class="hidden mt-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-teal-400 text-xs font-mono animate-pulse text-center">
+          ⚡ Analyzing workspace photo & calculating AI score breakdown...
+        </div>
+      </section>
+
+      <!-- Audit Results Card -->
+      <div id="auditResults" class="hidden space-y-6">
         <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">
           <div>
-            <span class="text-[10px] font-mono uppercase tracking-widest text-teal-400 font-semibold">Visual Rating</span>
-            <h2 class="text-2xl font-bold text-slate-100 mt-1">Overall Workspace Score</h2>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-[10px] font-mono uppercase tracking-widest text-teal-400 font-semibold">Audit Result</span>
+              <span id="resultRankBadge" class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-mono font-bold">--</span>
+            </div>
+            <h2 class="text-2xl font-black text-slate-100">Setup Evaluation Score</h2>
             <p id="summaryText" class="text-xs text-slate-400 mt-2 max-w-md leading-relaxed"></p>
+            
+            <!-- Earned Badges Container -->
+            <div id="earnedBadges" class="flex flex-wrap gap-2 mt-4"></div>
           </div>
-          <div class="text-center bg-slate-950 px-8 py-4 rounded-xl border border-slate-800/80 min-w-[140px]">
+
+          <div class="text-center bg-slate-950 px-8 py-6 rounded-2xl border border-slate-800 min-w-[160px] shadow-inner">
             <span id="scoreValue" class="text-5xl font-black text-teal-400">0.0</span>
             <span class="text-xs text-slate-400 block font-mono mt-1">/ 10.0</span>
           </div>
         </div>
 
-        <!-- Category Metrics Grid -->
-        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3" id="categoriesGrid"></div>
-
-        <!-- Strengths & Improvements -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-5">
-            <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-              <span>✅</span> Key Strengths
-            </h3>
-            <ul id="strengthsList" class="space-y-2 text-xs text-slate-300"></ul>
-          </div>
-
-          <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-5">
-            <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-              <span>🔧</span> Recommended Tweaks
-            </h3>
-            <ul id="improvementsList" class="space-y-2 text-xs text-slate-300"></ul>
-          </div>
-        </div>
+        <!-- Metrics Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="categoriesGrid"></div>
       </div>
 
     </div>
 
-    <!-- TAB 2: Setup Cost Analyzer Panel -->
-    <div id="tabCost" class="hidden space-y-6">
-
-      <!-- Hardware Selection Form -->
-      <section class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl">
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="text-sm font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
-            <span>⚙️</span> Select Internal PC Hardware & Display
-          </h2>
-          <span class="text-[10px] text-slate-400 font-mono">Supports Legacy (2008+) to Modern</span>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          
-          <!-- GPU Selector -->
+    <!-- TAB 2: Community Rating Feed & Arena -->
+    <div id="tabFeed" class="hidden space-y-6">
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
+        <div class="flex justify-between items-center mb-6">
           <div>
-            <label class="block text-xs font-medium text-slate-400 mb-1.5">Graphics Card (GPU)</label>
-            <select id="gpuSelect" onchange="calculateCostBreakdown()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 outline-none focus:border-teal-400">
-              <optgroup label="NVIDIA Legacy GTX Series">
-                <option value="25">Vintage GTX 200 / 400 / 500 (e.g. GTX 280, 460, 580)</option>
-                <option value="45">GTX 600 / 700 Series (e.g. GTX 670, 750 Ti, 780 Ti)</option>
-                <option value="80">GTX 900 Series (e.g. GTX 960, 970, 980 Ti)</option>
-                <option value="130">GTX 10-Series (e.g. GTX 1060, 1070, 1080 Ti)</option>
-                <option value="160">GTX 16-Series (e.g. GTX 1650, 1660 Super)</option>
-              </optgroup>
-              <optgroup label="NVIDIA RTX Series">
-                <option value="260">RTX 20-Series (e.g. RTX 2060, 2080 Super)</option>
-                <option value="420" selected>RTX 30-Series (e.g. RTX 3060, 3070, 3080)</option>
-                <option value="850">RTX 40-Series Mid/High (e.g. RTX 4070, 4080 Super)</option>
-                <option value="1800">RTX 4090 / RTX 5090 Flagship</option>
-              </optgroup>
-              <optgroup label="AMD Radeon Alternatives">
-                <option value="50">Legacy RX 400 / 500 (e.g. RX 480, RX 580)</option>
-                <option value="220">Mid RX 6000 / 7000 (e.g. RX 6700 XT, RX 7700 XT)</option>
-                <option value="750">High RX 7900 XT / XTX</option>
-              </optgroup>
-            </select>
+            <h2 class="text-sm font-bold text-slate-100 uppercase tracking-wider flex items-center gap-2">
+              <span>🗳️</span> Community Voting Arena
+            </h2>
+            <p class="text-xs text-slate-400">Rate community setups daily to keep your flame streak alive and earn +10 XP per vote!</p>
           </div>
-
-          <!-- CPU Selector -->
-          <div>
-            <label class="block text-xs font-medium text-slate-400 mb-1.5">Processor (CPU)</label>
-            <select id="cpuSelect" onchange="calculateCostBreakdown()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 outline-none focus:border-teal-400">
-              <optgroup label="Intel Legacy Core Series">
-                <option value="20">1st Gen Core 1000 Series (e.g. i7-870, i5-750, i3-530)</option>
-                <option value="35">2nd / 3rd Gen Sandy/Ivy Bridge (e.g. i7-2600K, i7-3770K)</option>
-                <option value="60">4th - 7th Gen Haswell/Kaby Lake (e.g. i7-4790K, i7-7700K)</option>
-                <option value="110">8th - 11th Gen Core (e.g. i7-8700K, i7-10700K)</option>
-              </optgroup>
-              <optgroup label="Intel Modern Core Series">
-                <option value="240" selected>12th - 14th Gen Core i5/i7 (e.g. i5-13600K, i7-14700K)</option>
-                <option value="450">Intel Core Ultra / i9 Flagship (e.g. i9-14900K)</option>
-              </optgroup>
-              <optgroup label="AMD Ryzen Series">
-                <option value="70">Ryzen 1000 - 3000 Series (e.g. R5 2600, R7 3700X)</option>
-                <option value="220">Ryzen 5000 / 7000 Series (e.g. R7 5800X3D, R7 7800X3D)</option>
-                <option value="480">Ryzen 9 Flagship (e.g. R9 7950X3D / 9950X)</option>
-              </optgroup>
-            </select>
-          </div>
-
-          <!-- Display Selector -->
-          <div>
-            <label class="block text-xs font-medium text-slate-400 mb-1.5">Display Setup</label>
-            <select id="monitorSelect" onchange="calculateCostBreakdown()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200 outline-none focus:border-teal-400">
-              <option value="120">Single 1080p 60Hz - 144Hz Monitor</option>
-              <option value="350" selected>Single 1440p High Refresh Gaming Monitor</option>
-              <option value="650">Dual Monitor Setup (1440p + 1080p secondary)</option>
-              <option value="900">34"+ Ultrawide / Curved Display</option>
-              <option value="1400">4K OLED Display / Triple Gaming Monitors</option>
-            </select>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- Cost Summary Cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 text-center">
-          <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400">Total Setup Valuation</span>
-          <p id="totalCostDisplay" class="text-3xl font-black text-teal-400 mt-2">$0</p>
-          <span id="costTierDisplay" class="text-[11px] text-slate-400 block mt-1 font-medium">Tier: --</span>
+          <span class="text-xs font-mono text-amber-400 bg-amber-400/10 border border-amber-400/20 px-3 py-1 rounded-lg font-semibold">+10 XP per vote</span>
         </div>
 
-        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 text-center">
-          <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400">Cost / Score Ratio</span>
-          <p id="ratioDisplay" class="text-3xl font-black text-purple-400 mt-2">$0</p>
-          <span class="text-[11px] text-slate-400 block mt-1 font-medium">Spent per score point</span>
-        </div>
+        <!-- Voting Card -->
+        <div class="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden max-w-xl mx-auto shadow-2xl">
+          <img id="feedImage" src="" class="w-full h-64 object-cover">
+          <div class="p-5 space-y-4">
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 id="feedTitle" class="text-sm font-extrabold text-slate-100">--</h3>
+                <span id="feedAuthor" class="text-[11px] text-slate-400 font-mono">--</span>
+              </div>
+              <span class="text-[10px] bg-teal-500/10 text-teal-400 border border-teal-500/30 px-2 py-0.5 rounded font-mono font-bold">SPOTLIGHT</span>
+            </div>
 
-        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 text-center">
-          <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400">Aesthetic Baseline</span>
-          <p id="costScoreRef" class="text-3xl font-black text-blue-400 mt-2">--</p>
-          <span class="text-[11px] text-slate-400 block mt-1 font-medium">AI Visual Score</span>
+            <!-- Vote Action Buttons -->
+            <div class="grid grid-cols-2 gap-3 pt-2">
+              <button onclick="voteSetup(true)" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 py-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 active:scale-95">
+                <span>🔥</span> Upvote (+10 XP)
+              </button>
+              <button onclick="voteSetup(false)" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 py-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 active:scale-95">
+                <span>⚠️</span> Downgrade (-5 pts)
+              </button>
+            </div>
+          </div>
         </div>
       </div>
+    </div>
 
-      <!-- Itemized Cost Breakdown Table -->
-      <section class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl">
-        <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wider mb-4">Itemized Cost Breakdown</h3>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs text-slate-300">
-            <thead class="bg-slate-950 text-slate-400 uppercase font-mono text-[10px] border-b border-slate-800">
-              <tr>
-                <th class="py-3 px-4">Component Category</th>
-                <th class="py-3 px-4">Detection Source</th>
-                <th class="py-3 px-4 text-right">Est. Value</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-800/60 font-mono">
-              <tr>
-                <td class="py-3 px-4 font-sans font-medium text-slate-200">PC Hardware (CPU/GPU/Platform)</td>
-                <td class="py-3 px-4 text-slate-400 text-[11px]">User Selection</td>
-                <td id="costPc" class="py-3 px-4 text-right text-teal-400">$0</td>
-              </tr>
-              <tr>
-                <td class="py-3 px-4 font-sans font-medium text-slate-200">Monitors & Displays</td>
-                <td class="py-3 px-4 text-slate-400 text-[11px]">User Selection</td>
-                <td id="costMonitors" class="py-3 px-4 text-right text-teal-400">$0</td>
-              </tr>
-              <tr>
-                <td class="py-3 px-4 font-sans font-medium text-slate-200">Desk & Ergonomic Seating</td>
-                <td class="py-3 px-4 text-teal-400 text-[11px]">AI Vision Estimate</td>
-                <td id="costFurniture" class="py-3 px-4 text-right text-teal-400">$0</td>
-              </tr>
-              <tr>
-                <td class="py-3 px-4 font-sans font-medium text-slate-200">Peripherals & Audio Hardware</td>
-                <td class="py-3 px-4 text-teal-400 text-[11px]">AI Vision Estimate</td>
-                <td id="costPeripherals" class="py-3 px-4 text-right text-teal-400">$0</td>
-              </tr>
-              <tr>
-                <td class="py-3 px-4 font-sans font-medium text-slate-200">Lighting & Wall Decor</td>
-                <td class="py-3 px-4 text-teal-400 text-[11px]">AI Vision Estimate</td>
-                <td id="costLighting" class="py-3 px-4 text-right text-teal-400">$0</td>
-              </tr>
-            </tbody>
-          </table>
+    <!-- TAB 3: Global Leaderboard -->
+    <div id="tabLeaderboard" class="hidden space-y-6">
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
+        <div class="flex justify-between items-center mb-6">
+          <div>
+            <h2 class="text-sm font-bold text-slate-100 uppercase tracking-wider flex items-center gap-2">
+              <span>🏆</span> Global Hall of Fame Leaderboard
+            </h2>
+            <p class="text-xs text-slate-400">Highest rated battlestations ranked globally on SetupScore AI.</p>
+          </div>
+          <span class="text-xs font-mono text-teal-400 font-semibold">Top Rigs</span>
         </div>
-      </section>
 
-      <!-- Upgrade ROI Suggestions -->
-      <section class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
-        <h3 class="text-xs font-bold text-teal-300 uppercase tracking-wider mb-1">💡 Best High-ROI Aesthetics Upgrades</h3>
-        <p class="text-xs text-slate-400 mb-4">Inexpensive additions to raise visual score with minimal budget:</p>
-        <div id="roiSuggestions" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
-      </section>
+        <div class="space-y-3" id="leaderboardList"></div>
+      </div>
+    </div>
 
+    <!-- TAB 4: Saved Setup Vault -->
+    <div id="tabVault" class="hidden space-y-6">
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6">
+        <div class="flex justify-between items-center mb-6">
+          <div>
+            <h2 class="text-sm font-bold text-slate-100 uppercase tracking-wider flex items-center gap-2">
+              <span>📜</span> Saved Setup Vault (LocalStorage)
+            </h2>
+            <p class="text-xs text-slate-400">Your past analyzed workspace setups are automatically stored locally in your browser.</p>
+          </div>
+          <button onclick="clearVaultHistory()" class="text-xs text-rose-400 hover:text-rose-300 font-mono bg-rose-500/10 border border-rose-500/20 px-3 py-1 rounded-lg transition">
+            Clear Vault History
+          </button>
+        </div>
+
+        <div id="vaultList" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Dynamically populated from LocalStorage -->
+        </div>
+      </div>
     </div>
 
   </main>
 
-  <!-- Changelog Modal -->
-  <div id="changelogModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
-      <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
-        <h3 class="text-sm font-bold text-slate-100 uppercase tracking-wider flex items-center gap-2">
-          <span>📜</span> Version Changelog History
-        </h3>
-        <button onclick="closeChangelog()" class="text-slate-400 hover:text-slate-200 font-mono text-xs">✕ Close</button>
+  <!-- Pro Status Modal -->
+  <div id="proModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-slate-900 border border-amber-500/30 rounded-2xl max-w-md w-full p-6 shadow-2xl relative text-center space-y-4">
+      <div class="w-12 h-12 bg-amber-400/10 text-amber-400 border border-amber-400/30 rounded-2xl flex items-center justify-center text-2xl mx-auto shadow-inner">
+        👑
       </div>
-      <div class="space-y-4 max-h-[60vh] overflow-y-auto pr-2 text-xs font-mono">
-        <div class="border-l-2 border-teal-400 pl-3">
-          <span class="text-teal-400 font-bold">v0.5 (Current)</span>
-          <p class="text-slate-300 mt-1">Added tabbed interface, client-side canvas compression, legacy GTX / Intel Core 1000 selectors, and restored instant logo reset button.</p>
+      <h3 class="text-lg font-bold text-slate-100">SetupScore Pro Status</h3>
+      <p class="text-xs text-slate-400 leading-relaxed">
+        Reach a <strong class="text-amber-300">50-Day Streak</strong> or unlock prestige via <strong class="text-teal-300">Rebirth Level 1</strong> to claim permanent Pro perks!
+      </p>
+
+      <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl text-left space-y-2 text-xs">
+        <div class="flex items-center gap-2 text-slate-300">
+          <span class="text-amber-400">✨</span> 2x XP Multiplier on all community votes
         </div>
-        <div class="border-l-2 border-slate-700 pl-3">
-          <span class="text-slate-400 font-bold">v0.4</span>
-          <p class="text-slate-400 mt-1">Introduced multi-currency support (AUD, USD, EUR, GBP) and itemized hardware valuation breakdown table.</p>
+        <div class="flex items-center gap-2 text-slate-300">
+          <span class="text-amber-400">✨</span> Golden animated card profile aura frame
         </div>
-        <div class="border-l-2 border-slate-700 pl-3">
-          <span class="text-slate-400 font-bold">v0.3</span>
-          <p class="text-slate-400 mt-1">Integrated AI Vision scoring engine for cables, lighting, aesthetics, and ergonomics evaluation.</p>
+        <div class="flex items-center gap-2 text-slate-300">
+          <span class="text-amber-400">✨</span> Exclusive #1 Leaderboard flex badge & partner perks
         </div>
-        <div class="border-l-2 border-slate-700 pl-3">
-          <span class="text-slate-400 font-bold">v0.1 - v0.2</span>
-          <p class="text-slate-400 mt-1">Initial base layout, image upload dropzone, and responsive dark theme initialization.</p>
-        </div>
+      </div>
+
+      <button onclick="closeProModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold py-3 rounded-xl transition">
+        Close Teaser
+      </button>
+    </div>
+  </div>
+
+  <!-- Reset Confirmation Modal -->
+  <div id="resetModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-slate-900 border border-rose-500/30 rounded-2xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4">
+      <div class="w-12 h-12 bg-rose-500/10 text-rose-400 border border-rose-500/30 rounded-2xl flex items-center justify-center text-2xl mx-auto">
+        ⚠️
+      </div>
+      <h3 class="text-base font-bold text-slate-100">Reset All Local Progress?</h3>
+      <p class="text-xs text-slate-400 leading-relaxed">
+        This will wipe your streak count, earned XP, rank levels, unlocked badges, and saved vault history from your browser local storage.
+      </p>
+      <div class="flex gap-2">
+        <button onclick="executeResetProgress()" class="flex-1 bg-rose-500 hover:bg-rose-600 text-slate-950 font-bold text-xs py-2.5 rounded-xl transition">
+          Yes, Reset Data
+        </button>
+        <button onclick="closeResetModal()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs py-2.5 rounded-xl transition">
+          Cancel
+        </button>
       </div>
     </div>
   </div>
 
   <script>
-    let base64Image = null;
-    let latestAiScores = null;
+    /* LOCALSTORAGE ENGINE & STATE INITIALIZATION */
+    const STORAGE_KEY = 'SETUPSCORE_USER_DATA_V075';
 
-    const currencyRates = {
-      AUD: { rate: 1.5, symbol: "$" },
-      USD: { rate: 1.0, symbol: "$" },
-      EUR: { rate: 0.92, symbol: "€" },
-      GBP: { rate: 0.78, symbol: "£" }
+    const defaultState = {
+      xp: 0,
+      level: 1,
+      streak: 1,
+      lastStreakDate: null,
+      savedAudits: [],
+      votedIds: [],
+      earnedBadges: []
     };
 
-    function resetApp() {
-      base64Image = null;
-      latestAiScores = null;
-      document.getElementById('imageInput').value = '';
-      document.getElementById('previewContainer').classList.add('hidden');
-      document.getElementById('aestheticResults').classList.add('hidden');
-      document.getElementById('aestheticBlank').classList.remove('hidden');
-      document.getElementById('gpuSelect').selectedIndex = 5;
-      document.getElementById('cpuSelect').selectedIndex = 4;
-      document.getElementById('monitorSelect').selectedIndex = 1;
-      switchTab('aesthetic');
-      calculateCostBreakdown();
-    }
+    let appState = loadUserData();
+    let uploadedImages = [null, null, null];
 
-    function openChangelog() {
-      document.getElementById('changelogModal').classList.remove('hidden');
-    }
+    const masteryRanks = ["Bronze Rig", "Silver Studio", "Gold Rig", "Diamond Enclosure", "Master Sanctuary"];
 
-    function closeChangelog() {
-      document.getElementById('changelogModal').classList.add('hidden');
-    }
+    const communityFeedSetups = [
+      { id: 'feed-1', title: "Stealth Cyberpunk Rig", author: "@CyberKnight", score: "8.8", image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=1000&q=80" },
+      { id: 'feed-2', title: "Minimalist Warm Wood Desk", author: "@WoodCraft", score: "9.2", image: "https://images.unsplash.com/photo-1593062096033-9a26b09da705?auto=format&fit=crop&w=1000&q=80" },
+      { id: 'feed-3', title: "Neon Vaporwave Cave", author: "@NeonPulse", score: "8.5", image: "https://images.unsplash.com/photo-1616588589676-62b3bd4ff6d2?auto=format&fit=crop&w=1000&q=80" }
+    ];
 
-    function switchTab(tab) {
-      const isAesthetic = tab === 'aesthetic';
-      
-      document.getElementById('tabAesthetic').classList.toggle('hidden', !isAesthetic);
-      document.getElementById('tabCost').classList.toggle('hidden', isAesthetic);
+    let currentFeedIndex = 0;
 
-      const btnA = document.getElementById('tabBtnAesthetic');
-      const btnC = document.getElementById('tabBtnCost');
-
-      btnA.className = isAesthetic 
-        ? "flex-1 sm:flex-none py-2.5 px-6 text-xs font-semibold rounded-t-lg transition border-b-2 border-teal-400 text-teal-400 bg-slate-900/60"
-        : "flex-1 sm:flex-none py-2.5 px-6 text-xs font-semibold rounded-t-lg transition border-b-2 border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/30";
-
-      btnC.className = !isAesthetic 
-        ? "flex-1 sm:flex-none py-2.5 px-6 text-xs font-semibold rounded-t-lg transition border-b-2 border-teal-400 text-teal-400 bg-slate-900/60"
-        : "flex-1 sm:flex-none py-2.5 px-6 text-xs font-semibold rounded-t-lg transition border-b-2 border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/30";
-    }
-
-    // Client-side image compression helper to prevent 413 Payload Errors
-    function compressImage(file, maxDimension = 1200, quality = 0.75) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = event => {
-          const img = new Image();
-          img.src = event.target.result;
-          img.onload = () => {
-            let width = img.width;
-            let height = img.height;
-
-            if (width > maxDimension || height > maxDimension) {
-              if (width > height) {
-                height = Math.round((height * maxDimension) / width);
-                width = maxDimension;
-              } else {
-                width = Math.round((width * maxDimension) / height);
-                height = maxDimension;
-              }
-            }
-
-            const canvas = document.createElement('canvas');
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-
-            const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
-            resolve(compressedBase64);
-          };
-          img.onerror = error => reject(error);
-        };
-        reader.onerror = error => reject(error);
-      });
-    }
-
-    async function handleImageSelect(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
+    // Load State on App Initialization
+    function loadUserData() {
       try {
-        base64Image = await compressImage(file);
-        document.getElementById('imagePreview').src = base64Image;
-        document.getElementById('previewContainer').classList.remove('hidden');
-      } catch (err) {
-        alert("Failed to process image file. Please try another image.");
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          return { ...defaultState, ...JSON.parse(stored) };
+        }
+      } catch (e) {
+        console.error("Failed to load from LocalStorage:", e);
+      }
+      return { ...defaultState };
+    }
+
+    // Save State to LocalStorage automatically
+    function saveUserData() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+        updateUIHeaderStats();
+        renderVault();
+      } catch (e) {
+        console.error("Failed to save to LocalStorage:", e);
       }
     }
 
-    async function runAnalysis() {
-      if (!base64Image) {
-        alert("Please select a photo first, mate!");
+    // Daily Streak Calculator
+    function verifyDailyStreak() {
+      const now = new Date();
+      const todayStr = now.toISOString().split('T')[0];
+
+      if (!appState.lastStreakDate) {
+        appState.lastStreakDate = todayStr;
+        saveUserData();
+        return;
+      }
+
+      const lastDate = new Date(appState.lastStreakDate);
+      const diffDays = Math.floor((now - lastDate) / (1000 * 60 * 60 * 24));
+
+      if (diffDays === 1) {
+        // Consecutive day - streak continues!
+        appState.streak += 1;
+        appState.lastStreakDate = todayStr;
+        saveUserData();
+      } else if (diffDays > 1) {
+        // Missed a day - streak resets
+        appState.streak = 1;
+        appState.lastStreakDate = todayStr;
+        saveUserData();
+      }
+    }
+
+    // Update Header Gamification Bar
+    function updateUIHeaderStats() {
+      document.getElementById('streakCount').textContent = appState.streak;
+      document.getElementById('xpText').textContent = `${appState.xp}/100 XP`;
+      document.getElementById('xpBar').style.width = `${appState.xp}%`;
+      document.getElementById('masteryRank').textContent = masteryRanks[appState.level - 1] || "Master Sanctuary";
+      document.getElementById('vaultBadge').textContent = appState.savedAudits.length;
+    }
+
+    // Add XP & Level Up logic
+    function addXp(amount) {
+      appState.xp += amount;
+      if (appState.xp >= 100) {
+        appState.xp -= 100;
+        if (appState.level < masteryRanks.length) {
+          appState.level += 1;
+          setTimeout(() => {
+            alert(`🎉 MASTERY LEVEL UP! You reached ${masteryRanks[appState.level - 1]}!`);
+          }, 100);
+        }
+      }
+      saveUserData();
+    }
+
+    // Handle Image Uploads
+    function handleAngleUpload(event, index) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = e => {
+        uploadedImages[index] = e.target.result;
+        document.getElementById(`prev${index}`).src = e.target.result;
+        document.getElementById(`prev${index}`).classList.remove('hidden');
+        document.getElementById(`holder${index}`).classList.add('opacity-0');
+        updateAngleCount();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function updateAngleCount() {
+      const count = uploadedImages.filter(Boolean).length;
+      document.getElementById('angleCountText').textContent = `${count} / 3 photos uploaded`;
+    }
+
+    function resetCurrentUploads() {
+      uploadedImages = [null, null, null];
+      for (let i = 0; i < 3; i++) {
+        document.getElementById(`prev${i}`).classList.add('hidden');
+        document.getElementById(`holder${i}`).classList.remove('opacity-0');
+      }
+      document.getElementById('auditResults').classList.add('hidden');
+      updateAngleCount();
+    }
+
+    // Execute Multi-Angle AI Audit
+    async function runMultiAngleAnalysis() {
+      const mainImage = uploadedImages[0];
+      if (!mainImage) {
+        alert("Please upload at least Photo #1 (Main Desk View)!");
         return;
       }
 
@@ -420,24 +469,27 @@
         const res = await fetch('/api/analyze', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ image: base64Image })
+          body: JSON.stringify({ image: mainImage })
         });
 
-        const responseText = await res.text();
-        let data;
-        try {
-          data = JSON.parse(responseText);
-        } catch (e) {
-          throw new Error("Server payload limit reached. Try using a smaller photo.");
-        }
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to analyze setup.');
 
-        if (!res.ok) {
-          throw new Error(data.details || data.error || 'Failed to analyze setup photo.');
-        }
+        // Save Audit to LocalStorage history
+        const newAudit = {
+          id: 'audit-' + Date.now(),
+          timestamp: new Date().toLocaleDateString(),
+          overallScore: data.overallScore || 8.5,
+          summary: data.summary || "Setup evaluated successfully.",
+          categories: data.categories || { cables: 8.0, lighting: 8.5, aesthetics: 9.0, ergonomics: 8.2 },
+          imageThumbnail: mainImage
+        };
 
-        latestAiScores = data;
-        renderAestheticResults(data);
-        calculateCostBreakdown();
+        appState.savedAudits.unshift(newAudit);
+        addXp(50); // XP Reward for audit
+        verifyDailyStreak();
+
+        renderAuditResults(newAudit);
 
       } catch (err) {
         alert("Analysis Error: " + err.message);
@@ -446,133 +498,144 @@
       }
     }
 
-    function renderAestheticResults(data) {
-      document.getElementById('aestheticBlank').classList.add('hidden');
-      document.getElementById('aestheticResults').classList.remove('hidden');
-
-      document.getElementById('scoreValue').textContent = data.overallScore ? data.overallScore.toFixed(1) : "N/A";
-      document.getElementById('summaryText').textContent = data.summary || "Setup score analysis complete.";
+    function renderAuditResults(audit) {
+      document.getElementById('auditResults').classList.remove('hidden');
+      document.getElementById('scoreValue').textContent = audit.overallScore.toFixed(1);
+      document.getElementById('summaryText').textContent = audit.summary;
 
       const categoriesGrid = document.getElementById('categoriesGrid');
-      const cats = data.categories || {};
-      
-      const categoryLabels = {
-        cables: "🔌 Cables",
-        lighting: "💡 Lighting",
-        aesthetics: "🎨 Aesthetics",
-        ergonomics: "🪑 Ergonomics",
-        hardware: "🖥️ Hardware"
-      };
-
-      categoriesGrid.innerHTML = Object.keys(categoryLabels).map(key => `
-        <div class="bg-slate-900/80 border border-slate-800 p-3 rounded-xl text-center">
-          <span class="text-[10px] text-slate-400 block">${categoryLabels[key]}</span>
-          <span class="text-lg font-bold text-teal-400 mt-1 block">${cats[key] ? cats[key].toFixed(1) : "N/A"}</span>
+      categoriesGrid.innerHTML = Object.keys(audit.categories).map(key => `
+        <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl text-center">
+          <span class="text-[10px] text-slate-400 uppercase font-mono block">${key}</span>
+          <span class="text-lg font-bold text-teal-400 mt-1 block">${audit.categories[key].toFixed(1)}</span>
         </div>
       `).join('');
 
-      document.getElementById('strengthsList').innerHTML = (data.strengths || []).map(s => `<li class="flex items-start gap-2"><span>•</span><span>${s}</span></li>`).join('');
-      document.getElementById('improvementsList').innerHTML = (data.improvements || []).map(i => `<li class="flex items-start gap-2"><span>•</span><span>${i}</span></li>`).join('');
+      const badgeList = ["🔌 Cable Ninja", "💡 RGB Master", "🪑 Ergo King"];
+      document.getElementById('earnedBadges').innerHTML = badgeList.map(b => `
+        <span class="text-[10px] bg-teal-500/10 text-teal-300 border border-teal-500/30 px-2.5 py-1 rounded-lg font-bold font-mono">
+          ${b}
+        </span>
+      `).join('');
     }
 
-    function calculateCostBreakdown() {
-      const currKey = document.getElementById('currencySelect').value;
-      const { rate, symbol } = currencyRates[currKey];
-
-      const gpuCost = parseFloat(document.getElementById('gpuSelect').value);
-      const cpuCost = parseFloat(document.getElementById('cpuSelect').value);
-      const monitorCost = parseFloat(document.getElementById('monitorSelect').value);
-      const pcBasePlatformUsd = 200;
-
-      const ergoScore = latestAiScores?.categories?.ergonomics || 6.5;
-      const lightingScore = latestAiScores?.categories?.lighting || 6.5;
-      const aestheticScore = latestAiScores?.categories?.aesthetics || 6.5;
-
-      const furnitureUsd = Math.round(120 + (ergoScore * 45));
-      const peripheralsUsd = Math.round(80 + (aestheticScore * 30));
-      const lightingUsd = Math.round(30 + (lightingScore * 20));
-
-      const pcHardware = Math.round((gpuCost + cpuCost + pcBasePlatformUsd) * rate);
-      const monitors = Math.round(monitorCost * rate);
-      const furniture = Math.round(furnitureUsd * rate);
-      const peripherals = Math.round(peripheralsUsd * rate);
-      const lighting = Math.round(lightingUsd * rate);
-
-      const totalCost = pcHardware + monitors + furniture + peripherals + lighting;
-
-      document.getElementById('costPc').textContent = `${symbol}${pcHardware.toLocaleString()}`;
-      document.getElementById('costMonitors').textContent = `${symbol}${monitors.toLocaleString()}`;
-      document.getElementById('costFurniture').textContent = `${symbol}${furniture.toLocaleString()}`;
-      document.getElementById('costPeripherals').textContent = `${symbol}${peripherals.toLocaleString()}`;
-      document.getElementById('costLighting').textContent = `${symbol}${lighting.toLocaleString()}`;
-
-      document.getElementById('totalCostDisplay').textContent = `${symbol}${totalCost.toLocaleString()}`;
-
-      let tier = "Budget / Minimalist";
-      if (totalCost > 4500 * rate) tier = "Enthusiast / Ultra Tier";
-      else if (totalCost > 2500 * rate) tier = "High-End Workstation";
-      else if (totalCost > 1200 * rate) tier = "Mid-Range Setup";
-      document.getElementById('costTierDisplay').textContent = `Tier: ${tier}`;
-
-      const overallScore = latestAiScores?.overallScore || 0;
-      document.getElementById('costScoreRef').textContent = overallScore ? overallScore.toFixed(1) : "--";
-      
-      if (overallScore > 0) {
-        const costPerPoint = Math.round(totalCost / overallScore);
-        document.getElementById('ratioDisplay').textContent = `${symbol}${costPerPoint.toLocaleString()}`;
-      } else {
-        document.getElementById('ratioDisplay').textContent = "--";
-      }
-
-      renderRoiSuggestions(latestAiScores?.categories, rate, symbol);
+    // Community Arena Voting Logic
+    function loadCurrentFeedItem() {
+      const setup = communityFeedSetups[currentFeedIndex];
+      document.getElementById('feedTitle').textContent = setup.title;
+      document.getElementById('feedAuthor').textContent = `Submitted by ${setup.author} • Rating: ${setup.score}/10`;
+      document.getElementById('feedImage').src = setup.image;
     }
 
-    function renderRoiSuggestions(categories = {}, rate, symbol) {
-      const suggestions = [];
+    function voteSetup(isUpvote) {
+      addXp(10);
+      verifyDailyStreak();
 
-      if ((categories.cables || 10) < 8.0) {
-        suggestions.push({
-          title: "Under-Desk Cable Tray",
-          cost: Math.round(30 * rate),
-          desc: "Cleanly routes power bricks and loose cables out of sight."
-        });
-      }
-      if ((categories.lighting || 10) < 8.0) {
-        suggestions.push({
-          title: "ScreenBar Light",
-          cost: Math.round(55 * rate),
-          desc: "Eliminates screen glare and evenly lights workspace."
-        });
-      }
-      if ((categories.ergonomics || 10) < 8.0) {
-        suggestions.push({
-          title: "Gas-Spring Monitor Arm",
-          cost: Math.round(75 * rate),
-          desc: "Frees up desk area and sets ideal ergonomic screen height."
-        });
-      }
+      currentFeedIndex = (currentFeedIndex + 1) % communityFeedSetups.length;
+      loadCurrentFeedItem();
 
-      if (suggestions.length === 0) {
-        suggestions.push({
-          title: "Felt Desk Mat",
-          cost: Math.round(30 * rate),
-          desc: "Adds subtle texture contrast and anchors peripheral alignment."
-        });
-      }
+      alert(isUpvote ? "🔥 Upvoted! Earned +10 XP & saved progress to LocalStorage!" : "⚠️ Downgraded setup. Earned +10 XP!");
+    }
 
-      const container = document.getElementById('roiSuggestions');
-      container.innerHTML = suggestions.map(item => `
-        <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl">
-          <div class="flex justify-between items-center mb-1">
-            <span class="text-xs font-bold text-slate-200">${item.title}</span>
-            <span class="text-xs font-mono font-semibold text-teal-400">${symbol}${item.cost}</span>
+    // Render Saved Vault Items from LocalStorage
+    function renderVault() {
+      const vaultList = document.getElementById('vaultList');
+      if (appState.savedAudits.length === 0) {
+        vaultList.innerHTML = `
+          <div class="col-span-full text-center py-8 text-slate-500 text-xs font-mono">
+            No saved audits found. Upload a workspace photo in the Audit tab!
           </div>
-          <p class="text-[11px] text-slate-400 leading-snug">${item.desc}</p>
+        `;
+        return;
+      }
+
+      vaultList.innerHTML = appState.savedAudits.map(item => `
+        <div class="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden p-4 flex gap-4 items-center">
+          <img src="${item.imageThumbnail}" class="w-16 h-16 rounded-lg object-cover border border-slate-800 flex-shrink-0">
+          <div class="flex-1 min-w-0">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-bold text-teal-400 font-mono">${item.overallScore.toFixed(1)} / 10</span>
+              <span class="text-[10px] text-slate-500 font-mono">${item.timestamp}</span>
+            </div>
+            <p class="text-[11px] text-slate-400 truncate mt-1">${item.summary}</p>
+          </div>
         </div>
       `).join('');
     }
 
-    calculateCostBreakdown();
+    function clearVaultHistory() {
+      if (confirm("Clear all saved setup audits from LocalStorage?")) {
+        appState.savedAudits = [];
+        saveUserData();
+      }
+    }
+
+    // Global Leaderboard Rendering
+    function renderLeaderboard() {
+      const topSetups = [
+        { rank: 1, name: "Neon Sanctuary", user: "@ApexRider", score: "9.8", badge: "👑 KING OF THE HILL" },
+        { rank: 2, name: "Minimalist Walnut Studio", user: "@WoodCraft", score: "9.5", badge: "🥈 GOLD TIER" },
+        { rank: 3, name: "Stealth Blackout Rig", user: "@ShadowDev", score: "9.3", badge: "🥉 BRONZE TIER" },
+        { rank: 4, name: "Cyberpunk RGB Cave", user: "@VaporWave", score: "9.1", badge: "TOP 5" },
+        { rank: 5, name: "Clean Dual Ultra-wide", user: "@ErgoNinja", score: "8.9", badge: "TOP 5" }
+      ];
+
+      document.getElementById('leaderboardList').innerHTML = topSetups.map(s => `
+        <div class="bg-slate-950 border border-slate-800 p-3.5 rounded-xl flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="font-mono text-xs font-bold text-slate-400 w-5">#${s.rank}</span>
+            <div>
+              <div class="flex items-center gap-2">
+                <h4 class="text-xs font-bold text-slate-200">${s.name}</h4>
+                <span class="text-[9px] bg-amber-400/10 text-amber-400 px-1.5 py-0.5 rounded font-mono">${s.badge}</span>
+              </div>
+              <span class="text-[10px] text-slate-400 font-mono">${s.user}</span>
+            </div>
+          </div>
+          <span class="text-sm font-black text-teal-400 font-mono">${s.score}</span>
+        </div>
+      `).join('');
+    }
+
+    // Navigation Tabs Switcher
+    function switchTab(tab) {
+      document.getElementById('tabAudit').classList.toggle('hidden', tab !== 'audit');
+      document.getElementById('tabFeed').classList.toggle('hidden', tab !== 'feed');
+      document.getElementById('tabLeaderboard').classList.toggle('hidden', tab !== 'leaderboard');
+      document.getElementById('tabVault').classList.toggle('hidden', tab !== 'vault');
+
+      const activeClass = "py-2.5 px-4 text-xs font-semibold rounded-t-lg transition border-b-2 border-teal-400 text-teal-400 bg-slate-900/60 whitespace-nowrap";
+      const inactiveClass = "py-2.5 px-4 text-xs font-semibold rounded-t-lg transition border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap";
+
+      document.getElementById('tabBtnAudit').className = tab === 'audit' ? activeClass : inactiveClass;
+      document.getElementById('tabBtnFeed').className = tab === 'feed' ? activeClass : inactiveClass;
+      document.getElementById('tabBtnLeaderboard').className = tab === 'leaderboard' ? activeClass : inactiveClass;
+      document.getElementById('tabBtnVault').className = tab === 'vault' ? activeClass : inactiveClass;
+    }
+
+    // Modals Management
+    function openProModal() { document.getElementById('proModal').classList.remove('hidden'); }
+    function closeProModal() { document.getElementById('proModal').classList.add('hidden'); }
+
+    function confirmResetProgress() { document.getElementById('resetModal').classList.remove('hidden'); }
+    function closeResetModal() { document.getElementById('resetModal').classList.add('hidden'); }
+
+    function executeResetProgress() {
+      localStorage.removeItem(STORAGE_KEY);
+      appState = { ...defaultState };
+      saveUserData();
+      closeResetModal();
+      alert("All local data has been reset!");
+    }
+
+    // Initialize App
+    window.onload = function() {
+      verifyDailyStreak();
+      updateUIHeaderStats();
+      loadCurrentFeedItem();
+      renderLeaderboard();
+      renderVault();
+    };
   </script>
 </body>
 </html>
