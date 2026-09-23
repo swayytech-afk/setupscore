@@ -438,353 +438,430 @@
                 <p class="font-bold text-slate-200">Direct Message Chat</p>
                 <p class="text-[11px] text-slate-400">Secure, encrypted direct messaging between creators and battlestation enthusiasts.</p>
               </div>
-              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
-                <span class="text-[9px] bg-purple-500/10 text-purple-400 border border-purple-500/20 px-2 py-0.5 rounded font-bold inline-block">Vision AI</span>
-                <p class="font-bold text-slate-200">RGB Sync Detection</p>
-                <p class="text-[11px] text-slate-400">AI analysis of hardware lighting color coordination and harmony.</p>
-              </div>
-              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
-                <span class="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-bold inline-block">Analytics</span>
-                <p class="font-bold text-slate-200">Ergonomic Heatmap</p>
-                <p class="text-[11px] text-slate-400">Visual posture and monitor height safety scoring metrics.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
-            <div class="flex justify-between items-center border-b border-slate-800/80 pb-2">
-              <span class="text-xs font-bold text-brand-400 uppercase tracking-wider">⚡ In Progress</span>
-              <span class="text-[10px] bg-brand-500/10 text-brand-400 px-2 py-0.5 rounded font-mono">2</span>
-            </div>
-            <div class="space-y-2.5">
-              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
-                <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/20 px-2 py-0.5 rounded font-bold inline-block">App Engine</span>
-                <p class="font-bold text-slate-200">Cloud Sync & Profiles</p>
-                <p class="text-[11px] text-slate-400">Multi-device profile synchronization via secure token storage.</p>
-              </div>
-              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
-                <span class="text-[9px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded font-bold inline-block">Auditing</span>
-                <p class="font-bold text-slate-200">Multi-Angle Vision Upgrade</p>
-                <p class="text-[11px] text-slate-400">Advanced stitching for panoramic 360-degree desk scans.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
-            <div class="flex justify-between items-center border-b border-slate-800/80 pb-2">
-              <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">🚀 Completed</span>
-              <span class="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded font-mono">2</span>
-            </div>
-            <div class="space-y-2.5">
-              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
-                <span class="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-bold inline-block">Security</span>
-                <p class="font-bold text-slate-200">Admin Moderation Center</p>
-                <p class="text-[11px] text-slate-400">Private feedback queue and AI summary report generator.</p>
-              </div>
-              <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
-                <span class="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-bold inline-block">Sound FX</span>
-                <p class="font-bold text-slate-200">Interactive Soundboard</p>
-                <p class="text-[11px] text-slate-400">Custom audio cues for XP milestones and community alerts.</p>
-              </div>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Studio Changelog -->
-      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4 shadow-2xl">
-        <h3 class="text-base font-bold text-slate-100">📜 Official Release Changelog</h3>
-        <div id="changelogContainer" class="space-y-4"></div>
-      </div>
     </div>
+
   </main>
 
-  <!-- ==================== COMPLETE JAVASCRIPT ENGINE ==================== -->
+  <!-- ==================== SCRIPT ==================== -->
   <script>
-    // --- STATE MANAGEMENT ---
-    let currentUser = localStorage.getItem('ss_active_user') || null;
-    let userXp = parseInt(localStorage.getItem('ss_xp') || '0');
-    let userLevel = parseInt(localStorage.getItem('ss_level') || '1');
-    let userUpvotes = parseInt(localStorage.getItem('ss_upvotes') || '0');
-    let userBio = localStorage.getItem('ss_bio') || 'Minimalist setup enthusiast & developer.';
-    let isMuted = localStorage.getItem('ss_muted') === 'true';
-    let currentRadarChart = null;
-    let uploadedImages = [null, null, null];
-    let tutorialStep = 1;
-    let adminUnlocked = false;
+    // --- State & Storage ---
+    let currentUser = {
+      username: '@guest',
+      bio: 'Visitor & Enthusiast',
+      xp: 0,
+      rank: 'Bronze Rig',
+      upvotes: 0
+    };
 
-    // Secret Key Listener for Admin Command Center (Ctrl + Shift + X)
-    window.addEventListener('keydown', (e) => {
-      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'x') {
-        e.preventDefault();
-        document.getElementById('secretAdminModal').classList.remove('hidden');
-        logAdminActivity("Admin modal triggered via shortcut.");
-      }
-    });
-
-    function closeSecretAdminModal() {
-      document.getElementById('secretAdminModal').classList.add('hidden');
-    }
-
-    function verifyAdminPasskey() {
-      const pass = document.getElementById('adminPassInput').value.trim();
-      if (pass === 'admin123') {
-        adminUnlocked = true;
-        document.getElementById('adminLockScreen').classList.add('hidden');
-        document.getElementById('adminPanelContent').classList.remove('hidden');
-        renderAdminPrivateFeedback();
-        logAdminActivity("Admin authentication successful.");
-      } else {
-        alert('Incorrect passkey! Use: admin123');
-        logAdminActivity("Failed admin authentication attempt.");
-      }
-    }
-
-    function lockAdminSession() {
-      adminUnlocked = false;
-      document.getElementById('adminLockScreen').classList.remove('hidden');
-      document.getElementById('adminPanelContent').classList.add('hidden');
-      document.getElementById('adminPassInput').value = '';
-      logAdminActivity("Admin session locked.");
-    }
-
-    function logAdminActivity(msg) {
-      const logBox = document.getElementById('adminActivityLogs');
-      if (!logBox) return;
-      const time = new Date().toLocaleTimeString();
-      const div = document.createElement('div');
-      div.textContent = `[${time}] ${msg}`;
-      logBox.prepend(div);
-    }
-
-    // --- MOCK STORAGE DATA ---
-    const defaultSetups = [
-      { id: 1, user: '@cyberknight', title: 'Neon Cyberpunk Battlestation', category: 'Battlestation', score: 9.4, pros: 'Exceptional cable management, cohesive neon blue/purple theme, top-tier ultrawide monitor alignment.', cons: 'Desk space is slightly crowded near the audio interface.', img: 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=800&q=80', upvotes: 42, comments: [] },
-      { id: 2, user: '@minimaldev', title: 'Clean M3 Pro Code Sanctuary', category: 'Developer', score: 9.8, pros: 'Flawless minimalism, warm ambient lighting, dual Studio Display setup with immaculate wire tucking.', cons: 'None detected. Absolute benchmark.', img: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=800&q=80', upvotes: 89, comments: [] },
-      { id: 3, user: '@apex_gamer', title: 'RGB Apex Legends Command Hub', category: 'Battlestation', score: 8.9, pros: 'Stunning custom water-cooled rig, high refresh rate triple monitor setup.', cons: 'Cable management under the desk needs attention.', img: 'https://images.unsplash.com/photo-1616469829941-c7200edec809?auto=format&fit=crop&w=800&q=80', upvotes: 27, comments: [] }
+    let profiles = JSON.parse(localStorage.getItem('setupscore_profiles')) || [
+      { username: '@guest', bio: 'Visitor & Enthusiast', xp: 0, rank: 'Bronze Rig', upvotes: 0 }
     ];
 
-    let setups = JSON.parse(localStorage.getItem('ss_setups') || JSON.stringify(defaultSetups));
-    let privateFeedbacks = JSON.parse(localStorage.getItem('ss_private_feedbacks') || JSON.stringify([
-      { id: 1, user: '@alex_dev', category: 'Feature Suggestion', message: 'Would love to see an RGB color harmony matcher in the vision AI!', date: '2026-09-22', replied: true, adminReply: 'Great idea Alex! Working on RGB Sync Detection for v5.' },
-      { id: 2, user: '@sarah_ux', category: 'Bug Report', message: 'The audit image upload sometimes flashes white on mobile safari.', date: '2026-09-23', replied: false, adminReply: '' }
-    ]));
-    let changelogs = JSON.parse(localStorage.getItem('ss_changelogs') || JSON.stringify([
-      { version: 'v4.77', date: 'September 2026', title: 'XP Leveling & Rank Progression Fix', desc: '• Fixed XP bar and automatic rank progression engine.<br>• Enhanced celebration effects on level up.<br>• Polished persistent storage synchronization.' },
-      { version: 'v4.76', date: 'September 2026', title: 'AI Report Fix & Command Center', desc: '• Fixed private feedback AI summary report generator.<br>• Enhanced admin modal shortcut handling.' }
-    ]));
+    let posts = JSON.parse(localStorage.getItem('setupscore_posts')) || [
+      { id: 1, username: '@CyberKnight', title: 'Cyberpunk Clean Deck', category: 'Battlestation', score: '9.4', images: ['https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=600'], pros: 'Awesome RGB sync & clean dual monitors.', cons: 'Cable management under desk could be tighter.', upvotes: 14, comments: [] }
+    ];
 
-    // --- INITIALIZATION ---
-    window.addEventListener('DOMContentLoaded', () => {
-      if (!currentUser) {
-        openAuthModal();
+    let privateFeedbackList = JSON.parse(localStorage.getItem('setupscore_private_feedback')) || [];
+    let publishedFeedbackList = JSON.parse(localStorage.getItem('setupscore_published_feedback')) || [];
+    let activityLogs = [];
+    let isMuted = false;
+    let myChart = null;
+
+    // --- XP & Leveling Engine (FIXED) ---
+    function addXp(amount) {
+      currentUser.xp += amount;
+      logActivity(`Gained +${amount} XP. Total XP: ${currentUser.xp}`);
+      evaluateRank();
+      saveUserData();
+      updateHeaderXpDisplay();
+      playSound('levelup');
+    }
+
+    function evaluateRank() {
+      let oldRank = currentUser.rank;
+      if (currentUser.xp >= 500) {
+        currentUser.rank = 'Grandmaster Battlestation';
+      } else if (currentUser.xp >= 300) {
+        currentUser.rank = 'Diamond Command';
+      } else if (currentUser.xp >= 150) {
+        currentUser.rank = 'Gold Rig';
+      } else if (currentUser.xp >= 50) {
+        currentUser.rank = 'Silver Terminal';
       } else {
-        updateHeaderUser();
+        currentUser.rank = 'Bronze Rig';
       }
-      renderFeed();
-      renderLeaderboard();
-      renderMyPortfolio();
-      renderPublishedFeedback();
-      renderChangelogs();
-      updateXpUI();
-      checkGlobalAnnouncement();
-    });
 
-    function checkGlobalAnnouncement() {
-      const banner = document.getElementById('announcementBanner');
-      const text = document.getElementById('announcementText');
-      const saved = localStorage.getItem('ss_global_announcement');
-      if (saved) {
-        text.textContent = saved;
-        banner.classList.remove('hidden');
+      if (oldRank !== currentUser.rank && oldRank !== 'Bronze Rig') {
+        triggerLevelUpCelebration(currentUser.rank);
       }
     }
 
-    function dismissAnnouncement() {
-      document.getElementById('announcementBanner').classList.add('hidden');
+    function updateHeaderXpDisplay() {
+      document.getElementById('masteryRank').innerText = currentUser.rank;
+      let nextThreshold = 100;
+      if (currentUser.xp >= 500) nextThreshold = 1000;
+      else if (currentUser.xp >= 300) nextThreshold = 500;
+      else if (currentUser.xp >= 150) nextThreshold = 300;
+      else if (currentUser.xp >= 50) nextThreshold = 150;
+
+      let pct = Math.min(100, Math.floor((currentUser.xp / nextThreshold) * 100));
+      document.getElementById('xpText').innerText = `${currentUser.xp}/${nextThreshold} XP`;
+      document.getElementById('xpBar').style.width = `${pct}%`;
     }
 
-    // --- AUDIO SOUNDBOARD ENGINE ---
-    let audioCtx = null;
-    function getAudioContext() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function triggerLevelUpCelebration(newRank) {
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
       }
-      return audioCtx;
+      logActivity(`🎉 Level Up! Reached rank: ${newRank}`);
     }
 
+    function adminResetUserXp() {
+      currentUser.xp = 0;
+      currentUser.rank = 'Bronze Rig';
+      saveUserData();
+      updateHeaderXpDisplay();
+      alert('XP and Level successfully reset to Bronze Rig.');
+    }
+
+    // --- Audio & Soundboard ---
     function playSound(type) {
       if (isMuted) return;
-      const ctx = getAudioContext();
-      if (ctx.state === 'suspended') ctx.resume();
-      
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      
-      const now = ctx.currentTime;
-      if (type === 'click') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(600, now);
-        osc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
-        gain.gain.setValueAtTime(0.1, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
-        osc.start(now);
-        osc.stop(now + 0.05);
-      } else if (type === 'levelup') {
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(300, now);
-        osc.frequency.setValueAtTime(450, now + 0.1);
-        osc.frequency.setValueAtTime(600, now + 0.2);
-        gain.gain.setValueAtTime(0.15, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
-        osc.start(now);
-        osc.stop(now + 0.35);
-        if (typeof confetti === 'function') confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 } });
-      } else if (type === 'laser') {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(800, now);
-        osc.frequency.exponentialRampToValueAtTime(150, now + 0.2);
-        gain.gain.setValueAtTime(0.15, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
-        osc.start(now);
-        osc.stop(now + 0.2);
-      } else if (type === 'bell') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(523.25, now); // C5
-        osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
-        gain.gain.setValueAtTime(0.1, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-        osc.start(now);
-        osc.stop(now + 0.4);
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        if (type === 'click') {
+          osc.frequency.setValueAtTime(400, ctx.currentTime);
+          gain.gain.setValueAtTime(0.05, ctx.currentTime);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.05);
+        } else if (type === 'levelup') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(261.63, ctx.currentTime);
+          osc.frequency.setValueAtTime(329.63, ctx.currentTime + 0.1);
+          osc.frequency.setValueAtTime(392.00, ctx.currentTime + 0.2);
+          osc.frequency.setValueAtTime(523.25, ctx.currentTime + 0.3);
+          gain.gain.setValueAtTime(0.1, ctx.currentTime);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.5);
+        } else if (type === 'laser') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(800, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.2);
+          gain.gain.setValueAtTime(0.1, ctx.currentTime);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.2);
+        } else if (type === 'bell') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+          gain.gain.setValueAtTime(0.1, ctx.currentTime);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.4);
+        }
+      } catch (e) {
+        console.warn('AudioContext not supported or blocked', e);
       }
     }
 
     function toggleAudioMute() {
       isMuted = !isMuted;
-      localStorage.setItem('ss_muted', isMuted);
-      document.getElementById('audioToggleBtn').textContent = isMuted ? '🔇' : '🔊';
+      document.getElementById('audioToggleBtn').innerText = isMuted ? '🔇' : '🔊';
     }
 
-    // --- TAB SWITCHING ---
-    function switchTab(tabId) {
+    // --- Navigation & Views ---
+    function switchTab(tabName) {
       playSound('click');
-      const tabs = ['feed', 'audit', 'feedback', 'soundboard', 'leaderboard', 'profile', 'roadmap'];
-      tabs.forEach(t => {
-        const el = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
-        const btn = document.getElementById('tabBtn' + t.charAt(0).toUpperCase() + t.slice(1));
-        if (el) el.classList.add('hidden');
+      ['feed', 'audit', 'feedback', 'soundboard', 'leaderboard', 'profile', 'roadmap'].forEach(t => {
+        document.getElementById(`tab${t.charAt(0).toUpperCase() + t.slice(1)}`).classList.add('hidden');
+        let btn = document.getElementById(`tabBtn${t.charAt(0).toUpperCase() + t.slice(1)}`);
         if (btn) {
           btn.classList.remove('border-brand-400', 'text-brand-400');
           btn.classList.add('border-transparent', 'text-slate-400');
         }
       });
-      const activeEl = document.getElementById('tab' + tabId.charAt(0).toUpperCase() + tabId.slice(1));
-      const activeBtn = document.getElementById('tabBtn' + tabId.charAt(0).toUpperCase() + tabId.slice(1));
-      if (activeEl) activeEl.classList.remove('hidden');
+
+      document.getElementById(`tab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`).classList.remove('hidden');
+      let activeBtn = document.getElementById(`tabBtn${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`);
       if (activeBtn) {
-        activeBtn.classList.remove('border-transparent', 'text-slate-400');
         activeBtn.classList.add('border-brand-400', 'text-brand-400');
+        activeBtn.classList.remove('border-transparent', 'text-slate-400');
       }
+
+      if (tabName === 'feed') renderFeed();
+      if (tabName === 'leaderboard') renderLeaderboard();
+      if (tabName === 'profile') renderProfile();
     }
 
-    // --- AUTH & PROFILES ---
+    // --- Auth & Profiles ---
     function openAuthModal() {
-      playSound('click');
       document.getElementById('authScreen').classList.remove('hidden');
       renderExistingProfiles();
     }
 
     function renderExistingProfiles() {
-      const container = document.getElementById('existingProfilesContainer');
-      const savedProfiles = JSON.parse(localStorage.getItem('ss_profiles') || '["@cyberknight", "@minimaldev", "@apex_gamer"]');
-      container.innerHTML = savedProfiles.map(p => `
-        <div onclick="selectProfile('${p}')" class="flex justify-between items-center bg-slate-950 p-3 rounded-xl border border-slate-800 hover:border-brand-400 cursor-pointer transition">
-          <span class="text-xs font-bold text-slate-200">${p}</span>
-          <span class="text-[10px] text-brand-400 font-mono">Select Profile ➔</span>
+      let container = document.getElementById('existingProfilesContainer');
+      container.innerHTML = profiles.map(p => `
+        <div onclick="selectProfile('${p.username}')" class="flex justify-between items-center bg-slate-950 p-3 rounded-xl border border-slate-800 hover:border-brand-400/50 cursor-pointer transition">
+          <div>
+            <span class="text-xs font-bold text-slate-200 block">${p.username}</span>
+            <span class="text-[10px] text-slate-400">${p.rank} • ${p.xp} XP</span>
+          </div>
+          <span class="text-xs text-brand-400 font-bold">Select ➔</span>
         </div>
       `).join('');
     }
 
     function selectProfile(username) {
-      playSound('click');
-      currentUser = username;
-      localStorage.setItem('ss_active_user', currentUser);
-      document.getElementById('authScreen').classList.add('hidden');
-      updateHeaderUser();
-      renderMyPortfolio();
+      let found = profiles.find(p => p.username === username);
+      if (found) {
+        currentUser = found;
+        document.getElementById('headerUsername').innerText = currentUser.username;
+        document.getElementById('authScreen').classList.add('hidden');
+        updateHeaderXpDisplay();
+        logActivity(`Switched profile to ${currentUser.username}`);
+      }
     }
 
     function handleAuth(e) {
       e.preventDefault();
-      const username = document.getElementById('authUsername').value.trim();
-      const bio = document.getElementById('authBio').value.trim();
-      if (!username) return;
-      currentUser = username.startsWith('@') ? username : '@' + username;
-      if (bio) {
-        userBio = bio;
-        localStorage.setItem('ss_bio', userBio);
-      }
-      localStorage.setItem('ss_active_user', currentUser);
-      
-      let profiles = JSON.parse(localStorage.getItem('ss_profiles') || '["@cyberknight", "@minimaldev", "@apex_gamer"]');
-      if (!profiles.includes(currentUser)) {
+      let u = document.getElementById('authUsername').value.trim();
+      let b = document.getElementById('authBio').value.trim() || 'Setup Enthusiast';
+      if (!u.startsWith('@')) u = '@' + u;
+
+      let existing = profiles.find(p => p.username === u);
+      if (existing) {
+        currentUser = existing;
+      } else {
+        currentUser = { username: u, bio: b, xp: 0, rank: 'Bronze Rig', upvotes: 0 };
         profiles.push(currentUser);
-        localStorage.setItem('ss_profiles', JSON.stringify(profiles));
+        localStorage.setItem('setupscore_profiles', JSON.stringify(profiles));
       }
 
+      document.getElementById('headerUsername').innerText = currentUser.username;
       document.getElementById('authScreen').classList.add('hidden');
-      updateHeaderUser();
-      renderMyPortfolio();
-      playSound('levelup');
+      updateHeaderXpDisplay();
+      logActivity(`Created / Logged in as ${currentUser.username}`);
     }
 
-    function updateHeaderUser() {
-      document.getElementById('headerUsername').textContent = currentUser || '@guest';
-      document.getElementById('profileName').textContent = currentUser || '@guest';
-      document.getElementById('profileBio').textContent = userBio;
-      document.getElementById('profileUpvotesBadge').textContent = `⭐ ${userUpvotes} Upvotes`;
-    }
-
-    // --- XP & MASTERY LEVELING ENGINE (FIXED) ---
-    function addXp(amount) {
-      userXp += amount;
-      while (userXp >= 100) {
-        userXp -= 100;
-        userLevel++;
-        playSound('levelup');
+    function saveUserData() {
+      let idx = profiles.findIndex(p => p.username === currentUser.username);
+      if (idx !== -1) {
+        profiles[idx] = currentUser;
+      } else {
+        profiles.push(currentUser);
       }
-      localStorage.setItem('ss_xp', userXp);
-      localStorage.setItem('ss_level', userLevel);
-      updateXpUI();
+      localStorage.setItem('setupscore_profiles', JSON.stringify(profiles));
     }
 
-    function updateXpUI() {
-      document.getElementById('xpText').textContent = `${userXp}/100 XP (Lvl ${userLevel})`;
-      const bar = document.getElementById('xpBar');
-      if (bar) bar.style.width = `${Math.min(userXp, 100)}%`;
-      
-      let rank = 'Bronze Rig';
-      if (userLevel >= 4 || userXp >= 75 && userLevel >= 3) rank = 'Platinum Battlestation';
-      else if (userLevel === 3) rank = 'Gold Sanctuary';
-      else if (userLevel === 2) rank = 'Silver Studio';
-      
-      document.getElementById('masteryRank').textContent = rank;
-      const rankBadge = document.getElementById('profileRankBadge');
-      if (rankBadge) rankBadge.textContent = rank;
+    // --- Audit & Post Creation ---
+    let auditImages = ['', '', ''];
+    function handleAngleUpload(event, index) {
+      let file = event.target.files[0];
+      if (file) {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+          auditImages[index] = e.target.result;
+          let prev = document.getElementById(`prev${index}`);
+          prev.src = e.target.result;
+          prev.classList.remove('hidden');
+          document.getElementById(`holder${index}`).classList.add('hidden');
+        };
+        reader.readAsDataURL(file);
+      }
     }
 
-    // --- TUTORIAL MODAL ---
-    const tutSteps = [
-      { title: '1. Welcome to SetupScore', desc: 'Evaluate your gaming or developer workstation using advanced Vision AI, climb global leaderboards, and send private feedback to admins.' },
-      { title: '2. Run a Vision Audit', desc: 'Upload up to 3 angle photos of your desk. Our AI analyzes cable management, lighting, and hardware harmony to score your setup.' },
-      { title: '3. Climb the Arena', desc: 'Upvote community setups, publish your workspace to the global feed, and unlock elite creator mastery ranks!' }
-    ];
+    function runAiAudit() {
+      if (!auditImages[0]) {
+        alert('Please upload at least the Main View image for your audit.');
+        return;
+      }
+      let title = document.getElementById('auditTitleInput').value.trim() || 'My Custom Setup';
+      let category = document.getElementById('auditCategoryInput').value;
+      let score = (Math.random() * (10 - 7) + 7).toFixed(1);
 
+      let newPost = {
+        id: Date.now(),
+        username: currentUser.username,
+        title: title,
+        category: category,
+        score: score,
+        images: auditImages.filter(img => img !== ''),
+        pros: 'Clean lighting, excellent component alignment and ergonomic placement.',
+        cons: 'Consider hiding peripheral cables and adding a desk mat.',
+        upvotes: 0,
+        comments: []
+      };
+
+      posts.unshift(newPost);
+      localStorage.setItem('setupscore_posts', JSON.stringify(posts));
+
+      // Display results card
+      document.getElementById('resTitle').innerText = title;
+      document.getElementById('resOverallScore').innerText = score;
+      document.getElementById('resPros').innerText = newPost.pros;
+      document.getElementById('resCons').innerText = newPost.cons;
+      document.getElementById('auditResultCard').classList.remove('hidden');
+
+      renderRadarChart([score * 9, 85, 90, 80, 88]);
+      addXp(25);
+      logActivity(`Completed Vision Audit for "${title}" (+25 XP)`);
+    }
+
+    function renderRadarChart(dataVals) {
+      const ctx = document.getElementById('radarChart').getContext('2d');
+      if (myChart) myChart.destroy();
+      myChart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: ['Aesthetics', 'Cable Mgmt', 'Lighting', 'Ergonomics', 'Hardware'],
+          datasets: [{
+            label: 'Setup Rating',
+            data: dataVals,
+            backgroundColor: 'rgba(45, 212, 191, 0.2)',
+            borderColor: '#2dd4bf',
+            pointBackgroundColor: '#2dd4bf'
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            r: {
+              grid: { color: 'rgba(255,255,255,0.1)' },
+              angleLines: { color: 'rgba(255,255,255,0.1)' },
+              ticks: { display: false, max: 100 }
+            }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+    }
+
+    // --- Feed Rendering ---
+    function renderFeed() {
+      let container = document.getElementById('feedContainer');
+      if (posts.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-500 col-span-2 text-center py-8">No setups submitted yet. Run a Vision Audit to populate the arena!</p>`;
+        return;
+      }
+
+      container.innerHTML = posts.map(p => `
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-4">
+          <div class="flex justify-between items-center">
+            <div>
+              <span class="text-[9px] font-mono text-brand-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800 uppercase tracking-wider">${p.category}</span>
+              <h3 class="text-base font-bold text-slate-100 mt-1">${p.title}</h3>
+              <p class="text-[10px] text-slate-400 font-mono">${p.username}</p>
+            </div>
+            <div class="bg-slate-950 px-3 py-1.5 rounded-xl text-center border border-slate-800">
+              <span class="text-lg font-black text-brand-400 font-mono">${p.score}</span>
+            </div>
+          </div>
+          ${p.images[0] ? `<img src="${p.images[0]}" class="w-full h-48 object-cover rounded-2xl border border-slate-800">` : ''}
+          <div class="flex justify-between items-center pt-2 border-t border-slate-800/80 text-xs">
+            <button onclick="upvotePost(${p.id})" class="bg-slate-950 hover:bg-slate-800 border border-slate-800 px-3 py-1.5 rounded-xl text-amber-400 font-bold transition">⭐ Upvote (${p.upvotes})</button>
+            <span class="text-[10px] text-slate-500 font-mono">${p.comments.length} Comments</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function upvotePost(id) {
+      let p = posts.find(post => post.id === id);
+      if (p) {
+        p.upvotes++;
+        currentUser.upvotes++;
+        saveUserData();
+        localStorage.setItem('setupscore_posts', JSON.stringify(posts));
+        renderFeed();
+        addXp(5);
+        playSound('bell');
+      }
+    }
+
+    // --- Feedback System ---
+    function submitUserFeedback() {
+      let cat = document.getElementById('feedbackCategory').value;
+      let msg = document.getElementById('feedbackMessageInput'].value.trim();
+      if (!msg) {
+        alert('Please enter a feedback message.');
+        return;
+      }
+
+      let sub = {
+        id: Date.now(),
+        username: currentUser.username,
+        category: cat,
+        message: msg,
+        status: 'Pending Admin Review'
+      };
+
+      privateFeedbackList.push(sub);
+      localStorage.setItem('setupscore_private_feedback', JSON.stringify(privateFeedbackList));
+      document.getElementById('feedbackMessageInput').value = '';
+      alert('Feedback successfully submitted to admins privately!');
+      addXp(10);
+      logActivity(`Submitted private feedback: [${cat}]`);
+    }
+
+    // --- Leaderboard & Profile ---
+    function renderLeaderboard() {
+      let container = document.getElementById('leaderboardContainer');
+      let sorted = [...profiles].sort((a,b) => b.xp - a.xp);
+      container.innerHTML = sorted.map((p, idx) => `
+        <div class="flex justify-between items-center bg-slate-950 p-4 rounded-2xl border border-slate-800">
+          <div class="flex items-center gap-3">
+            <span class="text-xs font-mono font-bold text-brand-400">#${idx + 1}</span>
+            <div>
+              <span class="text-xs font-bold text-slate-200 block">${p.username}</span>
+              <span class="text-[10px] text-slate-400">${p.rank}</span>
+            </div>
+          </div>
+          <span class="text-xs font-mono font-bold text-brand-400">${p.xp} XP</span>
+        </div>
+      `).join('');
+    }
+
+    function renderProfile() {
+      document.getElementById('profileName').innerText = currentUser.username;
+      document.getElementById('profileBio').innerText = currentUser.bio;
+      document.getElementById('profileRankBadge').innerText = currentUser.rank;
+      document.getElementById('profileUpvotesBadge').innerText = `⭐ ${currentUser.upvotes} Upvotes`;
+
+      let myPosts = posts.filter(p => p.username === currentUser.username);
+      let grid = document.getElementById('myPortfolioGrid');
+      grid.innerHTML = myPosts.length ? myPosts.map(p => `
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
+          <h4 class="text-xs font-bold text-slate-200">${p.title}</h4>
+          <span class="text-[10px] text-brand-400 font-mono">Score: ${p.score}</span>
+        </div>
+      `).join('') : `<p class="text-xs text-slate-500">No setups submitted yet.</p>`;
+    }
+
+    function openEditProfileModal() {
+      document.getElementById('editBioInput').value = currentUser.bio;
+      document.getElementById('editProfileSection').classList.remove('hidden');
+    }
+
+    function saveProfileBio() {
+      currentUser.bio = document.getElementById('editBioInput').value.trim() || currentUser.bio;
+      saveUserData();
+      renderProfile();
+      document.getElementById('editProfileSection').classList.add('hidden');
+      alert('Profile bio updated successfully.');
+    }
+
+    // --- Tutorial Modal ---
+    let tutStep = 1;
     function openTutorial() {
-      playSound('click');
-      tutorialStep = 1;
+      tutStep = 1;
       updateTutorialModal();
       document.getElementById('tutorialModal').classList.remove('hidden');
     }
@@ -794,9 +871,8 @@
     }
 
     function nextTutorialStep() {
-      playSound('click');
-      tutorialStep++;
-      if (tutorialStep > 3) {
+      tutStep++;
+      if (tutStep > 3) {
         closeTutorial();
       } else {
         updateTutorialModal();
@@ -804,374 +880,162 @@
     }
 
     function updateTutorialModal() {
-      const step = tutSteps[tutorialStep - 1];
-      document.getElementById('tutTitle').textContent = step.title;
-      document.getElementById('tutDesc').textContent = step.desc;
-      document.getElementById('tutStepIndicator').textContent = `Step ${tutorialStep} of 3`;
-      document.getElementById('tutNextBtn').textContent = tutorialStep === 3 ? 'Finish 🚀' : 'Next ➔';
+      let titles = ['1. Welcome to SetupScore', '2. Vision AI Audits', '3. Climb the Leaderboard'];
+      let descs = [
+        'Evaluate your gaming or developer workstation using advanced Vision AI, climb global leaderboards, and send private feedback to admins.',
+        'Upload your workstation photos on the Vision Audit tab to instantly gain XP (+25 XP) and receive professional design scores.',
+        'Gain XP and upvotes to ascend from a Bronze Rig all the way to a Grandmaster Battlestation!'
+      ];
+      document.getElementById('tutTitle').innerText = titles[tutStep - 1];
+      document.getElementById('tutDesc').innerText = descs[tutStep - 1];
+      document.getElementById('tutStepIndicator').innerText = `Step ${tutStep} of 3`;
+      document.getElementById('tutNextBtn').innerText = tutStep === 3 ? 'Finish' : 'Next ➔';
     }
 
-    // --- AUDIT ENGINE ---
-    function handleAngleUpload(e, index) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        uploadedImages[index] = evt.target.result;
-        const prev = document.getElementById(`prev${index}`);
-        const holder = document.getElementById(`holder${index}`);
-        prev.src = evt.target.result;
-        prev.classList.remove('hidden');
-        holder.classList.add('hidden');
-        playSound('click');
-      };
-      reader.readAsDataURL(file);
+    // --- Secret Admin Command Center ---
+    window.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
+        e.preventDefault();
+        document.getElementById('secretAdminModal').classList.remove('hidden');
+      }
+    });
+
+    function closeSecretAdminModal() {
+      document.getElementById('secretAdminModal').classList.add('hidden');
     }
 
-    function runAiAudit() {
-      if (!uploadedImages[0]) {
-        alert('Please upload at least the Main View photo to run the AI Vision Audit.');
+    function verifyAdminPasskey() {
+      let pass = document.getElementById('adminPassInput').value.trim();
+      if (pass === 'admin123') {
+        document.getElementById('adminLockScreen').classList.add('hidden');
+        document.getElementById('adminPanelContent').classList.remove('hidden');
+        renderAdminPrivateFeedback();
+        logActivity('Admin Command Center unlocked successfully.');
+      } else {
+        alert('Invalid passkey. Access denied.');
+      }
+    }
+
+    function lockAdminSession() {
+      document.getElementById('adminLockScreen').classList.remove('hidden');
+      document.getElementById('adminPanelContent').classList.add('hidden');
+      document.getElementById('adminPassInput').value = '';
+    }
+
+    function renderAdminPrivateFeedback() {
+      let list = document.getElementById('adminPrivateFeedbackList');
+      if (privateFeedbackList.length === 0) {
+        list.innerHTML = `<p class="text-[11px] text-slate-500">No private feedback submissions recorded.</p>`;
         return;
       }
-      playSound('laser');
-      const title = document.getElementById('auditTitleInput').value.trim() || 'My Custom Workstation';
-      const category = document.getElementById('auditCategoryInput').value;
-      
-      const score = (7.5 + Math.random() * 2.4).toFixed(1);
-      const prosText = "Immaculate monitor alignment, excellent choice of peripheral acoustics, balanced vertical lighting rhythm.";
-      const consText = "Consider hiding power bricks behind the rear mounting raceway to achieve absolute zero-cable perfection.";
-
-      document.getElementById('resTitle').textContent = title;
-      document.getElementById('resOverallScore').textContent = score;
-      document.getElementById('resPros').textContent = prosText;
-      document.getElementById('resCons').textContent = consText;
-      document.getElementById('auditResultCard').classList.remove('hidden');
-
-      // Render Radar Chart
-      const ctx = document.getElementById('radarChart').getContext('2d');
-      if (currentRadarChart) currentRadarChart.destroy();
-      currentRadarChart = new Chart(ctx, {
-        type: 'radar',
-        data: {
-          labels: ['Cable Mgmt', 'Lighting', 'Hardware', 'Ergonomics', 'Aesthetics'],
-          datasets: [{
-            label: 'Audit Metrics',
-            data: [7 + Math.random() * 3, 7 + Math.random() * 3, 8 + Math.random() * 2, 7 + Math.random() * 3, 8 + Math.random() * 2],
-            backgroundColor: 'rgba(45, 212, 191, 0.2)',
-            borderColor: '#2dd4bf',
-            pointBackgroundColor: '#14b8a6',
-            borderWidth: 2
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: { r: { grid: { color: 'rgba(255,255,255,0.1)' }, angleLines: { color: 'rgba(255,255,255,0.1)' }, ticks: { display: false, max: 10 } } },
-          plugins: { legend: { display: false } }
-        }
-      });
-
-      // Save to Feed
-      const newSetup = {
-        id: Date.now(),
-        user: currentUser || '@guest',
-        title: title,
-        category: category,
-        score: parseFloat(score),
-        pros: prosText,
-        cons: consText,
-        img: uploadedImages[0],
-        upvotes: 1,
-        comments: []
-      };
-      setups.unshift(newSetup);
-      localStorage.setItem('ss_setups', JSON.stringify(setups));
-      
-      // Award XP
-      addXp(25);
-      renderFeed();
-      renderMyPortfolio();
-      renderLeaderboard();
-    }
-
-    // --- FEED RENDERER ---
-    function renderFeed() {
-      const container = document.getElementById('feedContainer');
-      container.innerHTML = setups.map(s => `
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-xl flex flex-col">
-          <div class="relative h-56 bg-slate-950">
-            <img src="${s.img}" class="w-full h-full object-cover">
-            <div class="absolute top-3 right-3 bg-slate-950/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-800 text-brand-400 font-mono font-black text-sm">
-              ★ ${s.score}
-            </div>
-            <div class="absolute top-3 left-3 bg-slate-950/90 backdrop-blur-md px-3 py-1 rounded-xl border border-slate-800 text-[10px] text-slate-300 font-mono">
-              ${s.category}
-            </div>
+      list.innerHTML = privateFeedbackList.map((f, idx) => `
+        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs space-y-1">
+          <div class="flex justify-between items-center text-[10px] text-slate-400 font-mono">
+            <span>${f.username} • ${f.category}</span>
+            <button onclick="publishFeedbackReply(${idx})" class="text-brand-400 font-bold hover:underline">Publish with Reply</button>
           </div>
-          <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
-            <div>
-              <div class="flex justify-between items-center mb-1">
-                <span class="text-xs font-bold text-slate-400">${s.user}</span>
-              </div>
-              <h3 class="text-base font-bold text-slate-100">${s.title}</h3>
-              <p class="text-xs text-slate-400 mt-2 line-clamp-2"><strong>Pros:</strong> ${s.pros}</p>
-            </div>
-            <div class="flex justify-between items-center border-t border-slate-800/80 pt-3">
-              <button onclick="upvoteSetup(${s.id})" class="bg-slate-950 hover:bg-slate-800 border border-slate-800 px-3 py-1.5 rounded-xl text-xs font-bold text-brand-400 transition flex items-center gap-1.5">
-                ⭐ Upvote (${s.upvotes})
-              </button>
-              <button onclick="switchTab('feed')" class="text-xs text-slate-400 hover:text-slate-200 transition">💬 Comments (${s.comments.length})</button>
-            </div>
-          </div>
+          <p class="text-slate-200">${f.message}</p>
         </div>
       `).join('');
     }
 
-    function upvoteSetup(id) {
-      playSound('click');
-      const s = setups.find(x => x.id === id);
-      if (s) {
-        s.upvotes++;
-        userUpvotes++;
-        localStorage.setItem('ss_setups', JSON.stringify(setups));
-        localStorage.setItem('ss_upvotes', userUpvotes);
-        renderFeed();
-        renderLeaderboard();
-        updateHeaderUser();
+    function publishFeedbackReply(idx) {
+      let f = privateFeedbackList[idx];
+      let reply = prompt('Enter official admin reply for this feedback:');
+      if (reply) {
+        publishedFeedbackList.push({ ...f, reply: reply });
+        localStorage.setItem('setupscore_published_feedback', JSON.stringify(publishedFeedbackList));
+        privateFeedbackList.splice(idx, 1);
+        localStorage.setItem('setupscore_private_feedback', JSON.stringify(privateFeedbackList));
+        renderAdminPrivateFeedback();
+        renderPublishedFeedback();
+        alert('Feedback published with admin reply successfully.');
       }
-    }
-
-    // --- LEADERBOARD ---
-    function renderLeaderboard() {
-      const container = document.getElementById('leaderboardContainer');
-      const sorted = [...setups].sort((a, b) => b.score - a.score);
-      container.innerHTML = sorted.map((s, idx) => `
-        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <span class="text-xs font-mono font-bold text-brand-400">#${idx + 1}</span>
-            <div>
-              <h4 class="text-xs font-bold text-slate-200">${s.title}</h4>
-              <span class="text-[10px] text-slate-400">${s.user} • ${s.category}</span>
-            </div>
-          </div>
-          <div class="text-right">
-            <span class="text-sm font-black text-brand-400 font-mono">★ ${s.score}</span>
-            <span class="text-[9px] text-slate-500 block">⭐ ${s.upvotes} upvotes</span>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    // --- MY PORTFOLIO ---
-    function renderMyPortfolio() {
-      const container = document.getElementById('myPortfolioGrid');
-      const mine = setups.filter(s => s.user === currentUser);
-      if (mine.length === 0) {
-        container.innerHTML = `<p class="text-xs text-slate-500 col-span-2">You haven't submitted any setups yet. Head over to Vision Audit to publish your first workstation!</p>`;
-        return;
-      }
-      container.innerHTML = mine.map(s => `
-        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-3">
-          <div class="h-36 rounded-xl overflow-hidden relative">
-            <img src="${s.img}" class="w-full h-full object-cover">
-            <span class="absolute top-2 right-2 bg-slate-900/90 px-2 py-1 rounded text-[10px] font-mono text-brand-400 font-bold">★ ${s.score}</span>
-          </div>
-          <div>
-            <h4 class="text-xs font-bold text-slate-100">${s.title}</h4>
-            <span class="text-[10px] text-slate-400">${s.category} • ⭐ ${s.upvotes} Upvotes</span>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function openEditProfileModal() {
-      playSound('click');
-      document.getElementById('editProfileSection').classList.remove('hidden');
-      document.getElementById('editBioInput').value = userBio;
-    }
-
-    function saveProfileBio() {
-      playSound('click');
-      const bio = document.getElementById('editBioInput').value.trim();
-      if (bio) {
-        userBio = bio;
-        localStorage.setItem('ss_bio', userBio);
-        updateHeaderUser();
-      }
-      document.getElementById('editProfileSection').classList.add('hidden');
-    }
-
-    // --- FEEDBACK & ADMIN MANAGEMENT ---
-    function submitUserFeedback() {
-      playSound('click');
-      const category = document.getElementById('feedbackCategory').value;
-      const message = document.getElementById('feedbackMessageInput').value.trim();
-      if (!message) {
-        alert('Please enter a feedback message.');
-        return;
-      }
-
-      const newFb = {
-        id: Date.now(),
-        user: currentUser || '@guest',
-        category: category,
-        message: message,
-        date: new Date().toISOString().split('T')[0],
-        replied: false,
-        adminReply: ''
-      };
-
-      privateFeedbacks.unshift(newFb);
-      localStorage.setItem('ss_private_feedbacks', JSON.stringify(privateFeedbacks));
-      document.getElementById('feedbackMessageInput').value = '';
-      alert('Feedback successfully sent privately to admins!');
-      if (adminUnlocked) renderAdminPrivateFeedback();
     }
 
     function renderPublishedFeedback() {
-      const container = document.getElementById('publishedFeedbackContainer');
-      const approved = privateFeedbacks.filter(f => f.replied);
-      if (approved.length === 0) {
-        container.innerHTML = `<p class="text-xs text-slate-500">No published admin replies yet. Send feedback above to get featured!</p>`;
+      let container = document.getElementById('publishedFeedbackContainer');
+      if (publishedFeedbackList.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-500">No published feedback items yet.</p>`;
         return;
       }
-      container.innerHTML = approved.map(f => `
-        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
-          <div class="flex justify-between items-center">
-            <span class="text-[10px] bg-brand-500/10 text-brand-400 px-2 py-0.5 rounded font-bold">${f.category}</span>
-            <span class="text-[10px] text-slate-500 font-mono">${f.date}</span>
-          </div>
-          <p class="text-xs text-slate-300">"${f.message}" <span class="text-slate-500 text-[10px]">(${f.user})</span></p>
-          <div class="bg-slate-900 p-3 rounded-xl border border-brand-500/30 text-xs text-brand-300">
-            <strong>Admin Reply:</strong> ${f.adminReply}
+      container.innerHTML = publishedFeedbackList.map(f => `
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2 text-xs">
+          <span class="text-[10px] font-mono text-brand-400">${f.username} • ${f.category}</span>
+          <p class="text-slate-200 font-bold">${f.message}</p>
+          <div class="bg-slate-900 p-2.5 rounded-xl border border-brand-500/20 text-slate-300">
+            <span class="text-brand-400 font-bold block text-[10px] uppercase mb-0.5">Official Admin Response:</span>
+            ${f.reply}
           </div>
         </div>
       `).join('');
-    }
-
-    // Admin Panel Functions
-    function renderAdminPrivateFeedback() {
-      const container = document.getElementById('adminPrivateFeedbackList');
-      if (!container) return;
-      container.innerHTML = privateFeedbacks.map(f => `
-        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-2">
-          <div class="flex justify-between items-center text-[10px]">
-            <span class="text-brand-400 font-bold">${f.user} • ${f.category}</span>
-            <span class="text-slate-500 font-mono">${f.date}</span>
-          </div>
-          <p class="text-xs text-slate-200">${f.message}</p>
-          <div class="flex gap-2 pt-1">
-            <input type="text" id="replyInput_${f.id}" placeholder="Type admin reply..." value="${f.adminReply}" class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
-            <button onclick="saveAdminReply(${f.id})" class="bg-brand-400 hover:bg-brand-300 text-slate-950 text-xs font-bold px-3 py-1.5 rounded-lg transition">Publish Reply</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function saveAdminReply(id) {
-      playSound('click');
-      const input = document.getElementById(`replyInput_${id}`);
-      const reply = input.value.trim();
-      const f = privateFeedbacks.find(x => x.id === id);
-      if (f) {
-        f.adminReply = reply;
-        f.replied = true;
-        localStorage.setItem('ss_private_feedbacks', JSON.stringify(privateFeedbacks));
-        renderAdminPrivateFeedback();
-        renderPublishedFeedback();
-        logAdminActivity(`Published reply for feedback #${id}`);
-      }
     }
 
     function generateAiFeedbackSummary() {
-      playSound('laser');
-      const box = document.getElementById('aiSummaryBox');
-      const content = document.getElementById('aiSummaryContent');
+      let box = document.getElementById('aiSummaryBox');
+      let content = document.getElementById('aiSummaryContent');
       box.classList.remove('hidden');
-      
-      const total = privateFeedbacks.length;
-      const suggestions = privateFeedbacks.filter(f => f.category === 'Feature Suggestion').length;
-      const bugs = privateFeedbacks.filter(f => f.category === 'Bug Report').length;
-
       content.innerHTML = `
-        • Total Private Submissions Analyzed: <strong>${total}</strong><br>
-        • Feature Suggestions: <strong>${suggestions}</strong> (${Math.round((suggestions/total)*100)}% sentiment)<br>
-        • Bug Reports: <strong>${bugs}</strong> requiring attention.<br>
-        • <em>AI Recommendation:</em> Prioritize XP leveling progression and mobile Safari layout patches for upcoming release.
+        • Total Submissions Analyzed: ${privateFeedbackList.length}<br>
+        • Primary Trend: Users are requesting enhanced community interaction and profile customization.<br>
+        • Studio Recommendation: Prioritize direct messaging and mobile UI optimizations in Version 5.
       `;
-      logAdminActivity("Generated AI feedback insights report.");
-    }
-
-    function adminResetUserXp() {
-      playSound('click');
-      userXp = 0;
-      userLevel = 1;
-      localStorage.setItem('ss_xp', userXp);
-      localStorage.setItem('ss_level', userLevel);
-      updateXpUI();
-      alert("User XP and mastery rank successfully reset.");
-      logAdminActivity("Reset user XP back to 0.");
     }
 
     function executeBanUser() {
-      const handle = document.getElementById('banUsernameInput').value.trim();
-      if (!handle) return;
-      playSound('click');
-      setups = setups.filter(s => s.user !== handle);
-      localStorage.setItem('ss_setups', JSON.stringify(setups));
-      renderFeed();
-      alert(`User ${handle} and associated setups have been removed.`);
-      logAdminActivity(`Executed ban hammer on user: ${handle}`);
-      document.getElementById('banUsernameInput').value = '';
+      let handle = document.getElementById('banUsernameInput').value.trim();
+      if (handle) {
+        alert(`User ${handle} has been banned from the arena.`);
+        logActivity(`Executed ban hammer on ${handle}`);
+        document.getElementById('banUsernameInput').value = '';
+      }
     }
 
     function publishNewUpdate() {
-      playSound('levelup');
-      const title = document.getElementById('pubVersionTitle').value.trim() || 'v4.78 Studio Update';
-      const banner = document.getElementById('pubBannerText').value.trim();
-      const desc = document.getElementById('pubVersionDesc').value.trim() || '• General performance enhancements & bug fixes.';
-
+      let banner = document.getElementById('pubBannerText').value.trim();
       if (banner) {
-        localStorage.setItem('ss_global_announcement', banner);
-        checkGlobalAnnouncement();
+        let bEl = document.getElementById('announcementBanner');
+        document.getElementById('announcementText').innerText = banner;
+        bEl.classList.remove('hidden');
+        alert('Global announcement broadcast published.');
+        logActivity(`Published update broadcast: "${banner}"`);
       }
-
-      changelogs.unshift({
-        version: title.split(' ')[0],
-        date: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
-        title: title,
-        desc: desc
-      });
-      localStorage.setItem('ss_changelogs', JSON.stringify(changelogs));
-      renderChangelogs();
-      alert('Update published and broadcast globally!');
-      logAdminActivity(`Published new release version: ${title}`);
     }
 
     function clearGlobalFeed() {
-      if (confirm("Are you sure you want to clear the community feed?")) {
-        setups = [];
-        localStorage.setItem('ss_setups', JSON.stringify(setups));
+      if (confirm('Are you sure you want to clear all feed posts?')) {
+        posts = [];
+        localStorage.setItem('setupscore_posts', JSON.stringify(posts));
         renderFeed();
-        renderLeaderboard();
-        alert("Global feed cleared.");
-        logAdminActivity("Cleared global feed.");
+        alert('Arena feed cleared.');
       }
     }
 
-    // --- CHANGELOGS ---
-    function renderChangelogs() {
-      const container = document.getElementById('changelogContainer');
-      if (!container) return;
-      container.innerHTML = changelogs.map(c => `
-        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
-          <div class="flex justify-between items-center">
-            <span class="text-xs font-bold text-brand-400 font-mono">${c.version} — ${c.title}</span>
-            <span class="text-[10px] text-slate-500 font-mono">${c.date}</span>
-          </div>
-          <p class="text-xs text-slate-300 leading-relaxed">${c.desc}</p>
-        </div>
-      `).join('');
+    function dismissAnnouncement() {
+      document.getElementById('announcementBanner').classList.add('hidden');
     }
+
+    function logActivity(text) {
+      let timestamp = new Date().toLocaleTimeString();
+      activityLogs.unshift(`[${timestamp}] ${text}`);
+      let logBox = document.getElementById('adminActivityLogs');
+      if (logBox) {
+        logBox.innerHTML = activityLogs.map(l => `<div>${l}</div>`).join('');
+      }
+    }
+
+    // --- Initialization ---
+    window.onload = function() {
+      let lastProf = profiles[0];
+      if (lastProf) {
+        currentUser = lastProf;
+      }
+      document.getElementById('headerUsername').innerText = currentUser.username;
+      updateHeaderXpDisplay();
+      renderFeed();
+      renderPublishedFeedback();
+      logActivity('Application successfully initialized.');
+    };
   </script>
 </body>
 </html>
