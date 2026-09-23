@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SetupScore • Ultimate Edition v4.76 (Full 1000+ Lines Release)</title>
+  <title>SetupScore • Ultimate Edition v4.77 (XP Leveling Fix)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -80,16 +80,16 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Version Title / Tag</label>
-            <input type="text" id="pubVersionTitle" placeholder="e.g. v4.76 AI Report Fix" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
+            <input type="text" id="pubVersionTitle" placeholder="e.g. v4.77 XP Fix" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
           </div>
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Global Top Banner Broadcast Text</label>
-            <input type="text" id="pubBannerText" placeholder="⚡ Version 5 roadmap update coming soon!" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
+            <input type="text" id="pubBannerText" placeholder="⚡ XP Leveling bug successfully fixed!" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
           </div>
         </div>
         <div>
           <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Update Log Description (HTML & Bullets Supported)</label>
-          <textarea id="pubVersionDesc" rows="2" placeholder="• Fixed AI summary report generator...&#10;• Enhanced private inbox parsing..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400"></textarea>
+          <textarea id="pubVersionDesc" rows="2" placeholder="• Fixed XP leveling progression engine...&#10;• Enhanced rank calculation..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400"></textarea>
         </div>
 
         <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
@@ -170,7 +170,7 @@
         <div>
           <h1 class="text-base font-bold text-slate-100 flex items-center gap-2">
             SetupScore
-            <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/30 px-1.5 py-0.5 rounded font-bold">v4.76</span>
+            <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/30 px-1.5 py-0.5 rounded font-bold">v4.77</span>
           </h1>
           <p id="headerUsername" class="text-[10px] text-slate-400 font-mono">@guest</p>
         </div>
@@ -227,7 +227,7 @@
     <div id="tabAudit" class="hidden space-y-6">
       <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative">
         <h2 class="text-base font-bold text-slate-100 mb-1">Vision AI Workspace Audit</h2>
-        <p class="text-xs text-slate-400 mb-6">Upload photos of your desk setup for instant evaluation, XP gains, and scoring.</p>
+        <p class="text-xs text-slate-400 mb-6">Upload photos of your desk setup for instant evaluation, XP gains (+25 XP), and scoring.</p>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           <div class="border-2 border-dashed border-slate-800 hover:border-brand-400/60 rounded-2xl p-4 text-center cursor-pointer bg-slate-950 relative min-h-[160px] flex items-center justify-center transition group" onclick="document.getElementById('imgInput0').click()">
@@ -269,7 +269,7 @@
         </div>
 
         <button onclick="runAiAudit()" class="w-full bg-gradient-to-r from-brand-400 to-teal-500 hover:from-brand-300 hover:to-teal-400 text-slate-950 font-bold text-xs uppercase tracking-wider py-3.5 rounded-xl transition shadow-lg shadow-brand-500/20">
-          Run Vision Audit
+          Run Vision Audit (+25 XP)
         </button>
       </div>
 
@@ -504,6 +504,7 @@
     // --- STATE MANAGEMENT ---
     let currentUser = localStorage.getItem('ss_active_user') || null;
     let userXp = parseInt(localStorage.getItem('ss_xp') || '0');
+    let userLevel = parseInt(localStorage.getItem('ss_level') || '1');
     let userUpvotes = parseInt(localStorage.getItem('ss_upvotes') || '0');
     let userBio = localStorage.getItem('ss_bio') || 'Minimalist setup enthusiast & developer.';
     let isMuted = localStorage.getItem('ss_muted') === 'true';
@@ -569,8 +570,8 @@
       { id: 2, user: '@sarah_ux', category: 'Bug Report', message: 'The audit image upload sometimes flashes white on mobile safari.', date: '2026-09-23', replied: false, adminReply: '' }
     ]));
     let changelogs = JSON.parse(localStorage.getItem('ss_changelogs') || JSON.stringify([
-      { version: 'v4.76', date: 'September 2026', title: 'AI Report Fix & Command Center', desc: '• Fixed private feedback AI summary report generator.<br>• Enhanced admin modal shortcut handling.<br>• Upgraded soundboard feedback loops.' },
-      { version: 'v4.70', date: 'August 2026', title: 'Community Feedback & Profiles', desc: '• Added direct private admin feedback submission.<br>• Introduced creator profile management and bio customization.<br>• Polished dark mode glassmorphism UI.' }
+      { version: 'v4.77', date: 'September 2026', title: 'XP Leveling & Rank Progression Fix', desc: '• Fixed XP bar and automatic rank progression engine.<br>• Enhanced celebration effects on level up.<br>• Polished persistent storage synchronization.' },
+      { version: 'v4.76', date: 'September 2026', title: 'AI Report Fix & Command Center', desc: '• Fixed private feedback AI summary report generator.<br>• Enhanced admin modal shortcut handling.' }
     ]));
 
     // --- INITIALIZATION ---
@@ -640,7 +641,7 @@
         gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
         osc.start(now);
         osc.stop(now + 0.35);
-        if (typeof confetti === 'function') confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
+        if (typeof confetti === 'function') confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 } });
       } else if (type === 'laser') {
         osc.type = 'sawtooth';
         osc.frequency.setValueAtTime(800, now);
@@ -746,26 +747,28 @@
       document.getElementById('profileUpvotesBadge').textContent = `⭐ ${userUpvotes} Upvotes`;
     }
 
-    // --- XP & MASTERY ---
+    // --- XP & MASTERY LEVELING ENGINE (FIXED) ---
     function addXp(amount) {
       userXp += amount;
-      if (userXp >= 100) {
-        userXp = userXp % 100;
+      while (userXp >= 100) {
+        userXp -= 100;
+        userLevel++;
         playSound('levelup');
       }
       localStorage.setItem('ss_xp', userXp);
+      localStorage.setItem('ss_level', userLevel);
       updateXpUI();
     }
 
     function updateXpUI() {
-      document.getElementById('xpText').textContent = `${userXp}/100 XP`;
+      document.getElementById('xpText').textContent = `${userXp}/100 XP (Lvl ${userLevel})`;
       const bar = document.getElementById('xpBar');
-      if (bar) bar.style.width = `${userXp}%`;
+      if (bar) bar.style.width = `${Math.min(userXp, 100)}%`;
       
       let rank = 'Bronze Rig';
-      if (userXp >= 75) rank = 'Platinum Battlestation';
-      else if (userXp >= 50) rank = 'Gold Sanctuary';
-      else if (userXp >= 25) rank = 'Silver Studio';
+      if (userLevel >= 4 || userXp >= 75 && userLevel >= 3) rank = 'Platinum Battlestation';
+      else if (userLevel === 3) rank = 'Gold Sanctuary';
+      else if (userLevel === 2) rank = 'Silver Studio';
       
       document.getElementById('masteryRank').textContent = rank;
       const rankBadge = document.getElementById('profileRankBadge');
@@ -883,11 +886,11 @@
       setups.unshift(newSetup);
       localStorage.setItem('ss_setups', JSON.stringify(setups));
       
+      // Award XP
       addXp(25);
       renderFeed();
       renderMyPortfolio();
       renderLeaderboard();
-      playSound('levelup');
     }
 
     // --- FEED RENDERER ---
@@ -1093,7 +1096,7 @@
         • Total Private Submissions Analyzed: <strong>${total}</strong><br>
         • Feature Suggestions: <strong>${suggestions}</strong> (${Math.round((suggestions/total)*100)}% sentiment)<br>
         • Bug Reports: <strong>${bugs}</strong> requiring attention.<br>
-        • <em>AI Recommendation:</em> Prioritize RGB Sync Detection and mobile Safari responsive layout patches for upcoming Version 5 release.
+        • <em>AI Recommendation:</em> Prioritize XP leveling progression and mobile Safari layout patches for upcoming release.
       `;
       logAdminActivity("Generated AI feedback insights report.");
     }
@@ -1101,7 +1104,9 @@
     function adminResetUserXp() {
       playSound('click');
       userXp = 0;
+      userLevel = 1;
       localStorage.setItem('ss_xp', userXp);
+      localStorage.setItem('ss_level', userLevel);
       updateXpUI();
       alert("User XP and mastery rank successfully reset.");
       logAdminActivity("Reset user XP back to 0.");
@@ -1121,7 +1126,7 @@
 
     function publishNewUpdate() {
       playSound('levelup');
-      const title = document.getElementById('pubVersionTitle').value.trim() || 'v4.80 Studio Update';
+      const title = document.getElementById('pubVersionTitle').value.trim() || 'v4.78 Studio Update';
       const banner = document.getElementById('pubBannerText').value.trim();
       const desc = document.getElementById('pubVersionDesc').value.trim() || '• General performance enhancements & bug fixes.';
 
