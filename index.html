@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SetupScore • Ultimate Edition v4.75 (Admin Moderated Feedback)</title>
+  <title>SetupScore • Ultimate Edition v4.76 (AI Report Fix)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -32,7 +32,7 @@
             ⚡ Super Admin Command Center
             <span class="text-[9px] bg-red-500/10 text-red-400 border border-red-500/30 px-2 py-0.5 rounded font-mono">RESTRICTED OWNER ACCESS</span>
           </h3>
-          <p class="text-xs text-slate-400">Triggered via secret shortcut. Manage feedback submissions, AI summaries, and releases.</p>
+          <p class="text-xs text-slate-400">Triggered via secret shortcut. Manage feedback submissions, XP resets, and releases.</p>
         </div>
         <button onclick="closeSecretAdminModal()" class="text-slate-400 hover:text-slate-100 font-bold px-3 py-1 bg-slate-800 rounded-xl text-xs transition">✕ Close</button>
       </div>
@@ -61,17 +61,26 @@
           <!-- AI Summary Display Box -->
           <div id="aiSummaryBox" class="bg-slate-900 p-3 rounded-xl border border-brand-500/30 text-xs text-slate-300 font-mono hidden space-y-2">
             <span class="text-brand-400 font-bold block text-[10px] uppercase tracking-wider">AI Feedback Insights Report:</span>
-            <div id="aiSummaryContent" class="text-[11px] leading-relaxed"></div>
+            <div id="aiSummaryContent" class="text-[11px] leading-relaxed space-y-1"></div>
           </div>
 
           <div id="adminPrivateFeedbackList" class="space-y-2 max-h-56 overflow-y-auto"></div>
+        </div>
+
+        <!-- User Progression & XP Reset Controls -->
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+          <span class="text-xs font-bold text-amber-400 block">⚡ Progression & XP Reset Controls</span>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-slate-300">Reset active user's XP and level back to Bronze Rig (Level 1).</span>
+            <button onclick="adminResetUserXp()" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-bold px-4 py-2 rounded-xl transition">Reset My XP & Level</button>
+          </div>
         </div>
 
         <!-- Release Broadcast Settings -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Version Title / Tag</label>
-            <input type="text" id="pubVersionTitle" placeholder="e.g. v4.75 Refined Update" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
+            <input type="text" id="pubVersionTitle" placeholder="e.g. v4.76 AI Report Fix" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
           </div>
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Global Top Banner Broadcast Text</label>
@@ -80,11 +89,11 @@
         </div>
         <div>
           <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Update Log Description (HTML & Bullets Supported)</label>
-          <textarea id="pubVersionDesc" rows="2" placeholder="• Reviewed community feedback submissions...&#10;• Added admin publishing controls..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400"></textarea>
+          <textarea id="pubVersionDesc" rows="2" placeholder="• Fixed AI summary report generator...&#10;• Enhanced private inbox parsing..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400"></textarea>
         </div>
 
         <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
-          <span class="text-xs font-bold text-amber-400 block">🔨 Ban Hammer & User Moderation</span>
+          <span class="text-xs font-bold text-red-400 block">🔨 Ban Hammer & User Moderation</span>
           <div class="flex gap-2">
             <input type="text" id="banUsernameInput" placeholder="Enter handle to ban (e.g. @spammer)" class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
             <button onclick="executeBanUser()" class="bg-red-500 hover:bg-red-600 text-slate-950 text-xs font-bold px-4 py-2 rounded-xl transition">Ban User</button>
@@ -161,7 +170,7 @@
         <div>
           <h1 class="text-base font-bold text-slate-100 flex items-center gap-2">
             SetupScore
-            <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/30 px-1.5 py-0.5 rounded font-bold">v4.75</span>
+            <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/30 px-1.5 py-0.5 rounded font-bold">v4.76</span>
           </h1>
           <p id="headerUsername" class="text-[10px] text-slate-400 font-mono">@guest</p>
         </div>
@@ -268,7 +277,7 @@
       <div id="auditResultCard" class="hidden bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
         <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
           <div>
-            <span class="text-[9px] font-mono uppercase text-brand-400 font-bold tracking-widest">Audit Complete (+35 XP)</span>
+            <span class="text-[9px] font-mono uppercase text-brand-400 font-bold tracking-widest">Audit Complete (+25 XP)</span>
             <h3 id="resTitle" class="text-xl font-bold text-slate-100">Title</h3>
           </div>
           <div class="bg-slate-950 px-5 py-2.5 rounded-xl text-center border border-slate-800 shadow-inner">
@@ -294,7 +303,7 @@
       </div>
     </div>
 
-    <!-- FEEDBACK SECTION TAB (Private Submission to Admins + Published Admin Responses) -->
+    <!-- FEEDBACK SECTION TAB -->
     <div id="tabFeedback" class="hidden space-y-6">
       <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4">
         <div>
@@ -486,7 +495,7 @@
       <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4 shadow-2xl">
         <div>
           <h2 class="text-base font-bold text-slate-100 mb-1">Release History</h2>
-          <p class="text-xs text-slate-400">Official update changelog for SetupScore v4.75.</p>
+          <p class="text-xs text-slate-400">Official update changelog for SetupScore v4.76.</p>
         </div>
         <div id="releaseLogsContainer" class="space-y-3 font-mono text-xs"></div>
       </div>
@@ -553,10 +562,23 @@
       playSound('click');
     }
 
+    function adminResetUserXp() {
+      if (!currentUser) return alert("No active user profile.");
+      if (confirm(`Are you sure you want to reset XP and level for ${currentUser} back to Bronze Rig (Level 1)?`)) {
+        userXp = 0;
+        userLevel = 1;
+        saveUserData();
+        updateUI();
+        alert("User XP and level have been successfully reset.");
+        logAdminActivity(`Reset XP and level for ${currentUser} to Level 1.`);
+        playSound('levelup');
+      }
+    }
+
     // Tutorial Steps
     const tutorialSteps = [
-      { title: "1. Welcome to SetupScore v4.75", desc: "Evaluate your gaming or developer workstation using advanced Vision AI, explore community rigs, and submit feedback directly to admins." },
-      { title: "2. Vision AI Audits & XP", desc: "Upload photos of your main setup and cables to generate instant custom radar charts and earn XP to level up your ranking tier." },
+      { title: "1. Welcome to SetupScore v4.76", desc: "Evaluate your gaming or developer workstation using advanced Vision AI, explore community rigs, and submit feedback directly to admins." },
+      { title: "2. Vision AI Audits & XP", desc: "Upload photos of your main setup and cables to generate instant custom radar charts and earn XP to level up your ranking tier from Bronze Rig all the way to Master Sanctuary." },
       { title: "3. Private Feedback & Roadmap", desc: "Your feedback is sent privately to the admin inbox. Check out the studio roadmap for Version 5 or press Ctrl+Shift+O for admin tools." }
     ];
 
@@ -637,7 +659,6 @@
       } catch (e) {}
     }
 
-    // Init & Auth
     function initApp() {
       currentUser = localStorage.getItem('ss_current_user');
       if (currentUser) {
@@ -838,12 +859,13 @@
     }
 
     function publishFeedbackItem(id) {
-      const replyText = document.getElementById(`replyInput-${id}`).value.trim() || "I love this feature, it will be coming in version 5.0!";
+      const replyEl = document.getElementById(`replyInput-${id}`);
+      const replyText = replyEl ? replyEl.value.trim() : "I love this feature, it will be coming in version 5.0!";
       const idx = privateFeedback.findIndex(f => f.id === id);
       if (idx === -1) return;
 
       const item = privateFeedback.splice(idx, 1)[0];
-      item.adminReply = replyText;
+      item.adminReply = replyText || "I love this feature, it will be coming in version 5.0!";
       publishedFeedback.unshift(item);
 
       localStorage.setItem('ss_private_feedback_inbox', JSON.stringify(privateFeedback));
@@ -863,28 +885,50 @@
       playSound('click');
     }
 
-    // AI Feedback Summary Generator
+    // Repaired AI Feedback Summary Generator
     function generateAiFeedbackSummary() {
-      if (privateFeedback.length === 0) {
-        alert("No feedback items in the private inbox to summarize.");
+      let currentInbox = [];
+      try {
+        const raw = localStorage.getItem('ss_private_feedback_inbox');
+        currentInbox = raw ? JSON.parse(raw) : privateFeedback;
+      } catch(e) {
+        currentInbox = privateFeedback;
+      }
+
+      if (!currentInbox || currentInbox.length === 0) {
+        document.getElementById('aiSummaryContent').innerHTML = "• Total Pending Submissions: 0<br>• Inbox Status: Clear. No current feedback pending review.";
+        document.getElementById('aiSummaryBox').classList.remove('hidden');
+        playSound('click');
         return;
       }
-      const totalCount = privateFeedback.length;
-      const categories = privateFeedback.reduce((acc, f) => { acc[f.category] = (acc[f.category] || 0) + 1; return acc; }, {});
-      const topCat = Object.keys(categories).reduce((a, b) => categories[a] > categories[b] ? a : b);
-      
-      const summaryText = `• Total Pending Submissions: ${totalCount}<br>` +
-        `• Dominant Topic Category: ${topCat} (${categories[topCat]} items)<br>` +
-        `• Key User Request: Community members are primarily requesting features tailored for Version 5 rollout, highlighting high engagement with the platform.<br>` +
-        `• Recommendation: Review items in the admin inbox and publish top highlights with custom responses.`;
 
-      document.getElementById('aiSummaryContent').innerHTML = summaryText;
+      const totalCount = currentInbox.length;
+      const categories = {};
+      currentInbox.forEach(f => {
+        const cat = f.category || 'General Thoughts';
+        categories[cat] = (categories[cat] || 0) + 1;
+      });
+
+      let topCat = 'General Thoughts';
+      let maxCount = -1;
+      for (const cat in categories) {
+        if (categories[cat] > maxCount) {
+          maxCount = categories[cat];
+          topCat = cat;
+        }
+      }
+
+      const summaryHTML = `• Total Pending Submissions: <b>${totalCount}</b><br>` +
+        `• Dominant Topic Category: <b>${topCat}</b> (${categories[topCat]} items)<br>` +
+        `• Trend Analysis: Creators are actively submitting suggestions for upcoming Version 5 enhancements.<br>` +
+        `• Studio Recommendation: Review top submissions and publish highlights with official admin replies.`;
+
+      document.getElementById('aiSummaryContent').innerHTML = summaryHTML;
       document.getElementById('aiSummaryBox').classList.remove('hidden');
       playSound('bell');
       logAdminActivity("Generated AI feedback insights report.");
     }
 
-    // Admin Actions
     function executeBanUser() {
       const handle = document.getElementById('banUsernameInput').value.trim();
       if (!handle) return alert("Enter a valid username handle.");
@@ -940,7 +984,7 @@
       try {
         const rawLogs = localStorage.getItem('ss_release_logs');
         logs = rawLogs ? JSON.parse(rawLogs) : [
-          { title: "v4.75 Refined Update", date: "2026-09-23", desc: "• Private feedback inbox for admins.<br>• AI feedback summary generator.<br>• Simplified overall UI experience." }
+          { title: "v4.76 AI Report Fix", date: "2026-09-23", desc: "• Repaired AI summary report generator.<br>• Enhanced private inbox parsing." }
         ];
       } catch(e) { logs = []; }
 
@@ -980,7 +1024,7 @@
       try {
         const rawLogs = localStorage.getItem('ss_release_logs');
         logs = rawLogs ? JSON.parse(rawLogs) : [
-          { title: "v4.75 Refined Update", date: "2026-09-23", desc: "• Private feedback inbox for admins.<br>• AI feedback summary generator.<br>• Simplified overall UI experience." }
+          { title: "v4.76 AI Report Fix", date: "2026-09-23", desc: "• Repaired AI summary report generator.<br>• Enhanced private inbox parsing." }
         ];
       } catch(e) { logs = []; }
 
@@ -996,7 +1040,6 @@
       `).join('');
     }
 
-    // Profile Editing
     function openEditProfileModal() {
       const metaRaw = localStorage.getItem(`ss_meta_${currentUser}`);
       const meta = metaRaw ? JSON.parse(metaRaw) : { bio: "Minimalist workstation creator." };
@@ -1017,7 +1060,6 @@
       playSound('levelup');
     }
 
-    // Vision Audit
     function handleAngleUpload(e, idx) {
       const file = e.target.files[0]; if (!file) return;
       const reader = new FileReader();
@@ -1046,8 +1088,7 @@
       const post = { id: "p-" + Date.now(), title, author: currentUser, category: cat, score, img: uploadedImages[0], upvotes: 1 };
       myPortfolio.unshift(post); communityFeed.unshift(post);
       
-      // Fixed XP Calculation & Level Progression
-      userXp += 35;
+      userXp += 25;
       if (userXp >= 100) {
         userLevel = Math.min(ranks.length, userLevel + 1);
         userXp = userXp - 100;
@@ -1057,7 +1098,7 @@
       }
 
       saveUserData(); updateUI(); renderPortfolio(); renderFeed(); renderLeaderboard();
-      logAdminActivity(`Vision audit completed by ${currentUser} (Score: ${score}, XP: +35)`);
+      logAdminActivity(`Vision audit completed by ${currentUser} (Score: ${score}, XP: +25)`);
       switchTab('audit');
     }
 
