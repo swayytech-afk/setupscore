@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SetupScore • Ultimate Edition v4.75 (Final Secured)</title>
+  <title>SetupScore • Ultimate Edition v4.75 (Refined)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -51,16 +51,16 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Version Title / Tag</label>
-            <input type="text" id="pubVersionTitle" placeholder="e.g. v4.75 Final Update" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
+            <input type="text" id="pubVersionTitle" placeholder="e.g. v4.75 Refined Update" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
           </div>
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Global Top Banner Broadcast Text</label>
-            <input type="text" id="pubBannerText" placeholder="⚡ v4.75 Final Update live!" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
+            <input type="text" id="pubBannerText" placeholder="⚡ Feedback section is now live!" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
           </div>
         </div>
         <div>
           <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Update Log Description (HTML & Bullets Supported)</label>
-          <textarea id="pubVersionDesc" rows="3" placeholder="• Published final v4.75 update...&#10;• Added secret admin modal shortcut..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400"></textarea>
+          <textarea id="pubVersionDesc" rows="3" placeholder="• Fixed XP and leveling system...&#10;• Added community feedback section..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-400"></textarea>
         </div>
 
         <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
@@ -90,7 +90,7 @@
     <div class="max-w-md w-full bg-slate-900 border border-brand-500/40 rounded-3xl p-6 shadow-2xl relative">
       <span class="text-[10px] font-mono uppercase text-brand-400 font-bold tracking-widest block mb-1">Welcome Guide</span>
       <h3 id="tutTitle" class="text-lg font-bold text-slate-100 mb-2">1. Welcome to SetupScore</h3>
-      <p id="tutDesc" class="text-xs text-slate-400 mb-6 leading-relaxed">Evaluate your gaming or developer battlestation using advanced Vision AI, climb global leaderboards, and unlock achievement ranks.</p>
+      <p id="tutDesc" class="text-xs text-slate-400 mb-6 leading-relaxed">Evaluate your gaming or developer workstation using advanced Vision AI, climb global leaderboards, and share your feedback.</p>
       <div class="flex justify-between items-center">
         <span id="tutStepIndicator" class="text-[10px] text-slate-500 font-mono">Step 1 of 3</span>
         <div class="flex gap-2">
@@ -141,7 +141,7 @@
         <div>
           <h1 class="text-base font-bold text-slate-100 flex items-center gap-2">
             SetupScore
-            <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/30 px-1.5 py-0.5 rounded font-bold">v4.75 FINAL</span>
+            <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/30 px-1.5 py-0.5 rounded font-bold">v4.75</span>
           </h1>
           <p id="headerUsername" class="text-[10px] text-slate-400 font-mono">@guest</p>
         </div>
@@ -166,10 +166,11 @@
       </div>
     </div>
 
-    <!-- Navigation Tabs (No Admin Tab visible publicly) -->
+    <!-- Simplified Navigation Tabs -->
     <div class="max-w-6xl mx-auto px-4 flex gap-2 border-t border-slate-800/60 pt-2 overflow-x-auto">
       <button id="tabBtnFeed" onclick="switchTab('feed')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-brand-400 text-brand-400 whitespace-nowrap transition">Arena Feed</button>
       <button id="tabBtnAudit" onclick="switchTab('audit')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Vision Audit</button>
+      <button id="tabBtnFeedback" onclick="switchTab('feedback')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Feedback 💬</button>
       <button id="tabBtnSoundboard" onclick="switchTab('soundboard')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Soundboard 🔊</button>
       <button id="tabBtnLeaderboard" onclick="switchTab('leaderboard')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">Leaderboard</button>
       <button id="tabBtnProfile" onclick="switchTab('profile')" class="py-2 px-4 text-xs font-bold rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-slate-200 whitespace-nowrap transition">My Profile</button>
@@ -197,7 +198,7 @@
     <div id="tabAudit" class="hidden space-y-6">
       <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative">
         <h2 class="text-base font-bold text-slate-100 mb-1">Vision AI Workspace Audit</h2>
-        <p class="text-xs text-slate-400 mb-6">Upload photos of your desk setup for instant evaluation and scoring.</p>
+        <p class="text-xs text-slate-400 mb-6">Upload photos of your desk setup for instant evaluation, XP gains, and scoring.</p>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           <div class="border-2 border-dashed border-slate-800 hover:border-brand-400/60 rounded-2xl p-4 text-center cursor-pointer bg-slate-950 relative min-h-[160px] flex items-center justify-center transition group" onclick="document.getElementById('imgInput0').click()">
@@ -247,7 +248,7 @@
       <div id="auditResultCard" class="hidden bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
         <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
           <div>
-            <span class="text-[9px] font-mono uppercase text-brand-400 font-bold tracking-widest">Audit Complete</span>
+            <span class="text-[9px] font-mono uppercase text-brand-400 font-bold tracking-widest">Audit Complete (+35 XP)</span>
             <h3 id="resTitle" class="text-xl font-bold text-slate-100">Title</h3>
           </div>
           <div class="bg-slate-950 px-5 py-2.5 rounded-xl text-center border border-slate-800 shadow-inner">
@@ -269,6 +270,37 @@
               <p id="resCons" class="text-slate-300 font-mono text-[11px]">Analysis...</p>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEEDBACK SECTION TAB -->
+    <div id="tabFeedback" class="hidden space-y-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4">
+        <div>
+          <h2 class="text-base font-bold text-slate-100 mb-1">💬 Community Feedback</h2>
+          <p class="text-xs text-slate-400">Share your ideas, report bugs, or tell us what features you want in version 5.</p>
+        </div>
+
+        <div class="space-y-4 pt-2">
+          <div>
+            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Feedback Category</label>
+            <select id="feedbackCategory" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brand-400">
+              <option value="Feature Suggestion">💡 Feature Suggestion</option>
+              <option value="Bug Report">🐛 Bug Report</option>
+              <option value="General Thoughts">✨ General Thoughts</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Your Message</label>
+            <textarea id="feedbackMessageInput" rows="4" placeholder="Tell us what you love or what we can improve..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brand-400"></textarea>
+          </div>
+          <button onclick="submitUserFeedback()" class="bg-brand-400 hover:bg-brand-300 text-slate-950 font-bold text-xs px-6 py-3 rounded-xl transition shadow-md shadow-brand-500/20">Submit Feedback</button>
+        </div>
+
+        <div class="border-t border-slate-800 pt-4 mt-6">
+          <h3 class="text-xs font-bold text-slate-300 mb-3">Recent Community Feedback</h3>
+          <div id="feedbackListContainer" class="space-y-3 max-h-64 overflow-y-auto"></div>
         </div>
       </div>
     </div>
@@ -351,14 +383,14 @@
     <!-- ROADMAP & CHANGELOG TAB (Public viewable) -->
     <div id="tabRoadmap" class="hidden space-y-6">
       
-      <!-- Studio Future Roadmap (Trello-style Board) -->
+      <!-- Studio Future Roadmap -->
       <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4 shadow-2xl">
         <div>
           <h2 class="text-base font-bold text-slate-100 flex items-center gap-2">
             🗺️ Studio Future Roadmap
-            <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/30 px-2 py-0.5 rounded font-mono">COMING SOON</span>
+            <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/30 px-2 py-0.5 rounded font-mono">VERSION 5 COMING SOON</span>
           </h2>
-          <p class="text-xs text-slate-400 mt-0.5">Here is a sneak peek at what features the studio is working hard on for upcoming releases.</p>
+          <p class="text-xs text-slate-400 mt-0.5">Here is a sneak peek at what features the studio is working on for upcoming releases.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
@@ -390,14 +422,14 @@
             </div>
             <div class="space-y-2.5">
               <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
-                <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/20 px-2 py-0.5 rounded font-bold inline-block">AI Engine</span>
-                <p class="font-bold text-slate-200">Advanced Vision AI v2</p>
-                <p class="text-[11px] text-slate-400">Deeper detection for cable clutter and monitor symmetry.</p>
+                <span class="text-[9px] bg-brand-500/10 text-brand-400 border border-brand-500/20 px-2 py-0.5 rounded font-bold inline-block">UX / UI</span>
+                <p class="font-bold text-slate-200">Simplified Experience</p>
+                <p class="text-[11px] text-slate-400">Streamlining navigation to make the platform easier to use.</p>
               </div>
               <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1">
-                <span class="text-[9px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded font-bold inline-block">Gamification</span>
-                <p class="font-bold text-slate-200">Achievement Badges</p>
-                <p class="text-[11px] text-slate-400">Unlock special badges for top-voted workstation submissions.</p>
+                <span class="text-[9px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded font-bold inline-block">AI Engine</span>
+                <p class="font-bold text-slate-200">Advanced Vision AI v2</p>
+                <p class="text-[11px] text-slate-400">Deeper detection for cable clutter and monitor symmetry.</p>
               </div>
             </div>
           </div>
@@ -415,9 +447,9 @@
                 <p class="text-[11px] text-slate-400">Multi-profile switching & local persistence.</p>
               </div>
               <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1 opacity-75">
-                <span class="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-bold inline-block">Audio</span>
-                <p class="font-bold text-slate-200">Interactive Soundboard</p>
-                <p class="text-[11px] text-slate-400">Custom web audio frequency triggers.</p>
+                <span class="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-bold inline-block">Feedback</span>
+                <p class="font-bold text-slate-200">Community Feedback Section</p>
+                <p class="text-[11px] text-slate-400">Direct feedback submission and viewing.</p>
               </div>
               <div class="bg-slate-900 p-3 rounded-xl border border-slate-800/60 text-xs space-y-1 opacity-75">
                 <span class="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-bold inline-block">Security</span>
@@ -444,7 +476,7 @@
   <script>
     // System State
     let currentUser = null, userXp = 0, userLevel = 1, audioMuted = false;
-    let myPortfolio = [], communityFeed = [], uploadedImages = [null, null, null], activeRadarChart = null;
+    let myPortfolio = [], communityFeed = [], feedbackList = [], uploadedImages = [null, null, null], activeRadarChart = null;
     let tutorialStep = 1;
     const ranks = ["Bronze Rig", "Silver Studio", "Gold Station", "Diamond Battlestation", "Master Sanctuary"];
 
@@ -501,9 +533,9 @@
 
     // Tutorial Steps
     const tutorialSteps = [
-      { title: "1. Welcome to SetupScore v4.75", desc: "Evaluate your gaming or developer workstation using advanced Vision AI, explore community rigs, and climb global leaderboards." },
+      { title: "1. Welcome to SetupScore v4.75", desc: "Evaluate your gaming or developer workstation using advanced Vision AI, explore community rigs, and share your feedback." },
       { title: "2. Vision AI Audits & XP", desc: "Upload photos of your main setup and cables to generate instant custom radar charts and earn XP to level up your ranking tier." },
-      { title: "3. Soundboard & Roadmap", desc: "Access the soundboard, explore the studio future roadmap, or press Ctrl+Shift+O anytime to open the hidden owner admin command center." }
+      { title: "3. Feedback & Roadmap", desc: "Use the new feedback section to share your thoughts, explore the studio future roadmap, or press Ctrl+Shift+O to open the hidden owner admin center." }
     ];
 
     function openTutorial() {
@@ -596,6 +628,7 @@
         setTimeout(openTutorial, 500);
       }
       loadGlobalFeed();
+      loadFeedback();
       renderReleaseLogs();
       renderGlobalAnnouncement();
       logAdminActivity("System initialized successfully.");
@@ -664,7 +697,9 @@
         const raw = localStorage.getItem(`ss_data_${currentUser}`);
         if (raw) {
           const data = JSON.parse(raw);
-          userXp = data.xp || 0; userLevel = data.level || 1; myPortfolio = data.portfolio || [];
+          userXp = typeof data.xp === 'number' ? data.xp : 0;
+          userLevel = typeof data.level === 'number' ? data.level : 1;
+          myPortfolio = data.portfolio || [];
         } else {
           userXp = 0; userLevel = 1; myPortfolio = [];
         }
@@ -704,6 +739,50 @@
       const rank = ranks[userLevel - 1] || "Bronze Rig";
       document.getElementById('masteryRank').textContent = rank;
       document.getElementById('profileRankBadge').textContent = rank;
+    }
+
+    // Feedback Management
+    function loadFeedback() {
+      try {
+        const raw = localStorage.getItem('ss_community_feedback');
+        feedbackList = raw ? JSON.parse(raw) : [
+          { id: 'f-1', author: '@NeonDeck', category: 'Feature Suggestion', message: 'Would love direct messaging in v5!', date: '2026-09-23' }
+        ];
+      } catch(e) { feedbackList = []; }
+      renderFeedbackList();
+    }
+
+    function submitUserFeedback() {
+      const msg = document.getElementById('feedbackMessageInput').value.trim();
+      const cat = document.getElementById('feedbackCategory').value;
+      if (!msg) return alert("Please enter a message for your feedback.");
+
+      const item = { id: 'f-' + Date.now(), author: currentUser || '@guest', category: cat, message: msg, date: new Date().toISOString().split('T')[0] };
+      feedbackList.unshift(item);
+      localStorage.setItem('ss_community_feedback', JSON.stringify(feedbackList));
+      document.getElementById('feedbackMessageInput').value = '';
+      renderFeedbackList();
+      alert("Thank you! Your feedback has been submitted.");
+      playSound('levelup');
+      logAdminActivity(`New feedback submitted by ${currentUser || '@guest'}`);
+    }
+
+    function renderFeedbackList() {
+      const container = document.getElementById('feedbackListContainer');
+      if (!container) return;
+      if (feedbackList.length === 0) {
+        container.innerHTML = `<div class="text-slate-500 text-xs text-center py-4">No feedback submitted yet. Be the first!</div>`;
+        return;
+      }
+      container.innerHTML = feedbackList.map(f => `
+        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-xs space-y-1 shadow-sm">
+          <div class="flex justify-between items-center text-[10px]">
+            <span class="font-bold text-brand-400">${f.category}</span>
+            <span class="text-slate-500 font-mono">${f.author} • ${f.date}</span>
+          </div>
+          <p class="text-slate-300 font-sans leading-relaxed">${f.message}</p>
+        </div>
+      `).join('');
     }
 
     // Admin Actions
@@ -762,7 +841,7 @@
       try {
         const rawLogs = localStorage.getItem('ss_release_logs');
         logs = rawLogs ? JSON.parse(rawLogs) : [
-          { title: "v4.75 Final Update", date: "2026-09-23", desc: "• Published final v4.75 feature update.<br>• Added secret admin modal shortcut (Ctrl+Shift+O).<br>• Verified system stability across all clients." }
+          { title: "v4.75 Refined Update", date: "2026-09-23", desc: "• Fixed XP and leveling system.<br>• Added public feedback section.<br>• Simplified overall UI experience." }
         ];
       } catch(e) { logs = []; }
 
@@ -802,7 +881,7 @@
       try {
         const rawLogs = localStorage.getItem('ss_release_logs');
         logs = rawLogs ? JSON.parse(rawLogs) : [
-          { title: "v4.75 Final Update", date: "2026-09-23", desc: "• Published final v4.75 feature update.<br>• Added secret admin modal shortcut (Ctrl+Shift+O).<br>• Verified system stability across all clients." }
+          { title: "v4.75 Refined Update", date: "2026-09-23", desc: "• Fixed XP and leveling system.<br>• Added public feedback section.<br>• Simplified overall UI experience." }
         ];
       } catch(e) { logs = []; }
 
@@ -867,11 +946,19 @@
       renderRadar();
       const post = { id: "p-" + Date.now(), title, author: currentUser, category: cat, score, img: uploadedImages[0], upvotes: 1 };
       myPortfolio.unshift(post); communityFeed.unshift(post);
-      userXp = Math.min(100, userXp + 35);
-      if (userXp >= 100 && userLevel < ranks.length) { userLevel++; userXp = 0; playSound('levelup'); }
-      else { playSound('click'); }
-      saveUserData(); renderPortfolio(); renderFeed(); renderLeaderboard();
-      logAdminActivity(`Vision audit completed by ${currentUser} (Score: ${score})`);
+      
+      // Fixed XP Calculation & Level Progression
+      userXp += 35;
+      if (userXp >= 100) {
+        userLevel = Math.min(ranks.length, userLevel + 1);
+        userXp = userXp - 100;
+        playSound('levelup');
+      } else {
+        playSound('click');
+      }
+
+      saveUserData(); updateUI(); renderPortfolio(); renderFeed(); renderLeaderboard();
+      logAdminActivity(`Vision audit completed by ${currentUser} (Score: ${score}, XP: +35)`);
       switchTab('audit');
     }
 
@@ -953,7 +1040,7 @@
     }
 
     function switchTab(t) {
-      ['feed', 'audit', 'soundboard', 'leaderboard', 'profile', 'roadmap'].forEach(tab => {
+      ['feed', 'audit', 'feedback', 'soundboard', 'leaderboard', 'profile', 'roadmap'].forEach(tab => {
         const el = document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
         const btn = document.getElementById(`tabBtn${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
         if (el) el.classList.toggle('hidden', tab !== t);
