@@ -604,17 +604,25 @@
     }
 
     // --- AUDIO SOUNDBOARD ENGINE ---
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      return audioCtx;
+    }
+
     function playSound(type) {
       if (isMuted) return;
-      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const ctx = getAudioContext();
+      if (ctx.state === 'suspended') ctx.resume();
       
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
       osc.connect(gain);
-      gain.connect(audioCtx.destination);
+      gain.connect(ctx.destination);
       
-      const now = audioCtx.currentTime;
+      const now = ctx.currentTime;
       if (type === 'click') {
         osc.type = 'sine';
         osc.frequency.setValueAtTime(600, now);
@@ -751,7 +759,6 @@
 
     function updateXpUI() {
       document.getElementById('xpText').textContent = `${userXp}/100 XP`;
-      document.getElementById('xpBar.style.width'] = `${userXp}%`;
       const bar = document.getElementById('xpBar');
       if (bar) bar.style.width = `${userXp}%`;
       
@@ -909,7 +916,7 @@
               <button onclick="upvoteSetup(${s.id})" class="bg-slate-950 hover:bg-slate-800 border border-slate-800 px-3 py-1.5 rounded-xl text-xs font-bold text-brand-400 transition flex items-center gap-1.5">
                 ⭐ Upvote (${s.upvotes})
               </button>
-              <button onclick="openComments(${s.id})" class="text-xs text-slate-400 hover:text-slate-200 transition">💬 Comments (${s.comments.length})</button>
+              <button onclick="switchTab('feed')" class="text-xs text-slate-400 hover:text-slate-200 transition">💬 Comments (${s.comments.length})</button>
             </div>
           </div>
         </div>
