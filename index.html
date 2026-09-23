@@ -631,20 +631,21 @@
     }
 
     function runAiAudit() {
-      const title = document.getElementById('auditTitleInput').value.trim() || 'Custom Battlestation';
+      const titleInput = document.getElementById('auditTitleInput');
+      const title = titleInput.value.trim() || 'My Custom Battlestation';
       const category = document.getElementById('auditCategoryInput').value;
       const mainImage = activeImages[0] || 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=600&q=80';
 
-      const score = (7.5 + Math.random() * 2.3).toFixed(1);
-      const pros = 'Immaculate color coordination, clean monitor alignment, and good ergonomic positioning.';
-      const cons = 'Consider adding accent LED light bars behind the desk to reduce eye strain.';
+      const scoreNum = parseFloat((7.5 + Math.random() * 2.3).toFixed(1));
+      const pros = 'Immaculate color coordination, clean monitor alignment, and great ergonomic positioning.';
+      const cons = 'Consider adding accent LED light strips behind the desk to reduce eye strain.';
 
       const auditResult = {
         id: Date.now(),
         username: currentUser.username,
         title,
         category,
-        score: parseFloat(score),
+        score: scoreNum,
         images: [mainImage],
         upvotes: 0,
         pros,
@@ -656,18 +657,25 @@
       addXp(25);
 
       document.getElementById('resTitle').textContent = title;
-      document.getElementById('resOverallScore').textContent = score;
+      document.getElementById('resOverallScore').textContent = scoreNum.toFixed(1);
       document.getElementById('resPros').textContent = pros;
       document.getElementById('resCons').textContent = cons;
-      document.getElementById('auditResultCard').classList.remove('hidden');
+      
+      const resCard = document.getElementById('auditResultCard');
+      resCard.classList.remove('hidden');
 
-      renderRadarChart([8.5, 9.0, score * 0.9, 8.8, 9.2]);
+      renderRadarChart([8.5, 9.0, scoreNum * 0.9, 8.8, 9.2]);
       saveStateToLocalStorage();
       playSound('levelup');
+
+      // Smooth scroll down to view results
+      resCard.scrollIntoView({ behavior: 'smooth' });
     }
 
     function renderRadarChart(dataValues) {
-      const ctx = document.getElementById('radarChart').getContext('2d');
+      const canvasEl = document.getElementById('radarChart');
+      if (!canvasEl) return;
+      const ctx = canvasEl.getContext('2d');
       if (currentRadarChart) {
         currentRadarChart.destroy();
       }
